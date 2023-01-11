@@ -6,7 +6,7 @@ import {
 } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import React from 'react';
-import { newProject } from '@/api/project';
+import { projectOpt } from '@/api/project';
 import { searchUser } from '@/api/user';
 
 interface SearchUser {
@@ -40,7 +40,7 @@ const Index: React.FC<selfProps> = (props) => {
       }}
       onFinish={async (values) => {
         try {
-          const res = await newProject(values);
+          const res = await projectOpt(values, 'POST');
           if (res.code == 0) {
             message.success(res.msg);
             reload!(true);

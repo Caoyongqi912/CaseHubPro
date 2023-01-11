@@ -31,6 +31,11 @@ export default [
         name: 'editor',
         component: '@/pages/User/Editor',
       },
+      {
+        path: '/user/center',
+        name: 'current',
+        component: '@/pages/User/Center',
+      },
       { component: '@/pages/404' },
     ],
   },
@@ -41,7 +46,7 @@ export default [
     routes: [
       {
         path: '/project/table',
-        name: 'proOpt',
+        name: 'projectOpt',
         component: '@/pages/Project',
       },
       {

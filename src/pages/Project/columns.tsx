@@ -77,7 +77,6 @@ const columns: ProColumns[] = [
       <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
         查看
       </a>,
-      <a>删除</a>,
     ],
   },
 ];

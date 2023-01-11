@@ -1,5 +1,12 @@
 import { request } from 'umi';
 
+const UserURL: string = '/api/user/opt';
+const UserTagURL: string = '/api/user/tag/opt';
+const DepartmentURL: string = '/api/user/department/opt';
+const QueryUser: string = '/api/user/query';
+const SearchUser: string = '/api/user/search';
+const CurrentUser: string = '/api/user/current';
+
 /** 登录接口 POST /user/login */
 export async function login(
   body: API.ILoginParams,
@@ -17,7 +24,7 @@ export async function login(
 
 /** 获取当前的用户 GET /user/current */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request<{ data: API.IUser }>('/api/user/current', {
+  return request<{ data: API.IUser }>(CurrentUser, {
     method: 'GET',
     ...(options || {}),
   });
@@ -28,9 +35,64 @@ export async function searchUser(
   body: API.IMoHuSearchUser,
   options?: { [key: string]: any },
 ) {
-  return request<{ data: API.IUser[] }>('/api/user/search', {
+  return request<{ data: API.IUser[] }>(SearchUser, {
     method: 'POST',
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** user GET /user */
+export async function pageUser(
+  params: API.ISearch,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse>(QueryUser, {
+    method: 'GET',
+    params: params,
+    ...(options || {}),
+  });
+}
+
+/**
+ * 用户crud
+ * @param data
+ * @param method
+ * @param options
+ * @constructor
+ */
+export async function UserOpt(
+  data: API.IUser,
+  method: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse>(UserURL, {
+    method: method,
+    data: data,
+    ...(options || {}),
+  });
+}
+
+/**
+ * 部门query
+ * @param options
+ * @constructor
+ */
+export async function departmentQuery(options?: { [key: string]: any }) {
+  return request<API.IResponse>(DepartmentURL, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/**
+ * tag
+ * @param options
+ * @constructor
+ */
+export async function userTagQuery(options?: { [key: string]: any }) {
+  return request<API.IResponse>(UserTagURL, {
+    method: 'GET',
     ...(options || {}),
   });
 }

@@ -1,36 +1,38 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 import {
   LogoutOutlined,
   SettingOutlined,
-  UserOutlined
-} from "@ant-design/icons";
-import { Avatar, Menu, Spin } from "antd";
-import { history, useModel } from "umi";
-import styles from "./index.less";
-import { clearToken } from "@/utils/token";
-import HeaderDropdown from "@/components/HeaderDropdown";
-import type { ItemType } from "antd/lib/menu/hooks/useItems";
-import type { MenuInfo } from "rc-menu/lib/interface";
+  UserOutlined,
+} from '@ant-design/icons';
+import { Avatar, Menu, Spin } from 'antd';
+import { history, useModel } from 'umi';
+import styles from './index.less';
+import { clearToken } from '@/utils/token';
+import HeaderDropdown from '@/components/HeaderDropdown';
+import type { ItemType } from 'antd/lib/menu/hooks/useItems';
+import type { MenuInfo } from 'rc-menu/lib/interface';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
-  const { initialState, setInitialState } = useModel("@@initialState");
+  const { initialState, setInitialState } = useModel('@@initialState');
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
-      if (key === "logout") {
+      if (key === 'logout') {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
         clearToken();
-        history.push("/login");
-
+        history.push('/login');
+        return;
+      } else if (key === 'center') {
+        history.push('/user/center');
         return;
       }
       history.push(`/${key}`);
     },
-    [setInitialState]
+    [setInitialState],
   );
   const loading = (
     <span className={`${styles.action} ${styles.account}`}>
@@ -38,7 +40,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         size="small"
         style={{
           marginLeft: 8,
-          marginRight: 8
+          marginRight: 8,
         }}
       />
     </span>
@@ -48,7 +50,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
   const { currentUser } = initialState;
-  console.log(currentUser);
   if (!currentUser || !currentUser.username) {
     return loading;
   }
@@ -56,26 +57,21 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const menuItems: ItemType[] = [
     ...(menu
       ? [
-        {
-          key: "center",
-          icon: <UserOutlined />,
-          label: "个人中心"
-        },
-        {
-          key: "settings",
-          icon: <SettingOutlined />,
-          label: "个人设置"
-        },
-        {
-          type: "divider" as const
-        }
-      ]
+          {
+            key: 'center',
+            icon: <UserOutlined />,
+            label: '个人中心',
+          },
+          {
+            type: 'divider' as const,
+          },
+        ]
       : []),
     {
-      key: "logout",
+      key: 'logout',
       icon: <LogoutOutlined />,
-      label: "退出登录"
-    }
+      label: '退出登录',
+    },
   ];
 
   const menuHeaderDropdown = (
@@ -92,7 +88,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         <Avatar
           size="small"
           className={styles.avatar}
-          src={"http://127.0.0.1:5000" + currentUser.avatar}
+          src={
+            'http://localhost:5000/api/file/avatar?uid=' + currentUser.avatar
+          }
           alt="avatar"
         >
           {currentUser.username[0]}

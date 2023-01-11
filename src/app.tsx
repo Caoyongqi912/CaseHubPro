@@ -6,7 +6,6 @@ import RightContent from '@/components/RightContent';
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { RequestConfig } from '@@/plugin-request/request';
 import { getToken } from '@/utils/token';
-import { Simulate } from 'react-dom/test-utils';
 import { message } from 'antd';
 
 const loginPath = '/login';

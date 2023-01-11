@@ -1,8 +1,8 @@
 import type { ActionType } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useRef } from 'react';
 import NewProject from '@/components/NewProject';
-import { pageProject, updateProject } from '@/api/project';
+import { pageProject, projectOpt } from '@/api/project';
 import columns from '@/pages/Project/columns';
 
 export default () => {
@@ -12,10 +12,14 @@ export default () => {
       actionRef.current?.reload();
     }
   };
-  const getProjectPage = async (values: API.ISearch) => {
-    console.log(values);
-    const response = await pageProject({ ...values })
-      .then((res) => {
+
+  return (
+    <ProTable
+      columns={columns}
+      actionRef={actionRef}
+      cardBordered
+      request={async (params, sort, filter) => {
+        const res: any = await pageProject(params as API.ISearch);
         return {
           data: res.data.items,
           total: res.data.pageInfo.total,
@@ -23,34 +27,23 @@ export default () => {
           pageSize: res.data.pageInfo.page,
           current: res.data.pageInfo.limit,
         };
-      })
-      .catch((error) => console.log(error));
-    return Promise.resolve(response);
-  };
-
-  return (
-    <ProTable
-      columns={columns}
-      actionRef={actionRef}
-      cardBordered
-      // @ts-ignore
-      request={(params: API.ISearch, sort) => {
-        return getProjectPage(params);
       }}
       editable={{
         //可编辑表格的相关配置
-        type: 'multiple',
+        type: 'single', // 编辑单行
         onSave: async (key, record: API.IProject, originRow, newLineConfig) => {
           const form = {
             uid: record.uid,
             name: record.name,
             desc: record.desc,
           };
-          await updateProject(form as API.INewOrUpdateProject);
+          await projectOpt(form as API.INewOrUpdateProject, 'PUT');
         },
-        onChange: () => {
-          actionRef.current?.reload();
-          return Promise.resolve();
+        onDelete: async (key, record: API.IProject) => {
+          const form = {
+            uid: record.uid,
+          };
+          await projectOpt(form as API.INewOrUpdateProject, 'DELETE');
         },
       }}
       columnsState={{

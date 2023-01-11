@@ -1,7 +1,6 @@
 import { request } from '@@/plugin-request/request';
 
 const ProjectURL: string = '/api/project/opt';
-const ProjectSearchURL: string = '/api/project/search';
 
 /** 项目 GET /project */
 export async function pageProject(
@@ -15,27 +14,19 @@ export async function pageProject(
   });
 }
 
-/** 项目 POST /project */
-export async function newProject(
+/**
+ * 项目 rud
+ * @param data 请求参数
+ * @param method 请求方法
+ * @param options 其他配置
+ */
+export async function projectOpt(
   data: API.INewOrUpdateProject,
+  method: string,
   options?: { [key: string]: any },
 ) {
-  console.log(data);
   return request<API.IResponse>(ProjectURL, {
-    method: 'POST',
-    data: data,
-    ...(options || {}),
-  });
-}
-
-/** 项目 PUT /project */
-export async function updateProject(
-  data: API.INewOrUpdateProject,
-  options?: { [key: string]: any },
-) {
-  console.log(data);
-  return request<API.IResponse>(ProjectURL, {
-    method: 'PUT',
+    method: method,
     data: data,
     ...(options || {}),
   });

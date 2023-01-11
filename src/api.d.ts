@@ -6,14 +6,25 @@ declare namespace API {
   }
 
   interface IUser {
-    id: number;
-    uid: string;
-    username: string;
+    id?: number;
+    uid?: string;
+    username?: string;
     isAdmin?: boolean;
+    email?: string;
+    phone?: string;
     avatar?: string;
     gender?: string;
-    tag?: string;
+    tagName?: string;
     departmentID?: number;
+    departmentName?: string;
+  }
+
+  interface IDepartment {
+    adminID?: number;
+    desc?: string;
+    id: number;
+    name: string;
+    uid: string;
   }
 
   interface IMoHuSearchUser {

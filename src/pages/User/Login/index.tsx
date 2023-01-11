@@ -44,7 +44,7 @@ const Index: React.FC = () => {
     <div>
       <div>
         <LoginForm
-          title="CaseHub Login"
+          title="CaseHUB"
           initialValues={{ autoLogin: true }}
           onFinish={async (values) => {
             await handleSubmit(values as API.ILoginParams);

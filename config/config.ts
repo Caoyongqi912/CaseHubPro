@@ -9,7 +9,7 @@ const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
   antd: {
-    dark: false, //暗色主题
+    dark: true, //暗色主题
     // compact: true //紧凑主题
   },
   fastRefresh: {},

@@ -7,7 +7,7 @@ const settings: LayoutSettings & {
   // 修改左上角的 logo
   logo: '/icons/caseHub.jpg',
   // 设置标题的 title
-  title: 'caseHub',
+  title: 'caseHUB',
   navTheme: 'light',
   // 拂晓蓝
   primaryColor: '#1890ff',
