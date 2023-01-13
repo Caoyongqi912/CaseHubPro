@@ -96,7 +96,7 @@ const Index: React.FC<selfProps> = (props) => {
           const res: RequestOptionsType[] = [];
           if (params.departmentID) {
             const form: API.IQueryDepartmentTags = {
-              uid: params.departmentID,
+              id: params.departmentID,
             };
             let { data } = await userTagQuery(form);
             data.forEach((item: any) => {

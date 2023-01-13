@@ -92,7 +92,7 @@ export async function departmentQuery(options?: { [key: string]: any }) {
  * @constructor
  */
 export async function userTagQuery(
-  params: API.IQueryDepartmentTags,
+  params: any,
   options?: { [key: string]: any },
 ) {
   return request<API.IResponse>(DepartmentTagsURl, {

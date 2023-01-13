@@ -1,5 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import type { ActionType } from '@ant-design/pro-components';
+import React, { useRef, useState } from 'react';
+import type {
+  ActionType,
+  EditableFormInstance,
+  ProFieldRequestData,
+} from '@ant-design/pro-components';
 import {
   EditableProTable,
   ProColumns,
@@ -10,10 +14,17 @@ import { departmentQuery, pageUser, UserOpt, userTagQuery } from '@/api/user';
 import { message } from 'antd';
 import AddUser from '@/components/UserOpt/AddUser';
 
+interface Tags {
+  name: string;
+  id: number;
+}
+
 const Index: React.FC = () => {
   // const { initialState } = useModel("@@initialState");
   // const { currentUser } = initialState ?? {};
-  const [tagEnum, setTagEnum] = useState({});
+  const [tags, setTags] = useState<RequestOptionsType[]>([]);
+  const editableFormRef = useRef<EditableFormInstance>();
+
   const queryDepartments = async () => {
     let data: any;
     ({ data } = await departmentQuery());
@@ -26,16 +37,19 @@ const Index: React.FC = () => {
     });
     return res;
   };
-  const queryTagByDepartId = async (id: API.IQueryDepartmentTags) => {
+  const queryTagByDepartId = async (
+    id: API.IQueryDepartmentTags,
+    callback: any,
+  ) => {
     let data: any;
-    ({ data } = await userTagQuery(id));
-    let res = {};
-    data.forEach((item) => {
-      Object.defineProperty(res, item.id, { value: { text: item.name } });
+    ({ data } = await userTagQuery({ id: id }));
+    const res: RequestOptionsType[] = [];
+    data.forEach((item: Tags) => {
+      res.push({ label: item.name, value: item.name });
     });
-    setTagEnum(res);
-    console.log('tagenum', tagEnum);
-    return;
+    setTags(res);
+    callback && callback(res);
+    return res;
   };
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
   const isReload = (value: boolean) => {
@@ -124,6 +138,18 @@ const Index: React.FC = () => {
           },
         ],
       },
+      fieldProps: (_, { rowIndex }) => {
+        return {
+          onSelect: (value: API.IQueryDepartmentTags) => {
+            queryTagByDepartId(value, (data) => {
+              console.log('r', data);
+              editableFormRef.current?.setRowData?.(rowIndex, {
+                tagName: data,
+              });
+            });
+          },
+        };
+      },
     },
     {
       title: 'tag',
@@ -131,7 +157,6 @@ const Index: React.FC = () => {
       valueType: 'select',
       ellipsis: true, //是否自动缩略
       width: '10%',
-      valueEnum: tagEnum,
       formItemProps: {
         rules: [
           {
@@ -177,7 +202,7 @@ const Index: React.FC = () => {
   ];
 
   return (
-    <EditableProTable
+    <ProTable
       columns={columns}
       actionRef={actionRef}
       cardBordered
@@ -193,11 +218,7 @@ const Index: React.FC = () => {
       }}
       editable={{
         type: 'single',
-        onValuesChange: async (record: API.IUser) => {
-          await queryTagByDepartId({ id: record.departmentID });
-        },
-
-        onSave: async (key, record: API.IUser, originRow, newLineConfig) => {
+        onSave: async (key, record: API.IUser) => {
           const form = {
             uid: record.uid,
             username: record.username,
@@ -224,9 +245,6 @@ const Index: React.FC = () => {
       columnsState={{
         persistenceKey: 'pro-table-singe-demos',
         persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
-        onChange(value) {
-          console.log('value: ', value);
-        },
       }}
       rowKey="uid"
       search={{
@@ -241,10 +259,6 @@ const Index: React.FC = () => {
       }}
       pagination={{
         pageSize: 10,
-        // onChange: (page) => console.log(page)
-      }}
-      onSubmit={(params) => {
-        console.log('submit', params);
       }}
       dateFormatter="string"
       headerTitle="User List"
