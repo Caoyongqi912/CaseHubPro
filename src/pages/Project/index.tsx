@@ -1,11 +1,12 @@
 import type { ActionType } from '@ant-design/pro-components';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { useRef } from 'react';
 import NewProject from '@/components/NewProject';
 import { pageProject, projectOpt } from '@/api/project';
 import columns from '@/pages/Project/columns';
+import { message } from 'antd';
 
-export default () => {
+const ProjectList = () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
   const isReload = (value: boolean) => {
     if (value) {
@@ -18,8 +19,8 @@ export default () => {
       columns={columns}
       actionRef={actionRef}
       cardBordered
-      request={async (params, sort, filter) => {
-        const res: any = await pageProject(params as API.ISearch);
+      request={async (params: API.ISearch) => {
+        const res: any = await pageProject(params);
         return {
           data: res.data.items,
           total: res.data.pageInfo.total,
@@ -31,19 +32,24 @@ export default () => {
       editable={{
         //可编辑表格的相关配置
         type: 'single', // 编辑单行
-        onSave: async (key, record: API.IProject, originRow, newLineConfig) => {
+        onSave: async (key, record: API.IProject) => {
           const form = {
             uid: record.uid,
             name: record.name,
             desc: record.desc,
           };
-          await projectOpt(form as API.INewOrUpdateProject, 'PUT');
+          const res = await projectOpt(form as API.INewOrUpdateProject, 'PUT');
+          message.success(res.msg);
         },
         onDelete: async (key, record: API.IProject) => {
           const form = {
             uid: record.uid,
           };
-          await projectOpt(form as API.INewOrUpdateProject, 'DELETE');
+          const res = await projectOpt(
+            form as API.INewOrUpdateProject,
+            'DELETE',
+          );
+          message.success(res.msg);
         },
       }}
       columnsState={{
@@ -77,3 +83,5 @@ export default () => {
     />
   );
 };
+
+export default ProjectList;

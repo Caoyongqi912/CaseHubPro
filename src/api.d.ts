@@ -60,4 +60,9 @@ declare namespace API {
     uid?: string;
     name?: string;
   }
+
+  interface IQueryDepartmentTags {
+    id?: number;
+    name?: string;
+  }
 }

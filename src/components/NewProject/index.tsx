@@ -10,8 +10,8 @@ import { projectOpt } from '@/api/project';
 import { searchUser } from '@/api/user';
 
 interface SearchUser {
-  value: number;
-  label: string;
+  value: number | undefined;
+  label: string | undefined;
 }
 
 interface selfProps {
@@ -39,20 +39,10 @@ const Index: React.FC<selfProps> = (props) => {
         onCancel: () => console.log('close'),
       }}
       onFinish={async (values) => {
-        try {
-          const res = await projectOpt(values, 'POST');
-          if (res.code == 0) {
-            message.success(res.msg);
-            reload!(true);
-            return true;
-          } else {
-            message.error(res.msg);
-            console.log(res);
-            return false;
-          }
-        } catch (e) {
-          console.log(e);
-        }
+        const res = await projectOpt(values, 'POST');
+        message.success(res.msg);
+        reload!(true);
+        return true;
       }}
     >
       <ProFormText

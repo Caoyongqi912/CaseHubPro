@@ -1,7 +1,7 @@
 import { request } from 'umi';
 
 const UserURL: string = '/api/user/opt';
-const UserTagURL: string = '/api/user/tag/opt';
+const DepartmentTagsURl: string = '/api/user/department/tags';
 const DepartmentURL: string = '/api/user/department/opt';
 const QueryUser: string = '/api/user/query';
 const SearchUser: string = '/api/user/search';
@@ -87,12 +87,17 @@ export async function departmentQuery(options?: { [key: string]: any }) {
 
 /**
  * tag
+ * @param params
  * @param options
  * @constructor
  */
-export async function userTagQuery(options?: { [key: string]: any }) {
-  return request<API.IResponse>(UserTagURL, {
+export async function userTagQuery(
+  params: API.IQueryDepartmentTags,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse>(DepartmentTagsURl, {
     method: 'GET',
+    params,
     ...(options || {}),
   });
 }
