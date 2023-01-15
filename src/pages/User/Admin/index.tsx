@@ -141,7 +141,7 @@ const Index: React.FC = () => {
       fieldProps: (_, { rowIndex }) => {
         return {
           onSelect: (value: API.IQueryDepartmentTags) => {
-            queryTagByDepartId(value, (data) => {
+            queryTagByDepartId(value, (data:any) => {
               console.log('r', data);
               editableFormRef.current?.setRowData?.(rowIndex, {
                 tagName: data,
