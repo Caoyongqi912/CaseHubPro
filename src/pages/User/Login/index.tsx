@@ -54,12 +54,12 @@ const Index: React.FC = () => {
           <br />
           <ProFormText
             name="username"
-            initialValue="ADMIN"
+            initialValue="admin"
             fieldProps={{
               size: 'large',
               prefix: <UserOutlined className={styles.prefixIcon} />,
             }}
-            placeholder="ADMIN"
+            placeholder="admin"
             rules={[
               {
                 required: true,
@@ -69,7 +69,7 @@ const Index: React.FC = () => {
           />
           <ProFormText.Password
             name="password"
-            initialValue="ADMIN"
+            initialValue="admin"
             fieldProps={{
               size: 'large',
               prefix: <LockOutlined className={styles.prefixIcon} />,

@@ -8,9 +8,7 @@ const settings: LayoutSettings & {
   logo: '/icons/caseHub.jpg',
   // 设置标题的 title
   title: 'caseHUB',
-  navTheme: 'light',
-  // 拂晓蓝
-  primaryColor: '#1890ff',
+  // navTheme: 'realDark',
   layout: 'mix',
   contentWidth: 'Fluid',
   fixSiderbar: true,

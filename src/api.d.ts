@@ -22,9 +22,10 @@ declare namespace API {
   interface IDepartment {
     adminID?: number;
     desc?: string;
-    id: number;
+    id?: number;
     name: string;
-    uid: string;
+    uid?: string;
+    tags?: Array<string>;
   }
 
   interface IMoHuSearchUser {

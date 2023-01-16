@@ -48,6 +48,7 @@ export default [
         path: '/project/table',
         name: 'projectOpt',
         component: '@/pages/Project',
+        access: 'isAdmin',
       },
       {
         component: '@/pages/404',

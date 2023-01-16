@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import ex from 'umi/dist';
 
 const UserURL: string = '/api/user/opt';
 const DepartmentTagsURl: string = '/api/user/department/tags';
@@ -81,6 +82,20 @@ export async function UserOpt(
 export async function departmentQuery(options?: { [key: string]: any }) {
   return request<API.IResponse>(DepartmentURL, {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+export async function addDepartmentInfo(
+  body: API.IDepartment,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse>(DepartmentURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }

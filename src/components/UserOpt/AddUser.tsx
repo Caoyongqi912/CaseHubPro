@@ -77,12 +77,14 @@ const Index: React.FC<selfProps> = (props) => {
           let data: any;
           ({ data } = await departmentQuery());
           const res: RequestOptionsType[] = [];
+          console.log(data);
           data.forEach((item: API.IDepartment) => {
             res.push({
               label: item.name,
-              value: item.uid,
+              value: item.id,
             });
           });
+          console.log(res);
           return res;
         }}
       />

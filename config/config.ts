@@ -2,15 +2,16 @@ import { defineConfig } from 'umi';
 import routes from './routes';
 import proxy from './proxy';
 import defaultSetting from './defaultSetting';
-import { join } from 'path';
 
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
+  // theme:{
+  //   '@primary-color': 'dark',
+  // },
   antd: {
-    dark: true, //暗色主题
-    // compact: true //紧凑主题
+    compact: true, //紧凑主题
   },
   fastRefresh: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],

@@ -13,6 +13,7 @@ import {
 import { departmentQuery, pageUser, UserOpt, userTagQuery } from '@/api/user';
 import { message } from 'antd';
 import AddUser from '@/components/UserOpt/AddUser';
+import AddDepartment from '@/components/UserOpt/AddDepartment';
 
 interface Tags {
   name: string;
@@ -24,6 +25,7 @@ const Index: React.FC = () => {
   // const { currentUser } = initialState ?? {};
   const [tags, setTags] = useState<RequestOptionsType[]>([]);
   const editableFormRef = useRef<EditableFormInstance>();
+  const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
 
   const queryDepartments = async () => {
     let data: any;
@@ -37,21 +39,21 @@ const Index: React.FC = () => {
     });
     return res;
   };
-  const queryTagByDepartId = async (
-    id: API.IQueryDepartmentTags,
-    callback: any,
-  ) => {
+  const queryTagByDepartId = async (id: API.IQueryDepartmentTags) => {
     let data: any;
     ({ data } = await userTagQuery({ id: id }));
+    if (data === null) {
+      message.error('err');
+      return;
+    }
     const res: RequestOptionsType[] = [];
     data.forEach((item: Tags) => {
       res.push({ label: item.name, value: item.name });
     });
     setTags(res);
-    callback && callback(res);
-    return res;
+    return;
   };
-  const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
+
   const isReload = (value: boolean) => {
     if (value) {
       actionRef.current?.reload();
@@ -140,13 +142,13 @@ const Index: React.FC = () => {
       },
       fieldProps: (_, { rowIndex }) => {
         return {
+          onChange: (value: API.IQueryDepartmentTags) => {
+            editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
+            queryTagByDepartId(value);
+          },
           onSelect: (value: API.IQueryDepartmentTags) => {
-            queryTagByDepartId(value, (data:any) => {
-              console.log('r', data);
-              editableFormRef.current?.setRowData?.(rowIndex, {
-                tagName: data,
-              });
-            });
+            editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
+            queryTagByDepartId(value);
           },
         };
       },
@@ -156,6 +158,9 @@ const Index: React.FC = () => {
       dataIndex: 'tagName',
       valueType: 'select',
       ellipsis: true, //是否自动缩略
+      fieldProps: {
+        options: tags,
+      },
       width: '10%',
       formItemProps: {
         rules: [
@@ -191,7 +196,10 @@ const Index: React.FC = () => {
       render: (text, record, _, action) => [
         <a
           key="editable"
-          onClick={async () => {
+          onClick={() => {
+            if (record.departmentID) {
+              queryTagByDepartId(record.departmentID);
+            }
             action?.startEditable?.(record.uid);
           }}
         >
@@ -239,6 +247,8 @@ const Index: React.FC = () => {
         },
         onChange: () => {
           actionRef.current?.reload();
+          setTags([]);
+
           return Promise.resolve();
         },
       }}
@@ -264,8 +274,7 @@ const Index: React.FC = () => {
       headerTitle="User List"
       toolBarRender={() => [
         <AddUser reload={isReload} />,
-        <a>添加部门</a>,
-        <a>添加标签</a>,
+        <AddDepartment reload={isReload} />,
       ]}
     />
   );
