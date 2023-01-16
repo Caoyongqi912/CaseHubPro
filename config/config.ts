@@ -11,6 +11,7 @@ export default defineConfig({
   //   '@primary-color': 'dark',
   // },
   antd: {
+    dark: true,
     compact: true, //紧凑主题
   },
   fastRefresh: {},
