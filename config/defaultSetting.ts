@@ -8,7 +8,6 @@ const settings: LayoutSettings & {
   logo: '/icons/caseHub.jpg',
   // 设置标题的 title
   title: 'caseHUB',
-  // navTheme: 'realDark',
   layout: 'mix',
   contentWidth: 'Fluid',
   fixSiderbar: true,

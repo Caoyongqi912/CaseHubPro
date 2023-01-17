@@ -7,13 +7,11 @@ const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
-  // theme:{
-  //   '@primary-color': 'dark',
-  // },
   antd: {
     dark: true,
     compact: true, //紧凑主题
   },
+  dva: {},
   fastRefresh: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],
   layout: {

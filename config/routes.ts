@@ -25,11 +25,6 @@ export default [
         name: 'admin',
         access: 'isAdmin',
         component: '@/pages/User/Admin',
-      }, //access: "isAdmin",
-      {
-        path: '/user/editor',
-        name: 'editor',
-        component: '@/pages/User/Editor',
       },
       {
         path: '/user/center',
