@@ -2,6 +2,7 @@ import { request } from 'umi';
 import ex from 'umi/dist';
 
 const UserURL: string = '/api/user/opt';
+const UserAvatarURL: string = '/api/file/avatar';
 const DepartmentTagsURl: string = '/api/user/department/tags';
 const DepartmentURL: string = '/api/user/department/opt';
 const QueryUser: string = '/api/user/query';
@@ -113,6 +114,18 @@ export async function userTagQuery(
   return request<API.IResponse>(DepartmentTagsURl, {
     method: 'GET',
     params,
+    ...(options || {}),
+  });
+}
+
+export async function uploadAvatar(
+  file: any,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse>(UserAvatarURL, {
+    method: 'POST',
+    data: file,
+    requestType: 'form',
     ...(options || {}),
   });
 }

@@ -9,7 +9,7 @@ export default defineConfig({
   hash: true,
   antd: {
     dark: true,
-    compact: true, //紧凑主题
+    compact: false, //紧凑主题
   },
   dva: {},
   fastRefresh: {},

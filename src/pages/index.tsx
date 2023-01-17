@@ -1,11 +1,8 @@
-import { useModel } from 'umi';
 import { StatisticCard } from '@ant-design/pro-components';
 
 const { Divider } = StatisticCard;
 
 export default function IndexPage() {
-  const { initialState } = useModel('@@initialState');
-  const { currentUser } = initialState ?? {};
   return (
     <StatisticCard.Group title="用例状态">
       <StatisticCard

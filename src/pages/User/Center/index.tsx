@@ -1,16 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useModel } from '@@/plugin-model/useModel';
+import { GridContent } from '@ant-design/pro-components';
+import { Menu } from 'antd';
+import styles from './style.less';
+import BaseView from '@/pages/User/Center/components/base';
+
+const { Item } = Menu;
 
 const Index = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState ?? {};
+  const [initConfig, setInitConfig] = useState({
+    mode: 'inline',
+    selectKey: 'base',
+  });
+  const menuMap = {
+    base: '基本设置',
+    security: '安全设置',
+  };
+  const getMenu = () => {
+    return Object.keys(menuMap).map((item) => (
+      <Item key={item}>{menuMap[item]}</Item>
+    ));
+  };
+
+  const renderChildren = () => {
+    const { selectKey } = initConfig;
+    switch (selectKey) {
+      case 'base':
+        return <BaseView />;
+      case 'security':
+        return <a>security</a>;
+      default:
+        return null;
+    }
+  };
   return (
-    <>
-      <div>hi</div>
-      <p>todo</p>
-      <p>用户修改密码</p>
-      <p>上传头像</p>
-      <p>用户info</p>
-      <p>我的bug</p>
-      <p>我的case</p>
-    </>
+    <GridContent>
+      <div className={styles.main}>
+        <div className={styles.leftMenu}>
+          <Menu>{getMenu()}</Menu>
+        </div>
+        <div className={styles.right}>
+          <div className={styles.title}>{menuMap[initConfig.selectKey]}</div>
+          {renderChildren()}
+        </div>
+      </div>
+    </GridContent>
   );
 };
 

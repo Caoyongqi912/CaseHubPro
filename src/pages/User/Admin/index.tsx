@@ -22,7 +22,6 @@ interface Tags {
 
 const Index: React.FC = () => {
   // const { initialState } = useModel("@@initialState");
-  // const { currentUser } = initialState ?? {};
   const [tags, setTags] = useState<RequestOptionsType[]>([]);
   const editableFormRef = useRef<EditableFormInstance>();
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发

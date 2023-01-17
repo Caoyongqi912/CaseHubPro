@@ -43,12 +43,43 @@ export default [
         path: '/project/table',
         name: 'projectOpt',
         component: '@/pages/Project',
-        access: 'isAdmin',
       },
       {
         component: '@/pages/404',
       },
     ],
+  },
+  {
+    path: '/cases',
+    name: 'Cases',
+    icon: 'BuildFilled',
+    routes: [
+      {
+        path: '/cases/table',
+        name: 'caseOpt',
+      },
+    ],
+  },
+  {
+    path: '/bug',
+    name: 'Bugs',
+    icon: 'BugFilled',
+    routes: [
+      {
+        path: '/bug/table',
+        name: 'bugOpt',
+      },
+    ],
+  },
+  {
+    path: '/report',
+    name: 'Reports',
+    icon: 'BookFilled',
+  },
+  {
+    path: '/api',
+    name: 'API',
+    icon: 'ApiFilled',
   },
   {
     component: '@/pages/404',
