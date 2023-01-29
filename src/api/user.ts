@@ -1,7 +1,7 @@
 import { request } from 'umi';
-import ex from 'umi/dist';
 
 const UserURL: string = '/api/user/opt';
+const UserPwdURL: string = '/api/user/setpassword';
 const UserAvatarURL: string = '/api/file/avatar';
 const DepartmentTagsURl: string = '/api/user/department/tags';
 const DepartmentURL: string = '/api/user/department/opt';
@@ -70,6 +70,17 @@ export async function UserOpt(
 ) {
   return request<API.IResponse>(UserURL, {
     method: method,
+    data: data,
+    ...(options || {}),
+  });
+}
+
+export async function SetPwdServer(
+  data: API.IPassword,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse>(UserPwdURL, {
+    method: 'POST',
     data: data,
     ...(options || {}),
   });

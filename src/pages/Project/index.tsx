@@ -1,12 +1,13 @@
 import type { ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import NewProject from '@/components/NewProject';
 import { pageProject, projectOpt } from '@/api/project';
 import columns from '@/pages/Project/columns';
 import { message } from 'antd';
+import { API } from '@/api';
 
-const ProjectList = () => {
+const ProjectList: React.FC = () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
   const isReload = (value: boolean) => {
     if (value) {
@@ -38,8 +39,7 @@ const ProjectList = () => {
             name: record.name,
             desc: record.desc,
           };
-          const res = await projectOpt(form as API.INewOrUpdateProject, 'PUT');
-          message.success(res.msg);
+          return await projectOpt(form as API.INewOrUpdateProject, 'PUT');
         },
         onDelete: async (key, record: API.IProject) => {
           const form = {
@@ -59,7 +59,7 @@ const ProjectList = () => {
           console.log('value: ', value);
         },
       }}
-      rowKey="id"
+      rowKey="uid"
       search={{
         labelWidth: 'auto',
         span: 6,

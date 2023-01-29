@@ -1,19 +1,17 @@
 import { ProColumns } from '@ant-design/pro-components';
-import { history } from 'umi';
 
-const columns: ProColumns[] = [
+const Columns: ProColumns[] = [
   {
     title: 'uid',
     dataIndex: 'uid',
     ellipsis: false,
     editable: false,
-    copyable: true,
     formItemProps: { label: 'uid' },
   },
   {
-    title: 'title',
+    title: 'name',
     dataIndex: 'name',
-    ellipsis: true, //是否自动缩略
+    ellipsis: true,
     width: '10%',
     formItemProps: {
       rules: [
@@ -28,11 +26,25 @@ const columns: ProColumns[] = [
     title: 'desc',
     dataIndex: 'desc',
     ellipsis: true,
-    search: false,
+    width: '10%',
   },
   {
-    title: 'admin',
-    dataIndex: 'adminName',
+    title: 'host',
+    dataIndex: 'host',
+    ellipsis: true,
+    width: '10%',
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: '此项为必填项',
+        },
+      ],
+    },
+  },
+  {
+    title: 'creator',
+    dataIndex: 'creator',
     ellipsis: true,
     editable: false,
     search: false,
@@ -68,18 +80,11 @@ const columns: ProColumns[] = [
       >
         编辑
       </a>,
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        key="view"
-        onClick={() => {
-          history.push('/project/detail/' + record.uid);
-        }}
-      >
+      <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
         查看
       </a>,
     ],
   },
 ];
 
-export default columns;
+export default Columns;

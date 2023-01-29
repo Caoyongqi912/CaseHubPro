@@ -4,19 +4,18 @@ import { GridContent } from '@ant-design/pro-components';
 import { Menu } from 'antd';
 import styles from './style.less';
 import BaseView from '@/pages/User/Center/components/base';
+import SetPwd from '@/pages/User/Center/components/setPwd';
 
 const { Item } = Menu;
 
 const Index = () => {
-  const { initialState } = useModel('@@initialState');
-  const { currentUser } = initialState ?? {};
   const [initConfig, setInitConfig] = useState({
     mode: 'inline',
     selectKey: 'base',
   });
   const menuMap = {
-    base: '基本设置',
-    security: '安全设置',
+    base: '基本信息',
+    security: '更新密码',
   };
   const getMenu = () => {
     return Object.keys(menuMap).map((item) => (
@@ -30,7 +29,7 @@ const Index = () => {
       case 'base':
         return <BaseView />;
       case 'security':
-        return <a>security</a>;
+        return <SetPwd />;
       default:
         return null;
     }
@@ -39,7 +38,15 @@ const Index = () => {
     <GridContent>
       <div className={styles.main}>
         <div className={styles.leftMenu}>
-          <Menu>{getMenu()}</Menu>
+          <Menu
+            mode={initConfig.mode}
+            selectedKeys={[initConfig.selectKey]}
+            onClick={({ key }) => {
+              setInitConfig({ ...initConfig, selectKey: key });
+            }}
+          >
+            {getMenu()}
+          </Menu>
         </div>
         <div className={styles.right}>
           <div className={styles.title}>{menuMap[initConfig.selectKey]}</div>

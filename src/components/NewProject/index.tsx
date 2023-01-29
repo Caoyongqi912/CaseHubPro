@@ -8,6 +8,7 @@ import { Button, message } from 'antd';
 import React from 'react';
 import { projectOpt } from '@/api/project';
 import { searchUser } from '@/api/user';
+import MohuSearch from '@/components/UserOpt/MohuSearch';
 
 interface SearchUser {
   value: number | undefined;
@@ -64,20 +65,7 @@ const Index: React.FC<selfProps> = (props) => {
         rules={[{ required: true, message: 'Please select !' }]}
         debounceTime={2000}
         request={async (params) => {
-          let res: SearchUser[] = [];
-          const searchData: API.IMoHuSearchUser = {
-            target: 'username',
-            value: params.keyWords,
-          };
-          let { data } = await searchUser(searchData);
-          data.map((item: API.IUser) => {
-            let users: SearchUser = {
-              label: item.username,
-              value: item.id,
-            };
-            res.push(users);
-          });
-          return res;
+          return await MohuSearch(params);
         }}
       />
     </ModalForm>

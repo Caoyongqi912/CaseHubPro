@@ -19,6 +19,7 @@ export default [
     path: '/user',
     name: 'User',
     icon: 'user',
+    access: 'admin',
     routes: [
       {
         path: '/user/admin',
@@ -30,6 +31,7 @@ export default [
         path: '/user/center',
         name: 'current',
         component: '@/pages/User/Center',
+        hideInMenu: true,
       },
       { component: '@/pages/404' },
     ],
@@ -40,9 +42,15 @@ export default [
     icon: 'project',
     routes: [
       {
-        path: '/project/table',
+        path: '/project/List',
         name: 'projectOpt',
         component: '@/pages/Project',
+      },
+      {
+        path: '/project/detail/:uid',
+        name: 'projectDetail',
+        component: '@/pages/Project/projectDetail',
+        hideInMenu: true,
       },
       {
         component: '@/pages/404',
@@ -61,6 +69,23 @@ export default [
     ],
   },
   {
+    path: '/interface',
+    name: 'API',
+    icon: 'ApiFilled',
+    routes: [
+      {
+        path: '/interface/caseApi',
+        name: '接口用例',
+        component: '@/pages/Case/CaseAPI',
+      },
+      {
+        path: '/interface/test',
+        name: '其他',
+      },
+      { component: '@/pages/404' },
+    ],
+  },
+  {
     path: '/bug',
     name: 'Bugs',
     icon: 'BugFilled',
@@ -76,10 +101,19 @@ export default [
     name: 'Reports',
     icon: 'BookFilled',
   },
+
   {
-    path: '/api',
-    name: 'API',
-    icon: 'ApiFilled',
+    name: 'Setting',
+    path: '/setting',
+    icon: 'SettingFilled',
+    routes: [
+      {
+        name: 'host',
+        path: '/setting/host',
+
+        component: '@/pages/Setting/Host',
+      },
+    ],
   },
   {
     component: '@/pages/404',

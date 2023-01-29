@@ -17,7 +17,7 @@ const Avatar = () => {
     name: 'file',
     maxCount: 1,
     showUploadList: false,
-    onRemove: (file) => {
+    onRemove: (file: any) => {
       const index = fileList.indexOf(file);
       const newFileList = fileList.slice();
       newFileList.splice(index, 1);
@@ -63,7 +63,7 @@ const BaseView: React.FC = () => {
   return (
     <div className={styles.baseView}>
       <div className={styles.left}>
-        <Descriptions column={1}>
+        <Descriptions column={1} size={'middle'} bordered={true}>
           <Descriptions.Item label="UserName">
             {currentUser?.username}
           </Descriptions.Item>

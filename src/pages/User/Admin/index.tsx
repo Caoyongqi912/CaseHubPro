@@ -21,7 +21,6 @@ interface Tags {
 }
 
 const Index: React.FC = () => {
-  // const { initialState } = useModel("@@initialState");
   const [tags, setTags] = useState<RequestOptionsType[]>([]);
   const editableFormRef = useRef<EditableFormInstance>();
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
@@ -236,7 +235,6 @@ const Index: React.FC = () => {
             gender: record.gender,
           };
           const res = await UserOpt(form, 'PUT');
-          message.success(res.msg);
           return;
         },
         onDelete: async (key) => {

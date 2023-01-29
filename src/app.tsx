@@ -90,11 +90,8 @@ const requestInterceptors = (url: string, options: RequestConfig) => {
     options: { ...options, interceptors: true },
   };
 };
-const responseInterceptors = async (
-  response: Response,
-  options: RequestConfig,
-) => {
-  const resp: API.IResponse = await response.clone().json();
+const responseInterceptors = async (response: Response) => {
+  const resp: API.IResponse<any> = await response.clone().json();
   if (resp.code != 0) {
     message.error(resp.msg);
   }

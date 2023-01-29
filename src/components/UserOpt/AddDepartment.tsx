@@ -6,15 +6,11 @@ import {
 } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { addDepartmentInfo, searchUser } from '@/api/user';
+import { addDepartmentInfo } from '@/api/user';
+import MohuSearch from '@/components/UserOpt/MohuSearch';
 
 interface selfProps {
   reload: Function | undefined;
-}
-
-interface SearchUser {
-  value: number | undefined;
-  label: string | undefined;
 }
 
 const AddDepartment: React.FC<selfProps> = (props) => {
@@ -61,21 +57,8 @@ const AddDepartment: React.FC<selfProps> = (props) => {
         placeholder="input your admin name to search"
         rules={[{ required: true, message: 'Please select !' }]}
         debounceTime={2000}
-        request={async (params) => {
-          let res: SearchUser[] = [];
-          const searchData: API.IMoHuSearchUser = {
-            target: 'username',
-            value: params.keyWords,
-          };
-          let { data } = await searchUser(searchData);
-          data.map((item: API.IUser) => {
-            let users: SearchUser = {
-              label: item.username,
-              value: item.id,
-            };
-            res.push(users);
-          });
-          return res;
+        request={async (values) => {
+          return await MohuSearch(values);
         }}
       />
       <ProFormSelect

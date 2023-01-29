@@ -1,7 +1,9 @@
+import React from 'react';
+
 declare namespace API {
-  interface IResponse {
+  interface IResponse<T> {
     code: number;
-    data?: any;
+    data?: T | undefined;
     msg: string;
   }
 
@@ -19,6 +21,11 @@ declare namespace API {
     departmentName?: string;
   }
 
+  interface IPassword {
+    new_password?: string;
+    old_password?: string;
+  }
+
   interface IDepartment {
     adminID?: number;
     desc?: string;
@@ -34,13 +41,14 @@ declare namespace API {
   }
 
   interface IProject {
-    adminID: number;
-    create_time: string;
-    update_time: string;
-    id: number;
-    uid: string;
-    name: string;
-    desc: string | null;
+    adminID?: number;
+    adminName?: string;
+    create_time?: string;
+    update_time?: string;
+    id?: number;
+    uid?: string;
+    name?: string;
+    desc?: string | null;
   }
 
   interface ILoginParams {
@@ -65,5 +73,35 @@ declare namespace API {
   interface IQueryDepartmentTags {
     id?: number;
     name?: string;
+  }
+
+  interface IHost {
+    id?: number;
+    uid?: string;
+    name?: string;
+    host?: string;
+    creator?: string;
+    updater?: string;
+  }
+
+  interface ICaseDetail {
+    name: string;
+    label: string;
+    required: boolean;
+    message?: string;
+    type: string;
+    placeholder?: string;
+    component: null | React.ReactElement;
+    span: number;
+  }
+
+  interface ICasePart {
+    id: number;
+    uid: string;
+    name: string;
+    projectID: number | string;
+    create_time: string;
+    update_time: string | null;
+    parentID: string | null;
   }
 }
