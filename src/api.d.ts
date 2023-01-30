@@ -96,12 +96,33 @@ declare namespace API {
   }
 
   interface ICasePart {
+    id?: number;
+    uid?: string;
+    partName?: string;
+    projectID?: number | string;
+    create_time?: string;
+    update_time?: string | null;
+    parentID?: number;
+  }
+
+  interface ICasePartResponse {
     id: number;
     uid: string;
-    name: string;
-    projectID: number | string;
+    partName: string;
+    projectID: number | null;
     create_time: string;
     update_time: string | null;
-    parentID: string | null;
+    children?: Array<ICasePartResponse>;
+  }
+
+  interface ITreeNode {
+    id?: number;
+    name?: string;
+    children?: ITreeNode[];
+  }
+
+  interface INode {
+    name?: INode;
+    id?: number;
   }
 }

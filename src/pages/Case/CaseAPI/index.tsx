@@ -7,15 +7,16 @@ import {
   Modal,
   Result,
   Tooltip,
-  Dropdown,
   Menu as AMenu,
-  Spin,
+  message,
 } from 'antd';
+import type { MenuProps } from 'antd';
 import {
   PlusOutlined,
   RocketOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import SplitPane, { Props } from 'react-split-pane';
 import { queryProject } from '@/api/project';
@@ -31,7 +32,12 @@ import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
 import { API } from '@/api';
 import SearchTree from '@/components/Tree/SearchTree';
 import NoRecord from '@/pages/Case/CaseAPI/component/NoRecord';
-import { casePartTree } from '@/api/interface';
+import {
+  addCasePart,
+  casePartTree,
+  delCasePart,
+  putCasePart,
+} from '@/api/interface';
 
 const { Option } = Select;
 
@@ -45,28 +51,38 @@ const SplitProps: Props = {
 
 const Index: FC = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
-  const [caseParts, setCaseParts] = useState<API.ICasePart[]>([]);
+  const [caseParts, setCaseParts] = useState<API.ICasePartResponse[]>([]);
   const [projects, setProject] = useState<API.IProject[]>([]);
   const [projectID, setProjectID] = useState<number>(0);
-  const [editing, setEditing] = useState(false);
-  const [modalTitle, setModalTitle] = useState('新建目录');
-  const [rootModal, setRootModal] = useState(false);
-  const [record, setRecord] = useState({});
+  const [projectName, setProjectName] = useState<string>('');
+  const [editing, setEditing] = useState<boolean>(false);
+  const [todo, setTodo] = useState<boolean>(true);
+  //modalTitle
+  const [modalTitle, setModalTitle] = useState<string>('新建目录');
+  //Modal 开关
+  const [rootModal, setRootModal] = useState<boolean>(false);
+  const [record, setRecord] = useState<API.ICasePart>({});
   const [name, setName] = useState('');
   const [currentNode, setCurrentNode] = useState(null);
-  const [currentDirectory, setCurrentDirectory] = useState([]);
+  const [currentCasePart, setCurrentPart] = useState<API.ICasePart[]>([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
+
   useEffect(() => {
     queryProjects();
   }, []);
   useEffect(() => {
     listTestcaseTree();
-  }, [projectID]);
+  }, [projectID, projectName]);
+  /**
+   * 查询所有项目
+   * 存储第一个项目id与name
+   */
   const queryProjects = async () => {
     const { data } = await queryProject();
     if (data) {
       setProject(data);
       setProjectID(data[0].id!);
+      setProjectName(data[0].name!);
     }
   };
   const getProject = () => {
@@ -82,20 +98,46 @@ const Index: FC = (props) => {
     }
     return filter_project[0];
   };
-  const onCreateDirectory = () => {};
-  const AddCaseMenu = (
-    <AMenu>
-      <AMenu.Item key="1">
-        <a
-          onClick={() => {
-            // onAddTestCase();
-          }}
-        >
-          <RocketOutlined /> 普通用例
-        </a>
-      </AMenu.Item>
-    </AMenu>
-  );
+
+  /**
+   * 创建casePart
+   * @param value
+   */
+  const onCreateOrUpdateCasePart = async (value: any) => {
+    console.log('todo', todo);
+    console.log('value', value);
+    console.log('record', record);
+    console.log('currentNode', currentNode);
+    let body: API.ICasePart = {};
+    body.projectID = projectID;
+    let res: API.IResponse<any>;
+    // 新增？
+    if (todo) {
+      // 新增子节点？
+      if (currentNode) {
+        body.parentID = currentNode;
+        body.partName = value.partName;
+        res = await addCasePart(body);
+      } else {
+        body.partName = value.partName;
+        res = await addCasePart(body);
+      }
+    } else {
+      // 修改
+      body.id = record.id;
+      body.partName = value.partName;
+      res = await putCasePart(body);
+    }
+    if (res.code === 0) {
+      message.success(res.msg);
+      setRootModal(false);
+      saveCase({
+        selectedRowKeys: [],
+      });
+      listTestcaseTree();
+    }
+  };
+
   const moveFields = [
     {
       name: 'directory_id',
@@ -106,19 +148,26 @@ const Index: FC = (props) => {
       // component: <TreeSelect treeData={directory} showSearch treeDefaultExpandAll/>
     },
   ];
+
+  // 新增目录filed
   const fields = [
     {
-      name: 'name',
+      name: 'partName',
       label: '目录名称',
       required: true,
       placeholder: '请输入目录名称, 不超过18个字符',
       type: 'input',
     },
   ];
+
   const saveCase = (data) => {};
   const save = (data) => {
     // localStorage.setItem("project_id", data.project_id)
   };
+
+  /**
+   * 通过projectID 过滤CaseParts
+   */
   const listTestcaseTree = async () => {
     if (projectID) {
       const res = await casePartTree({ projectID: projectID });
@@ -126,23 +175,27 @@ const Index: FC = (props) => {
       return;
     }
   };
-  const onDeleteDirectory = async (key) => {
-    const res = null;
+  const onDeleteCasePart = async (id: number) => {
+    const res = await delCasePart({ id: id });
     if (res) {
       listTestcaseTree();
     }
   };
-  const handleItemClick = (key, node) => {
+
+  // 目录操作
+  const handleItemClick = (key: number, node: any) => {
     if (key === 1) {
       // 新增目录
-      setCurrentNode(node.key);
+      setCurrentNode(node.id);
       setModalTitle('新增目录');
-      setRecord({ name: '' });
+      setRecord({ partName: '' });
       setRootModal(true);
+      setTodo(true);
     } else if (key === 2) {
-      setRecord({ name: node.title.props.children[2], id: node.key });
+      setRecord({ partName: node.name.props.children[2], id: node.id });
       setModalTitle('编辑目录');
       setRootModal(true);
+      setTodo(false);
     } else if (key === 3) {
       Modal.confirm({
         title: '你确定要删除这个目录吗?',
@@ -152,7 +205,7 @@ const Index: FC = (props) => {
         okType: 'danger',
         cancelText: '点错了',
         onOk() {
-          onDeleteDirectory(node.key);
+          onDeleteCasePart(node.id);
         },
       });
     }
@@ -162,8 +215,7 @@ const Index: FC = (props) => {
     <AMenu>
       <AMenu.Item key="1">
         <a
-          onClick={(e) => {
-            e.stopPropagation();
+          onClick={() => {
             handleItemClick(2, node);
           }}
         >
@@ -172,8 +224,7 @@ const Index: FC = (props) => {
       </AMenu.Item>
       <AMenu.Item key="2" danger>
         <a
-          onClick={(e) => {
-            e.stopPropagation();
+          onClick={() => {
             handleItemClick(3, node);
           }}
         >
@@ -183,15 +234,16 @@ const Index: FC = (props) => {
     </AMenu>
   );
 
-  const AddDirectory = (
+  const AddCasePart = (
     <Tooltip title="点击可新建根目录, 子目录需要在树上新建">
       <a
-        className="directoryButton"
+        className="casePartAddButton"
         onClick={() => {
           setRootModal(true);
-          setRecord({ name: '' });
+          setRecord({ partName: '' });
           setModalTitle('新建根目录');
           setCurrentNode(null);
+          setTodo(true);
         }}
       >
         <PlusOutlined />
@@ -210,7 +262,7 @@ const Index: FC = (props) => {
             title={modalTitle}
             onCancel={() => setRootModal(false)}
             fields={fields}
-            onFinish={onCreateDirectory}
+            onFinish={onCreateOrUpdateCasePart}
             record={record}
             visible={rootModal}
             left={6}
@@ -243,7 +295,7 @@ const Index: FC = (props) => {
                         showSearch
                         allowClear
                         autoFocus={true}
-                        value={projectID}
+                        value={projectName}
                         placeholder="请选择项目"
                         onChange={(e) => {
                           if (e !== undefined) {
@@ -251,7 +303,7 @@ const Index: FC = (props) => {
                           }
                           setEditing(false);
                         }}
-                        filterOption={(input, option) =>
+                        filterOption={(input, option: any) =>
                           option.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
@@ -281,21 +333,22 @@ const Index: FC = (props) => {
               <div style={{ marginTop: 24 }}>
                 {caseParts.length > 0 ? (
                   <SearchTree
+                    setTodo={setTodo}
                     treeData={caseParts}
-                    addDirectory={AddDirectory}
+                    addCasePart={AddCasePart}
                     menu={content}
-                    onSelect={(keys) => {
+                    onSelect={(keys: React.Key[], info: any) => {
                       saveCase({
-                        currentDirectory:
-                          keys[0] === currentDirectory[0] ? [] : keys,
+                        currentCasePart:
+                          keys[0] === currentCasePart[0] ? [] : keys,
                         selectedRowKeys: [],
                       });
                     }}
-                    onAddNode={(node) => {
-                      setCurrentNode(node.key);
+                    onAddNode={(node: any) => {
+                      setCurrentNode(node.id);
                       handleItemClick(1, node);
                     }}
-                    selectedKeys={currentDirectory}
+                    selectedKeys={currentCasePart}
                   />
                 ) : (
                   <NoRecord
@@ -306,7 +359,7 @@ const Index: FC = (props) => {
                         <a
                           onClick={() => {
                             setRootModal(true);
-                            setRecord({ name: '' });
+                            setRecord({ partName: '' });
                             setModalTitle('新建根目录');
                             setCurrentNode(null);
                           }}

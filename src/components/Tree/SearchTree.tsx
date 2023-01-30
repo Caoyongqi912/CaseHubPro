@@ -7,16 +7,17 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import logo from '@@/plugin-layout/layout/component/logo';
+import { API } from '@/api';
 
 interface SelfProps {
-  treeData: Array<any>;
-  blockNode: boolean;
+  treeData: API.ICasePartResponse[];
+  blockNode?: boolean;
   onAddNode: any;
-  menu: any;
+  menu: Function;
   selectedKeys: any;
   onSelect: any;
-  addDirectory: any;
+  addCasePart: any;
+  setTodo: any;
 }
 
 const SearchTree: FC<SelfProps> = ({
@@ -26,16 +27,20 @@ const SearchTree: FC<SelfProps> = ({
   menu,
   selectedKeys,
   onSelect,
-  addDirectory,
+  addCasePart,
+  setTodo,
 }) => {
-  const [expandedKeys, setExpandedKeys] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
-  const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const [nodeKey, setNodeKey] = useState(null);
+  const [expandedKeys, setExpandedKeys] = useState<Array<string>>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
+  const [nodeKey, setNodeKey] = useState<any>(null);
 
   const dataList: { id: number; partName: string }[] = [];
 
-  const getParentKey = (id: number, tree: any) => {
+  const getParentKey = (
+    id: number,
+    tree: API.ITreeNode[],
+  ): API.ITreeNode['id'] => {
     let parentKey;
     for (let i = 0; i < tree.length; i++) {
       const node = tree[i];
@@ -50,7 +55,7 @@ const SearchTree: FC<SelfProps> = ({
     return parentKey;
   };
 
-  const generateList = (data) => {
+  const generateList = (data: API.ICasePartResponse[]) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { id, partName } = node;
@@ -60,13 +65,16 @@ const SearchTree: FC<SelfProps> = ({
       }
     }
   };
+
   generateList(gData);
-  const onExpand = (expandedKeys) => {
+
+  //展开/收起节点时触发
+  const onExpand = (expandedKeys: any) => {
     setExpandedKeys(expandedKeys);
     setAutoExpandParent(false);
   };
 
-  const onChange = (e) => {
+  const onChange = (e: any) => {
     const { value } = e.target;
     const expandedKeys = dataList
       .map((item) => {
@@ -76,17 +84,16 @@ const SearchTree: FC<SelfProps> = ({
         return null;
       })
       .filter((item, i, self) => item && self.indexOf(item) === i);
-    setExpandedKeys(expandedKeys);
+    setExpandedKeys(expandedKeys as any);
     setSearchValue(value);
     setAutoExpandParent(true);
   };
 
-  const loop = (data) =>
-    data.map((item) => {
-      console.log('=-=-----', item);
+  const loop = (data: any) =>
+    data.map((item: API.ICasePartResponse) => {
       const index = item.partName.indexOf(searchValue);
-      const beforeStr = item.partName.substr(0, index);
-      const afterStr = item.partName.substr(index + searchValue.length);
+      const beforeStr = item.partName.substring(0, index);
+      const afterStr = item.partName.substring(index + searchValue.length);
       const name =
         index > -1 ? (
           <span>
@@ -98,14 +105,14 @@ const SearchTree: FC<SelfProps> = ({
           <span>{item.partName}</span>
         );
       if (item.children) {
-        return { name, key: item.id, children: loop(item.children) };
+        return { name, id: item.id, children: loop(item.children) };
       }
-
       return {
         name,
-        key: item.id,
+        id: item.id,
       };
     });
+
   return (
     <div>
       <Row gutter={8}>
@@ -118,7 +125,7 @@ const SearchTree: FC<SelfProps> = ({
             prefix={<SearchOutlined />}
           />
         </Col>
-        <Col span={6}>{addDirectory}</Col>
+        <Col span={6}>{addCasePart}</Col>
       </Row>
       <Tree
         onExpand={onExpand}
@@ -129,16 +136,18 @@ const SearchTree: FC<SelfProps> = ({
         expandedKeys={expandedKeys}
         autoExpandParent={autoExpandParent}
         treeData={loop(gData)}
-        titleRender={(node) => {
+        titleRender={(node: any) => {
           return (
             <div
               onMouseOver={() => setNodeKey(node.id)}
               onMouseLeave={() => setNodeKey(null)}
             >
-              {/*<FolderTwoTone className="folder" twoToneColor="rgb(255, 173, 210)"/>*/}
-              {/*<FolderCode theme="outline" size="15" className="folder" />*/}
+              <FolderTwoTone
+                className="folder"
+                twoToneColor="rgb(255, 173, 210)"
+              />
               {node.name}
-              {nodeKey === node.key ? (
+              {nodeKey === node.id ? (
                 <span className="suffixButton">
                   <PlusOutlined
                     onClick={(event) => {
@@ -147,13 +156,8 @@ const SearchTree: FC<SelfProps> = ({
                     }}
                     className="left"
                   />
-                  <Dropdown overlay={menu(node)} trigger="click">
-                    <MoreOutlined
-                      className="right"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    />
+                  <Dropdown overlay={menu(node)} trigger={['click']}>
+                    <MoreOutlined className="right" />
                   </Dropdown>
                 </span>
               ) : null}

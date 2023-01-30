@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import { API } from '@/api';
 
 const UserURL: string = '/api/user/opt';
 const UserPwdURL: string = '/api/user/setpassword';
