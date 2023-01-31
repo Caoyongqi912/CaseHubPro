@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && umi dev",
+    "start": "umi dev",
     "build": "umi build",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
@@ -31,7 +31,7 @@
     "umi": "^3.5.36"
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
+    "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/preset-react": "1.x",
     "lint-staged": "^10.0.7",

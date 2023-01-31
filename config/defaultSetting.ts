@@ -9,8 +9,13 @@ const settings: LayoutSettings & {
   // 设置标题的 title
   title: 'caseHUB',
   layout: 'mix',
+  menu: {
+    type: 'sub',
+  },
   contentWidth: 'Fluid',
+  fixedHeader: false,
   fixSiderbar: true,
+  colorWeak: false,
 };
 
 export default settings;

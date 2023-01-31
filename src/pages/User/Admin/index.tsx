@@ -14,6 +14,7 @@ import { departmentQuery, pageUser, UserOpt, userTagQuery } from '@/api/user';
 import { message } from 'antd';
 import AddUser from '@/components/UserOpt/AddUser';
 import AddDepartment from '@/components/UserOpt/AddDepartment';
+import { PageContainer } from '@ant-design/pro-layout';
 
 interface Tags {
   name: string;
@@ -208,72 +209,74 @@ const Index: React.FC = () => {
   ];
 
   return (
-    <ProTable
-      columns={columns}
-      actionRef={actionRef}
-      cardBordered
-      request={async (params) => {
-        const res: any = await pageUser(params as API.ISearch);
-        return {
-          data: res.data.items,
-          total: res.data.pageInfo.total,
-          success: res.msg,
-          pageSize: res.data.pageInfo.page,
-          current: res.data.pageInfo.limit,
-        };
-      }}
-      editable={{
-        type: 'single',
-        onSave: async (key, record: API.IUser) => {
-          const form = {
-            uid: record.uid,
-            username: record.username,
-            email: record.email,
-            phone: record.phone,
-            departmentID: record.departmentID,
-            tagName: record.tagName,
-            gender: record.gender,
+    <PageContainer title={false}>
+      <ProTable
+        columns={columns}
+        actionRef={actionRef}
+        cardBordered
+        request={async (params) => {
+          const res: any = await pageUser(params as API.ISearch);
+          return {
+            data: res.data.items,
+            total: res.data.pageInfo.total,
+            success: res.msg,
+            pageSize: res.data.pageInfo.page,
+            current: res.data.pageInfo.limit,
           };
-          const res = await UserOpt(form, 'PUT');
-          return;
-        },
-        onDelete: async (key) => {
-          const res = await UserOpt({ uid: key } as API.IUser, 'DELETE');
-          message.success(res.msg);
-          return;
-        },
-        onChange: () => {
-          actionRef.current?.reload();
-          setTags([]);
+        }}
+        editable={{
+          type: 'single',
+          onSave: async (key, record: API.IUser) => {
+            const form = {
+              uid: record.uid,
+              username: record.username,
+              email: record.email,
+              phone: record.phone,
+              departmentID: record.departmentID,
+              tagName: record.tagName,
+              gender: record.gender,
+            };
+            const res = await UserOpt(form, 'PUT');
+            return;
+          },
+          onDelete: async (key) => {
+            const res = await UserOpt({ uid: key } as API.IUser, 'DELETE');
+            message.success(res.msg);
+            return;
+          },
+          onChange: () => {
+            actionRef.current?.reload();
+            setTags([]);
 
-          return Promise.resolve();
-        },
-      }}
-      columnsState={{
-        persistenceKey: 'pro-table-singe-demos',
-        persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
-      }}
-      rowKey="uid"
-      search={{
-        labelWidth: 'auto',
-        span: 6,
-      }}
-      options={{
-        setting: {
-          listsHeight: 400,
-        },
-        reload: true,
-      }}
-      pagination={{
-        pageSize: 10,
-      }}
-      dateFormatter="string"
-      headerTitle="User List"
-      toolBarRender={() => [
-        <AddUser reload={isReload} />,
-        <AddDepartment reload={isReload} />,
-      ]}
-    />
+            return Promise.resolve();
+          },
+        }}
+        columnsState={{
+          persistenceKey: 'pro-table-singe-demos',
+          persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
+        }}
+        rowKey="uid"
+        search={{
+          labelWidth: 'auto',
+          span: 6,
+        }}
+        options={{
+          setting: {
+            listsHeight: 400,
+          },
+          reload: true,
+        }}
+        pagination={{
+          pageSize: 10,
+        }}
+        dateFormatter="string"
+        headerTitle="User List"
+        toolBarRender={() => [
+          <AddUser reload={isReload} />,
+          <AddDepartment reload={isReload} />,
+        ]}
+      />
+    </PageContainer>
   );
 };
 

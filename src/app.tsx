@@ -7,6 +7,7 @@ import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { RequestConfig } from '@@/plugin-request/request';
 import { getToken } from '@/utils/token';
 import { message } from 'antd';
+import { API } from '@/api';
 
 const loginPath = '/login';
 

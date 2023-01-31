@@ -10,10 +10,8 @@ import {
   Menu as AMenu,
   message,
 } from 'antd';
-import type { MenuProps } from 'antd';
 import {
   PlusOutlined,
-  RocketOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
   DeleteOutlined,
@@ -251,13 +249,13 @@ const Index: FC = (props) => {
     </Tooltip>
   );
   return (
-    <PageContainer title={false} style={{ margin: -8 }}>
-      <TestResult flag={true} width={1000} caseName={name} />
-      <FormForModal title={'移动用例'} fields={moveFields} />
+    <PageContainer title={false}>
+      {/*<TestResult flag={true} width={1000} caseName={name} />*/}
+      {/*<FormForModal title={'移动用例'} fields={moveFields} />*/}
       {projects.length === 0 ? (
         <Result status="404" subTitle={<span>你还没有添加任何项目</span>} />
       ) : (
-        <Row gutter={1}>
+        <Row gutter={8}>
           <FormForModal
             title={modalTitle}
             onCancel={() => setRootModal(false)}
@@ -284,8 +282,11 @@ const Index: FC = (props) => {
             visible={addCaseVisible}
             setVisible={setAddCaseVisible}
           />
-          <SplitPane {...SplitProps}>
-            <div className={'card'}>
+          <SplitPane>
+            <div
+              className={'card'}
+              style={{ height: '100%', padding: 24, overflowX: 'hidden' }}
+            >
               <Row gutter={8}>
                 <Col span={24}>
                   <div style={{ height: 40, lineHeight: '40px' }}>
@@ -374,8 +375,11 @@ const Index: FC = (props) => {
               </div>
             </div>
 
-            <div className={'card'}>
-              <Row style={{ marginTop: 16 }}>
+            <div
+              className={'card'}
+              style={{ height: '100%', overflowX: 'hidden' }}
+            >
+              <Row style={{ marginTop: 10 }}>
                 <Col span={24}>
                   <ProTable
                     editable={{

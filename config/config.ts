@@ -9,9 +9,10 @@ export default defineConfig({
   hash: true,
   antd: {
     dark: true,
-    compact: false, //紧凑主题
   },
-  dva: {},
+  dva: {
+    hmr: true,
+  },
   fastRefresh: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],
   layout: {

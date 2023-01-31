@@ -65,6 +65,7 @@ export default [
       {
         path: '/cases/table',
         name: 'caseOpt',
+        component: '@/pages/Case/CaseHub',
       },
     ],
   },
