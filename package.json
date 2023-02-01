@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "umi dev",
+    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && umi dev",
     "build": "umi build",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
@@ -26,6 +26,7 @@
     "inline-style-prefixer": "^7.0.0",
     "react": "17.x",
     "react-ace": "^9.4.3",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "17.x",
     "react-split-pane": "^2.0.3",
     "umi": "^3.5.36"

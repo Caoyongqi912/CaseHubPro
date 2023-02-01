@@ -6,7 +6,6 @@ const Index: FC<EditorProps> = (props) => {
     <Editor
       height={props.height || '20vh'}
       options={props.options}
-      // defaultLanguage={language || 'json'}
       language={props.language || 'json'}
       theme={props.theme || 'vs-dark'}
       value={props.value}

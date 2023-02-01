@@ -27,7 +27,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 interface SelfProps {
-  form: any;
+  stepsForm: any;
   body: string;
   bodyType: number;
   setBody: any;
@@ -38,48 +38,12 @@ interface SelfProps {
   setFromData: any;
 }
 
-const columns = (columnType: string) => {
-  return [
-    {
-      title: 'KEY',
-      key: 'key',
-      dataIndex: 'key',
-    },
-    {
-      title: 'VALUE',
-      key: 'value',
-      dataIndex: 'value',
-    },
-    {
-      title: 'DESCRIPTION',
-      key: 'description',
-      dataIndex: 'description',
-    },
-    {
-      title: '操作',
-      valueType: 'option',
-      render: (text, record) => {
-        return (
-          <>
-            <EditTwoTone
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                // setEditableRowKeys([record.id]);
-              }}
-            />
-            <DeleteTwoTone
-              style={{ cursor: 'pointer', marginLeft: 8 }}
-              onClick={() => {
-                // onDelete(columnType, record.id);
-              }}
-              twoToneColor="#eb2f96"
-            />
-          </>
-        );
-      },
-    },
-  ];
-};
+interface KV {
+  id: number;
+  key: any;
+  value: any;
+  desc: string;
+}
 
 const PostmanBody: FC<SelfProps> = (props, context) => {
   const {
@@ -88,9 +52,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
     headers,
     setBodyType,
     setHeaders,
-    setFromData,
-    formData,
-    form,
+    stepsForm,
     bodyType,
   } = props;
   const [method, setMethod] = useState('GET');
@@ -101,11 +63,64 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
   const [headersKeys, setHeadersKeys] = useState(() =>
     headers.map((item) => item.id),
   );
-  const [rawType, setRawType] = useState('JSON');
+
+  const columns = (columnType: string) => {
+    return [
+      {
+        title: 'KEY',
+        key: 'key',
+        dataIndex: 'key',
+      },
+      {
+        title: 'VALUE',
+        key: 'value',
+        dataIndex: 'value',
+      },
+      {
+        title: 'DESCRIPTION',
+        key: 'desc',
+        dataIndex: 'desc',
+      },
+      {
+        title: '操作',
+        valueType: 'option',
+        render: (_: any, record: any) => {
+          return (
+            <>
+              <EditTwoTone
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  setEditableRowKeys([record.id]);
+                }}
+              />
+              <DeleteTwoTone
+                style={{ cursor: 'pointer', marginLeft: 8 }}
+                onClick={() => {
+                  onDelete(columnType, record.id);
+                }}
+                twoToneColor="#eb2f96"
+              />
+            </>
+          );
+        },
+      },
+    ];
+  };
+
+  const onDelete = (columnType: string, key: number) => {
+    if (columnType === 'params') {
+      const data = paramsData.filter((item: any) => item.id !== key);
+      setParamsData(data);
+      joinUrl(data);
+    } else {
+      const data = headers.filter((item: any) => item.id !== key);
+      setHeaders(data);
+    }
+  };
 
   // 根据paramsData拼接url
-  const joinUrl = (data) => {
-    const url = form.getFieldValue('url');
+  const joinUrl = (data: KV[]) => {
+    const url = stepsForm.getFieldValue('url');
     let tempUrl: string;
     if (url === undefined) {
       tempUrl = '';
@@ -122,11 +137,11 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
         }
       }
     });
-    // setUrl(tempUrl);
-    form.setFieldsValue({ url: tempUrl });
+    stepsForm.setFieldsValue({ url: tempUrl });
   };
 
-  const getBody = (bd) => {
+  // 返回body 类型 component
+  const getBody = (bd: number) => {
     if (bd === 0) {
       return (
         <div
@@ -145,82 +160,26 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
         </div>
       );
     }
-    // if (bd === 2) {
-    //   return <FormData ossFileList={ossFileList} dataSource={formData} setDataSource={setFormData}/>
-    // }
     return (
       <Row style={{ marginTop: 12 }}>
         <Col span={24}>
           <Card bodyStyle={{ padding: 0 }}>
-            <CodeEditor language={rawType} />
+            <CodeEditor onChange={(e) => setBody(JSON.parse(e))} />
           </Card>
         </Col>
       </Row>
     );
   };
 
-  useEffect(() => {
-    setEditableRowKeys(paramsData.map((v) => v.id));
-  }, [paramsData]);
-
-  const prefixSelector = (
-    <Form.Item name="base_path" noStyle>
-      <Select
-        style={{ width: 130 }}
-        placeholder="选择BasePath"
-        showSearch
-        allowClear
-        optionLabelProp="label"
-      >
-        <Option value={null} label="无">
-          无
-          <a
-            style={{ float: 'right', fontSize: 12 }}
-            href="/#/config/address"
-            target="_blank"
-          >
-            去配置
-          </a>
-        </Option>
-      </Select>
-    </Form.Item>
-  );
-
-  const items: MenuProps['items'] = [
-    {
-      label: (
-        <a
-          onClick={() => {
-            setRawType('JSON');
-          }}
-        >
-          JSON
-        </a>
-      ),
-      key: '0',
-    },
-    {
-      label: (
-        <a
-          onClick={() => {
-            setRawType('TEXT');
-          }}
-        >
-          TEXT
-        </a>
-      ),
-      key: '1',
-    },
-  ];
   return (
-    <Form form={form}>
+    <Form form={stepsForm}>
       <Row gutter={[8, 8]}>
         <Col span={20}>
-          <Form layout="inline" form={form}>
+          <Form layout="inline" form={stepsForm}>
             <Col span={8}>
               <Form.Item
                 colon={false}
-                name="request_method"
+                name="method"
                 label="请求方式"
                 rules={[{ required: true, message: '请选择请求方法' }]}
                 initialValue={method}
@@ -253,7 +212,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
                 rules={[{ required: true, message: '请输入请求url' }]}
               >
                 <Input
-                  addonBefore={prefixSelector}
+                  // addonBefore={prefixSelector}
                   style={{ width: '100%' }}
                   placeholder="请输入要请求的url"
                 />
@@ -301,17 +260,9 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
                 }}
               >
                 <Radio value={0}>none</Radio>
-                <Radio value={2}>form-data</Radio>
-                <Radio value={1}>raw</Radio>
+                {/*<Radio value={2}>form-data</Radio>*/}
+                <Radio value={1}>json</Radio>
               </Radio.Group>
-              {bodyType === 1 ? (
-                <Dropdown menu={{ items }} trigger={['click']}>
-                  <a onClick={(e) => e.preventDefault()}>
-                    {rawType}
-                    <DownOutlined />
-                  </a>
-                </Dropdown>
-              ) : null}
             </Row>
             {getBody(bodyType)}
           </TabPane>

@@ -3,7 +3,7 @@ import { Card } from 'antd';
 import PostmanBody from '@/pages/Case/CaseAPI/component/Postman/PostmanBody';
 
 interface SelfProps {
-  form: any;
+  stepsForm: any;
   body: string;
   bodyType: number;
   setBody: any;

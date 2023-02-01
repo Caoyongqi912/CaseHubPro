@@ -4,62 +4,8 @@ import { Send } from '@icon-park/react';
 import TextIcon from '@/utils/TextIcon';
 
 export const CONFIG = {
-  ROLE: {
-    0: 'user',
-    1: 'admin',
-    2: 'superAdmin',
-  },
-  USER_ROLE: {
-    0: '普通用户',
-    1: '组长',
-    2: '超级管理员',
-  },
-  USER_ROLE_TAG: {
-    0: 'default',
-    1: 'blue',
-    2: 'success',
-  },
-  EDITOR_THEME: [
-    'material-one-dark',
-    'atom-one-dark',
-    'vs-dark',
-    'ambiance',
-    'chrome',
-    'dracula',
-    'eclipse',
-    'github',
-    'merbivore',
-    'merbivore_soft',
-    'monokai',
-    'terminal',
-    'xcode',
-  ],
-  PIC_URL: 'https://cdn.pity.fun/',
-  PROJECT_ROLE: {
-    OWNER: '负责人',
-    ADMIN: '组长',
-    MEMBER: '组员',
-  },
-  PROJECT_ROLE_TO_ID: {
-    OWNER: '2',
-    MEMBER: '0',
-    ADMIN: '1',
-  },
-  PROJECT_TAG: {
-    OWNER: 'purple',
-    MEMBER: 'pink',
-  },
-  CONFIG_TYPE_TAG: {
-    JSON: 'green',
-    Yaml: 'pink',
-    String: 'blue',
-  },
-  PROJECT_ROLE_MAP: {
-    1: '组长',
-    0: '组员',
-    // 2: "负责人"
-  },
-  PRIORITY: ['P0', 'P1', 'P2', 'P3', 'P4'],
+  CASE_LEVEL: ['P1', 'P2', 'P3', 'P4'],
+
   ASSERT_TYPE: {
     equal: '等于',
     not_equal: '不等于',
@@ -94,9 +40,9 @@ export const CONFIG = {
   },
   // 用例状态
   CASE_STATUS: {
-    1: '调试中',
-    2: '暂时关闭',
-    3: '正常运行',
+    1: 'DEBUG',
+    2: 'CLOSE',
+    3: 'NORMAL',
   },
   REQUEST_TYPE: {
     // 1: <TextIcon font={18} icon="icon-http3" text="HTTP"/>,

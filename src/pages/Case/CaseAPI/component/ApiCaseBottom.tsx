@@ -6,8 +6,8 @@ import { API } from '@/api';
 const { TabPane } = Tabs;
 
 interface SelfProps {
-  form: any;
-  caseDetail: API.ICaseDetail[];
+  stepsForm: any;
+  caseInfo: API.IAPICaseInfo[];
   body: string;
   bodyType: number;
   setBody: any;
@@ -19,7 +19,6 @@ interface SelfProps {
 }
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
-  const { form } = props;
   return (
     <Row gutter={8} style={{ marginTop: 36, minHeight: 500 }}>
       <Col span={24}>

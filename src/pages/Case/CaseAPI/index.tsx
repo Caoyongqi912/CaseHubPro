@@ -9,6 +9,8 @@ import {
   Tooltip,
   Menu as AMenu,
   message,
+  Card,
+  Empty,
 } from 'antd';
 import {
   PlusOutlined,
@@ -35,6 +37,7 @@ import {
   casePartTree,
   delCasePart,
   putCasePart,
+  queryApiCaseByCasePartID,
 } from '@/api/interface';
 
 const { Option } = Select;
@@ -62,7 +65,9 @@ const Index: FC = (props) => {
   const [record, setRecord] = useState<API.ICasePart>({});
   const [name, setName] = useState('');
   const [currentNode, setCurrentNode] = useState(null);
+  const [currentCasePartID, setCurrentCasePartID] = useState(null);
   const [currentCasePart, setCurrentPart] = useState<API.ICasePart[]>([]);
+  const [currentCaseAPI, setCurrentCaseAPI] = useState([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
 
   useEffect(() => {
@@ -71,6 +76,11 @@ const Index: FC = (props) => {
   useEffect(() => {
     listTestcaseTree();
   }, [projectID, projectName]);
+
+  useEffect(() => {
+    queryCaseApis();
+  }, [currentCasePartID]);
+
   /**
    * 查询所有项目
    * 存储第一个项目id与name
@@ -136,6 +146,16 @@ const Index: FC = (props) => {
     }
   };
 
+  const queryCaseApis = async () => {
+    if (currentCasePartID) {
+      const res = await queryApiCaseByCasePartID({
+        casePartID: currentCasePartID,
+      });
+      console.log(res.data);
+      setCurrentCaseAPI(res.data);
+    }
+  };
+
   const moveFields = [
     {
       name: 'directory_id',
@@ -146,6 +166,11 @@ const Index: FC = (props) => {
       // component: <TreeSelect treeData={directory} showSearch treeDefaultExpandAll/>
     },
   ];
+  const isReload = (value: boolean) => {
+    if (value) {
+      actionRef.current?.reload();
+    }
+  };
 
   // 新增目录filed
   const fields = [
@@ -162,7 +187,6 @@ const Index: FC = (props) => {
   const save = (data) => {
     // localStorage.setItem("project_id", data.project_id)
   };
-
   /**
    * 通过projectID 过滤CaseParts
    */
@@ -209,7 +233,7 @@ const Index: FC = (props) => {
     }
   };
   // menu
-  const content = (node) => (
+  const content = (node: any) => (
     <AMenu>
       <AMenu.Item key="1">
         <a
@@ -282,12 +306,17 @@ const Index: FC = (props) => {
             visible={addCaseVisible}
             setVisible={setAddCaseVisible}
           />
-          <SplitPane>
-            <div
-              className={'card'}
-              style={{ height: '100%', padding: 24, overflowX: 'hidden' }}
+          <SplitPane {...SplitProps}>
+            <Card
+              style={{
+                height: 1000,
+                padding: 24,
+                overflowX: 'hidden',
+                overflow: 'auto',
+              }}
             >
               <Row gutter={8}>
+                {/*项目*/}
                 <Col span={24}>
                   <div style={{ height: 40, lineHeight: '40px' }}>
                     {editing ? (
@@ -331,7 +360,8 @@ const Index: FC = (props) => {
                   </div>
                 </Col>
               </Row>
-              <div style={{ marginTop: 24 }}>
+              {/*目录*/}
+              <Card style={{ marginTop: 24 }}>
                 {caseParts.length > 0 ? (
                   <SearchTree
                     setTodo={setTodo}
@@ -339,11 +369,7 @@ const Index: FC = (props) => {
                     addCasePart={AddCasePart}
                     menu={content}
                     onSelect={(keys: React.Key[], info: any) => {
-                      saveCase({
-                        currentCasePart:
-                          keys[0] === currentCasePart[0] ? [] : keys,
-                        selectedRowKeys: [],
-                      });
+                      setCurrentCasePartID(info.node.id);
                     }}
                     onAddNode={(node: any) => {
                       setCurrentNode(node.id);
@@ -372,29 +398,63 @@ const Index: FC = (props) => {
                     }
                   />
                 )}
-              </div>
-            </div>
+              </Card>
+            </Card>
 
-            <div
-              className={'card'}
-              style={{ height: '100%', overflowX: 'hidden' }}
+            <Card
+              style={{ height: 1000, overflowX: 'hidden', overflow: 'auto' }}
             >
-              <Row style={{ marginTop: 10 }}>
-                <Col span={24}>
-                  <ProTable
-                    editable={{
-                      type: 'single',
-                    }}
-                    rowKey={(record) => record.uid}
-                    actionRef={actionRef}
-                    cardBordered
-                    bordered
-                    columns={columns}
-                    toolBarRender={() => [<AddApiCase />]}
-                  ></ProTable>
-                </Col>
-              </Row>
-            </div>
+              {currentCasePartID ? (
+                <Row style={{ marginTop: 16 }}>
+                  <Col span={24}>
+                    <ProTable
+                      editable={{
+                        type: 'single',
+                      }}
+                      rowKey={(record) => record.uid}
+                      actionRef={actionRef}
+                      dataSource={currentCaseAPI}
+                      rowSelection={{}}
+                      pagination={{
+                        pageSize: 10,
+                      }}
+                      columnsState={{
+                        persistenceKey: 'pro-table-singe-demos',
+                        persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
+                        onChange(value) {
+                          console.log('value: ', value);
+                        },
+                      }}
+                      cardBordered
+                      search={{
+                        labelWidth: 'auto',
+                        span: 6,
+                      }}
+                      options={{
+                        setting: {
+                          listsHeight: 400,
+                        },
+                        reload: true,
+                      }}
+                      bordered
+                      columns={columns}
+                      toolBarRender={() => [
+                        <AddApiCase
+                          casePartID={currentCasePartID}
+                          projectID={projectID}
+                          isReload={isReload}
+                        />,
+                      ]}
+                    ></ProTable>
+                  </Col>
+                </Row>
+              ) : (
+                <Empty
+                  imageStyle={{ height: 230 }}
+                  description="快选中左侧的目录畅享用例之旅吧~"
+                />
+              )}
+            </Card>
           </SplitPane>
         </Row>
       )}

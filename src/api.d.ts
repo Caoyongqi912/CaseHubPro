@@ -84,7 +84,7 @@ declare namespace API {
     updater?: string;
   }
 
-  interface ICaseDetail {
+  interface IAPICaseInfo {
     name: string;
     label: string;
     required: boolean;
@@ -121,8 +121,34 @@ declare namespace API {
     children?: ITreeNode[];
   }
 
-  interface INode {
-    name?: INode;
-    id?: number;
+  interface IHeader {
+    key: string;
+    val: string;
+  }
+
+  interface IAuth {
+    username?: string;
+    password?: string;
+  }
+
+  interface IInterfaceStep {
+    step: number;
+    name: string;
+    desc?: string | null;
+    url: string;
+    method: string;
+    http: string;
+    headers?: IHeader[];
+    body?: any;
+  }
+
+  interface IInterface {
+    title: string;
+    desc?: string | null;
+    status: string;
+    level: string;
+    casePartID: number;
+    projectID: number;
+    steps?: IInterfaceStep[];
   }
 }

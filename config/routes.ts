@@ -82,6 +82,7 @@ export default [
       {
         path: '/interface/test',
         name: '其他',
+        component: '@/pages/Case/Demo',
       },
       { component: '@/pages/404' },
     ],

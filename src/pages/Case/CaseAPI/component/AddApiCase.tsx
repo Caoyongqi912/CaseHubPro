@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { Badge, Button, Drawer, Form, Select } from 'antd';
+import React, { FC, useState } from 'react';
+import { Badge, Button, Drawer, Form, message, Select } from 'antd';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import { CONFIG } from '@/utils/config';
 import { API } from '@/api';
+import { addApiCase } from '@/api/interface';
 
 const { Option } = Select;
 
-const AddApiCase = () => {
+interface SelfProps {
+  casePartID: number;
+  projectID: number;
+  isReload: Function;
+}
+
+const AddApiCase: FC<SelfProps> = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
   const [body, setBody] = useState('');
   const [bodyType, setBodyType] = useState(0);
@@ -14,9 +21,9 @@ const AddApiCase = () => {
   const [formData, setFormData] = useState([]);
   const [suffix, setSuffix] = useState(false);
 
-  const caseDetail: API.ICaseDetail[] = [
+  const caseInfo: API.IAPICaseInfo[] = [
     {
-      name: 'name',
+      name: 'title',
       label: '用例名称',
       required: true,
       message: '请输入用例名称',
@@ -26,12 +33,12 @@ const AddApiCase = () => {
       span: 8,
     },
     {
-      name: 'priority',
+      name: 'level',
       label: '优先级',
       required: true,
       component: (
         <Select placeholder="请选择用例优先级">
-          {CONFIG.PRIORITY.map((v) => (
+          {CONFIG.CASE_LEVEL.map((v) => (
             <Option key={v} value={v}>
               {v}
             </Option>
@@ -48,7 +55,7 @@ const AddApiCase = () => {
       component: (
         <Select placeholder="请选择用例当前状态">
           {Object.keys(CONFIG.CASE_STATUS).map((key) => (
-            <Option key={key} value={key}>
+            <Option key={key} value={CONFIG.CASE_STATUS[key]}>
               {<Badge {...CONFIG.CASE_BADGE[key]} />}
             </Option>
           ))}
@@ -58,7 +65,7 @@ const AddApiCase = () => {
       span: 8,
     },
     {
-      name: 'request_type',
+      name: 'http',
       label: '请求类型',
       required: true,
       component: (
@@ -74,41 +81,35 @@ const AddApiCase = () => {
       span: 8,
     },
     {
-      name: 'tag',
-      label: '用例标签',
+      name: 'desc',
+      label: '描述',
       required: false,
-      component: <Select mode="tags" placeholder="请输入用例标签"></Select>,
-      type: 'select',
-      span: 8,
-    },
-    {
-      name: 'case_type',
-      label: '用例类型',
-      required: true,
-      component: (
-        <Select placeholder="请选择用例类型">
-          <Option value={0}>普通用例</Option>
-          {/*<Option value={1}>前置用例</Option>*/}
-          {/*<Option value={2}>数据工厂</Option>*/}
-        </Select>
-      ),
-      type: 'select',
+      component: null,
+      type: 'textarea',
       span: 8,
     },
   ];
-  const [form] = Form.useForm<API.ICaseDetail>();
-  const showDrawer = () => {
-    setAddCaseVisible(true);
-  };
+  const [infoForm] = Form.useForm<API.IInterface>();
+  const [stepsForm] = Form.useForm<API.IInterfaceStep>();
 
+  /**
+   * 提交新增用例
+   */
   const onSubmit = async () => {
-    const values = await form.validateFields();
-    const params = { ...values };
-    console.log(params);
-    console.log(bodyType);
-    console.log(body);
-    console.log(headers);
-    console.log(formData);
+    const data = await infoForm.validateFields();
+    const step = await stepsForm.validateFields();
+    step.body = body;
+    step.headers = headers;
+    data.steps = [{ ...step }];
+    data.projectID = props.projectID;
+    data.casePartID = props.casePartID;
+    console.log(data);
+    const res = await addApiCase(data);
+    if (res.code === 0) {
+      message.success(res.msg);
+      setAddCaseVisible(false);
+      props.isReload!(true);
+    }
   };
 
   return (
@@ -122,9 +123,10 @@ const AddApiCase = () => {
         maskClosable={false}
       >
         <ApiCaseEditor
-          form={form}
+          form={infoForm}
+          stepsForm={stepsForm}
           onSubmit={onSubmit}
-          caseDetail={caseDetail}
+          caseInfo={caseInfo}
           body={body}
           setBody={setBody}
           formData={formData}
@@ -135,7 +137,7 @@ const AddApiCase = () => {
           setBodyType={setBodyType}
         />
       </Drawer>
-      <Button type="primary" onClick={showDrawer}>
+      <Button type="primary" onClick={() => setAddCaseVisible(true)}>
         添加用例
       </Button>
     </>

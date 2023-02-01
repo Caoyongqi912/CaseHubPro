@@ -2,37 +2,43 @@ import React from 'react';
 import SplitPane from 'react-split-pane';
 import { PageContainer } from '@ant-design/pro-layout';
 import './index.less';
+import { Card, Col, Row } from 'antd';
 
 const Index = () => {
   return (
     <PageContainer title={false}>
-      <SplitPane
-        split="vertical"
-        minSize={100}
-        maxSize={-100}
-        defaultSize={'50%'}
-      >
-        <div>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-          <h1>1</h1>
-        </div>
-        <h2>2</h2>
-      </SplitPane>
+      <Row gutter={16}>
+        <SplitPane split="vertical" minSize={10} maxSize={30} defaultSize={10}>
+          <Row gutter={8}>
+            <Col span={24}>
+              <Card
+                bodyStyle={{
+                  padding: 24,
+                  height: '100%',
+                  overflowX: 'hidden',
+                  overflow: 'auto',
+                }}
+              >
+                <div>1</div>
+              </Card>
+            </Col>
+          </Row>
+          <Row gutter={8}>
+            <Col span={24}>
+              <Card
+                bodyStyle={{
+                  padding: 24,
+                  height: '100%',
+                  overflowX: 'hidden',
+                  overflow: 'auto',
+                }}
+              >
+                <div>1</div>
+              </Card>
+            </Col>
+          </Row>
+        </SplitPane>
+      </Row>
     </PageContainer>
   );
 };

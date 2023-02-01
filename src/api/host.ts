@@ -1,4 +1,5 @@
 import { request } from 'umi';
+import { API } from '@/api';
 
 const HostUrl = '/api/case/host/opt';
 
@@ -11,7 +12,7 @@ export async function pageHost(
   params: API.ISearch,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(HostUrl, {
+  return request<API.IResponse<any>>(HostUrl, {
     method: 'GET',
     params: params,
     ...(options || {}),

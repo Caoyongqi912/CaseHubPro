@@ -29,7 +29,8 @@ const getComponent = (
 interface SelfProps {
   onSubmit: Function;
   form: any;
-  caseDetail: API.ICaseDetail[];
+  stepsForm: any;
+  caseInfo: API.IAPICaseInfo[];
   body: string;
   bodyType: number;
   setBody: any;
@@ -41,29 +42,27 @@ interface SelfProps {
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
-  const { onSubmit, form, caseDetail } = props;
+  const { onSubmit, form, caseInfo } = props;
+
+  const cardTitle = (
+    <span style={{ fontWeight: 700, fontSize: '16px' }}>API CASE INFO</span>
+  );
+  const cardExtra = (
+    <Button
+      type="primary"
+      onClick={async () => {
+        await onSubmit();
+      }}
+    >
+      提交
+    </Button>
+  );
 
   return (
     <Form form={form}>
-      <Card
-        title={
-          <span style={{ fontWeight: 700, fontSize: '16px' }}>
-            API CASE INFO
-          </span>
-        }
-        extra={
-          <Button
-            type="primary"
-            onClick={async () => {
-              await onSubmit();
-            }}
-          >
-            提交
-          </Button>
-        }
-      >
+      <Card title={cardTitle} extra={cardExtra}>
         <Row gutter={[8, 8]}>
-          {caseDetail.map((item) => (
+          {caseInfo.map((item) => (
             <Col span={item.span || 24}>
               <FormItem
                 label={item.label}

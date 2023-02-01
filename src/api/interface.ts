@@ -3,6 +3,8 @@ import { API } from '@/api';
 
 const CasePartTreeUrl: string = '/api/case/part/query';
 const CasePartOptUrl: string = '/api/case/part/opt';
+const CaseAPIOptURl: string = '/api/case/interface/opt';
+const QueryCaseAPIByCasePartID: string = '/api/case/part/interfaces';
 
 interface ICasePartTree {
   projectID: number;
@@ -51,6 +53,47 @@ export async function delCasePart(
   options?: { [key: string]: any },
 ) {
   return request<API.IResponse<any>>(CasePartOptUrl, {
+    method: 'DELETE',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function addApiCase(
+  body: API.IInterface,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<any>>(CaseAPIOptURl, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+interface queryApiCaseByCasePartIDParams {
+  casePartID: number;
+}
+
+export async function queryApiCaseByCasePartID(
+  params: queryApiCaseByCasePartIDParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<any>>(QueryCaseAPIByCasePartID, {
+    method: 'GET',
+    params: params,
+    ...(options || {}),
+  });
+}
+
+interface delApiCaseBody {
+  uid: string;
+}
+
+export async function delApiCase(
+  body: delApiCaseBody,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<any>>(CaseAPIOptURl, {
     method: 'DELETE',
     data: body,
     ...(options || {}),

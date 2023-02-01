@@ -5,6 +5,7 @@ import { projectDetailInfo, queryProjectUsers } from '@/api/project';
 import { Card, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import ProjectRoles from '@/pages/Project/projectRoles';
+import { API } from '@/api';
 
 const ProjectDetail = () => {
   const projectID = useParams();
