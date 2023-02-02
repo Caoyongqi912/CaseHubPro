@@ -1,5 +1,5 @@
-import { request } from 'umi';
 import { API } from '@/api';
+import { request } from '@@/plugin-request/request';
 
 const UserURL: string = '/api/user/opt';
 const UserPwdURL: string = '/api/user/setpassword';
@@ -15,7 +15,7 @@ export async function login(
   body: API.ILoginParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>('/api/user/login', {
+  return request<API.IResponse<any>>('/api/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export async function pageUser(
   params: API.ISearch,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(QueryUser, {
+  return request<API.IResponse<any>>(QueryUser, {
     method: 'GET',
     params: params,
     ...(options || {}),
@@ -69,7 +69,7 @@ export async function UserOpt(
   method: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(UserURL, {
+  return request<API.IResponse<any>>(UserURL, {
     method: method,
     data: data,
     ...(options || {}),
@@ -80,7 +80,7 @@ export async function SetPwdServer(
   data: API.IPassword,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(UserPwdURL, {
+  return request<API.IResponse<any>>(UserPwdURL, {
     method: 'POST',
     data: data,
     ...(options || {}),
@@ -93,7 +93,7 @@ export async function SetPwdServer(
  * @constructor
  */
 export async function departmentQuery(options?: { [key: string]: any }) {
-  return request<API.IResponse>(DepartmentURL, {
+  return request<API.IResponse<any>>(DepartmentURL, {
     method: 'GET',
     ...(options || {}),
   });
@@ -103,7 +103,7 @@ export async function addDepartmentInfo(
   body: API.IDepartment,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(DepartmentURL, {
+  return request<API.IResponse<any>>(DepartmentURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ export async function userTagQuery(
   params: any,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(DepartmentTagsURl, {
+  return request<API.IResponse<any>>(DepartmentTagsURl, {
     method: 'GET',
     params,
     ...(options || {}),
@@ -134,7 +134,7 @@ export async function uploadAvatar(
   file: any,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(UserAvatarURL, {
+  return request<API.IResponse<any>>(UserAvatarURL, {
     method: 'POST',
     data: file,
     requestType: 'form',

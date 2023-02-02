@@ -1,18 +1,20 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Col, Row } from 'antd';
 
 const Index = () => {
   return (
-    <Card
-      bodyStyle={{
-        padding: 24,
-        height: '100%',
-        overflowX: 'hidden',
-        overflow: 'auto',
-      }}
-    >
-      <div>1</div>
-    </Card>
+    <Row gutter={2}>
+      <Col span={4}>
+        <Card
+          bodyStyle={{
+            height: '100%',
+          }}
+        ></Card>
+      </Col>
+      <Col span={20}>
+        <Card>2</Card>
+      </Col>
+    </Row>
   );
 };
 

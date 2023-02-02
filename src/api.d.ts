@@ -116,8 +116,8 @@ declare namespace API {
   }
 
   interface ITreeNode {
-    id?: number;
-    name?: string;
+    key: number;
+    name: string;
     children?: ITreeNode[];
   }
 

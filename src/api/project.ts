@@ -1,3 +1,4 @@
+import { API } from '@/api';
 import { request } from '@@/plugin-request/request';
 
 const ProjectURL: string = '/api/project/opt';

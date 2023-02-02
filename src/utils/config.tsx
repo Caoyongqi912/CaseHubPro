@@ -6,6 +6,21 @@ import TextIcon from '@/utils/TextIcon';
 export const CONFIG = {
   CASE_LEVEL: ['P1', 'P2', 'P3', 'P4'],
 
+  RENDER_CASE_STATUS: {
+    DEBUG: {
+      color: 'blue',
+      text: '待调试',
+    },
+    CLOSE: {
+      color: 'red',
+      text: '已完成',
+    },
+    NORMAL: {
+      color: 'green',
+      text: 'NORMAL',
+    },
+  },
+
   ASSERT_TYPE: {
     equal: '等于',
     not_equal: '不等于',

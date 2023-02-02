@@ -1,5 +1,5 @@
-import { request } from 'umi';
 import { API } from '@/api';
+import { request } from '@@/plugin-request/request';
 
 const HostUrl = '/api/case/host/opt';
 
@@ -24,7 +24,7 @@ export async function hostOpt(
   params?: API.IHost,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse>(HostUrl, {
+  return request<API.IResponse<any>>(HostUrl, {
     method,
     data: params,
     ...(options || {}),

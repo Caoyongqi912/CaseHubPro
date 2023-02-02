@@ -11,6 +11,8 @@ import {
   message,
   Card,
   Empty,
+  Tag,
+  Divider,
 } from 'antd';
 import {
   PlusOutlined,
@@ -23,11 +25,10 @@ import { queryProject } from '@/api/project';
 import FormForModal from '@/components/InterfaceComponent/FormForModal';
 import TestResult from '@/components/InterfaceComponent/TestResult';
 import AddTestCaseComponent from '@/components/InterfaceComponent/AddTestCaseComponent';
-import { ActionType, ProTable } from '@ant-design/pro-components';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-layout';
-import './caseApiLess.css';
+import './caseApiLess.less';
 import RecorderDrawer from '@/components/InterfaceComponent/RecorderDrawer';
-import columns from '@/pages/Case/CaseAPI/columns';
 import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
 import { API } from '@/api';
 import SearchTree from '@/components/Tree/SearchTree';
@@ -35,12 +36,12 @@ import NoRecord from '@/pages/Case/CaseAPI/component/NoRecord';
 import {
   addCasePart,
   casePartTree,
+  delApiCase,
   delCasePart,
   putCasePart,
   queryApiCaseByCasePartID,
 } from '@/api/interface';
-
-const { Option } = Select;
+import { CONFIG } from '@/utils/config';
 
 const SplitProps: Props = {
   className: 'caseSplit',
@@ -55,7 +56,6 @@ const Index: FC = (props) => {
   const [caseParts, setCaseParts] = useState<API.ICasePartResponse[]>([]);
   const [projects, setProject] = useState<API.IProject[]>([]);
   const [projectID, setProjectID] = useState<number>(0);
-  const [projectName, setProjectName] = useState<string>('');
   const [editing, setEditing] = useState<boolean>(false);
   const [todo, setTodo] = useState<boolean>(true);
   //modalTitle
@@ -63,11 +63,11 @@ const Index: FC = (props) => {
   //Modal 开关
   const [rootModal, setRootModal] = useState<boolean>(false);
   const [record, setRecord] = useState<API.ICasePart>({});
-  const [name, setName] = useState('');
   const [currentNode, setCurrentNode] = useState(null);
   const [currentCasePartID, setCurrentCasePartID] = useState(null);
   const [currentCasePart, setCurrentPart] = useState<API.ICasePart[]>([]);
   const [currentCaseAPI, setCurrentCaseAPI] = useState([]);
+  const [projectsOpt, setProjectOpt] = useState([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
 
   useEffect(() => {
@@ -75,8 +75,7 @@ const Index: FC = (props) => {
   }, []);
   useEffect(() => {
     listTestcaseTree();
-  }, [projectID, projectName]);
-
+  }, [projectID]);
   useEffect(() => {
     queryCaseApis();
   }, [currentCasePartID]);
@@ -90,10 +89,16 @@ const Index: FC = (props) => {
     if (data) {
       setProject(data);
       setProjectID(data[0].id!);
-      setProjectName(data[0].name!);
+      let temp: any = [];
+      data.map((i: API.IProject) => {
+        const _ = { value: i.id, label: i.name };
+        temp.push(_);
+      });
+      setProjectOpt(temp);
     }
   };
-  const getProject = () => {
+
+  const getProject: any = () => {
     if (projects.length === 0) {
       return 'loading...';
     }
@@ -101,7 +106,7 @@ const Index: FC = (props) => {
       (p) => p.id === projectID,
     );
     if (filter_project.length === 0) {
-      // save({ project_id: projects[0].id });
+      // changeProject(projects[0].id);
       return projects[0];
     }
     return filter_project[0];
@@ -112,10 +117,6 @@ const Index: FC = (props) => {
    * @param value
    */
   const onCreateOrUpdateCasePart = async (value: any) => {
-    console.log('todo', todo);
-    console.log('value', value);
-    console.log('record', record);
-    console.log('currentNode', currentNode);
     let body: API.ICasePart = {};
     body.projectID = projectID;
     let res: API.IResponse<any>;
@@ -146,6 +147,7 @@ const Index: FC = (props) => {
     }
   };
 
+  // 根据 所选partID 查询 apiCase列
   const queryCaseApis = async () => {
     if (currentCasePartID) {
       const res = await queryApiCaseByCasePartID({
@@ -156,14 +158,105 @@ const Index: FC = (props) => {
     }
   };
 
-  const moveFields = [
+  // 删除用例
+  const delCase = async (uid: string) => {
+    const res = await delApiCase({ uid: uid });
+    if (res.code === 0) {
+      message.success(res.msg);
+      queryCaseApis();
+    }
+
+    return;
+  };
+
+  const columns: ProColumns[] = [
     {
-      name: 'directory_id',
-      label: '目标目录',
-      required: true,
-      placeholder: '请选择要移动到的目录',
-      type: 'select',
-      // component: <TreeSelect treeData={directory} showSearch treeDefaultExpandAll/>
+      title: '名称',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: '请求协议',
+      dataIndex: 'http',
+      render: (text, record) => {
+        // @ts-ignore
+        return CONFIG.REQUEST_TYPE[text];
+      },
+    },
+    {
+      title: '优先级',
+      dataIndex: 'level',
+      render: (text, record) => {
+        return <Tag color={'blue'}>{text}</Tag>;
+        // return <Tag color={CONFIG.RENDER_CASE_STATUS[text].color}>{
+        //   CONFIG.RENDER_CASE_STATUS[text].text
+        // }</Tag>;
+      },
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      render: (text, record) => {
+        return (
+          <Tag color={CONFIG.RENDER_CASE_STATUS[text].color}>
+            {CONFIG.RENDER_CASE_STATUS[text].text}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: '创建人',
+      dataIndex: 'creatorName',
+      // render: (text, record) => {
+      //   return <Avatar >{text}</Avatar>;
+      // }
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'create_time',
+      valueType: 'date',
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      key: 'option',
+      render: (text, record, _, action) => {
+        return (
+          <>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              key="view"
+              // onClick={() => {
+              //   history.push("/project/detail/" + record.uid);
+            >
+              详情
+            </a>
+            <Divider type={'vertical'} />
+            {/*<Dropdown>*/}
+            <a>执行</a>
+            {/*</Dropdown>*/}
+            <Divider type={'vertical'} />
+            <a
+              onClick={() => {
+                Modal.confirm({
+                  title: '确认删除？',
+                  icon: <ExclamationCircleOutlined />,
+                  content: '删除后不可恢复，请谨慎~',
+                  okText: '确定',
+                  okType: 'danger',
+                  cancelText: '点错了',
+                  onOk: async () => {
+                    await delCase(record.uid);
+                  },
+                });
+              }}
+            >
+              删除
+            </a>
+          </>
+        );
+      },
     },
   ];
   const isReload = (value: boolean) => {
@@ -184,9 +277,10 @@ const Index: FC = (props) => {
   ];
 
   const saveCase = (data) => {};
-  const save = (data) => {
-    // localStorage.setItem("project_id", data.project_id)
+  const changeProject = (projectID: number) => {
+    setProjectID(projectID);
   };
+
   /**
    * 通过projectID 过滤CaseParts
    */
@@ -194,27 +288,27 @@ const Index: FC = (props) => {
     if (projectID) {
       const res = await casePartTree({ projectID: projectID });
       setCaseParts(res.data);
-      return;
+      1;
     }
   };
+  //删除用例分组
   const onDeleteCasePart = async (id: number) => {
     const res = await delCasePart({ id: id });
     if (res) {
       listTestcaseTree();
     }
   };
-
   // 目录操作
   const handleItemClick = (key: number, node: any) => {
     if (key === 1) {
       // 新增目录
-      setCurrentNode(node.id);
+      setCurrentNode(node.key);
       setModalTitle('新增目录');
       setRecord({ partName: '' });
       setRootModal(true);
       setTodo(true);
     } else if (key === 2) {
-      setRecord({ partName: node.name.props.children[2], id: node.id });
+      setRecord({ partName: node.name.props.children[2], id: node.key });
       setModalTitle('编辑目录');
       setRootModal(true);
       setTodo(false);
@@ -227,12 +321,12 @@ const Index: FC = (props) => {
         okType: 'danger',
         cancelText: '点错了',
         onOk() {
-          onDeleteCasePart(node.id);
+          onDeleteCasePart(node.key);
         },
       });
     }
   };
-  // menu
+  // 目录选项
   const content = (node: any) => (
     <AMenu>
       <AMenu.Item key="1">
@@ -256,6 +350,7 @@ const Index: FC = (props) => {
     </AMenu>
   );
 
+  // 新建目录
   const AddCasePart = (
     <Tooltip title="点击可新建根目录, 子目录需要在树上新建">
       <a
@@ -279,7 +374,7 @@ const Index: FC = (props) => {
       {projects.length === 0 ? (
         <Result status="404" subTitle={<span>你还没有添加任何项目</span>} />
       ) : (
-        <Row gutter={8}>
+        <Row gutter={2}>
           <FormForModal
             title={modalTitle}
             onCancel={() => setRootModal(false)}
@@ -306,30 +401,32 @@ const Index: FC = (props) => {
             visible={addCaseVisible}
             setVisible={setAddCaseVisible}
           />
-          <SplitPane {...SplitProps}>
+
+          <Col span={6}>
             <Card
               style={{
-                height: 1000,
+                height: '100%',
                 padding: 24,
                 overflowX: 'hidden',
                 overflow: 'auto',
               }}
+              bordered={false}
+              hoverable={true}
             >
               <Row gutter={8}>
-                {/*项目*/}
                 <Col span={24}>
                   <div style={{ height: 40, lineHeight: '40px' }}>
                     {editing ? (
                       <Select
-                        style={{ marginLeft: 32, width: 150 }}
+                        style={{ width: 150 }}
                         showSearch
                         allowClear
                         autoFocus={true}
-                        value={projectName}
+                        defaultValue={projectID}
                         placeholder="请选择项目"
-                        onChange={(e) => {
+                        onChange={(e: number) => {
                           if (e !== undefined) {
-                            save({ projectID: e });
+                            changeProject(e);
                           }
                           setEditing(false);
                         }}
@@ -338,11 +435,8 @@ const Index: FC = (props) => {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                         }
-                      >
-                        {projects.map((value) => (
-                          <Option key={value.uid}>{value.name} </Option>
-                        ))}
-                      </Select>
+                        options={projectsOpt}
+                      />
                     ) : (
                       <div onClick={() => setEditing(true)}>
                         <span
@@ -360,19 +454,17 @@ const Index: FC = (props) => {
                   </div>
                 </Col>
               </Row>
-              {/*目录*/}
               <Card style={{ marginTop: 24 }}>
                 {caseParts.length > 0 ? (
                   <SearchTree
-                    setTodo={setTodo}
                     treeData={caseParts}
                     addCasePart={AddCasePart}
                     menu={content}
                     onSelect={(keys: React.Key[], info: any) => {
-                      setCurrentCasePartID(info.node.id);
+                      setCurrentCasePartID(info.node.key);
                     }}
                     onAddNode={(node: any) => {
-                      setCurrentNode(node.id);
+                      setCurrentNode(node.key);
                       handleItemClick(1, node);
                     }}
                     selectedKeys={currentCasePart}
@@ -400,9 +492,17 @@ const Index: FC = (props) => {
                 )}
               </Card>
             </Card>
+          </Col>
 
+          <Col span={18}>
             <Card
-              style={{ height: 1000, overflowX: 'hidden', overflow: 'auto' }}
+              style={{
+                height: '100%',
+                overflowX: 'hidden',
+                overflow: 'auto',
+              }}
+              bordered={false}
+              hoverable={true}
             >
               {currentCasePartID ? (
                 <Row style={{ marginTop: 16 }}>
@@ -421,9 +521,6 @@ const Index: FC = (props) => {
                       columnsState={{
                         persistenceKey: 'pro-table-singe-demos',
                         persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
-                        onChange(value) {
-                          console.log('value: ', value);
-                        },
                       }}
                       cardBordered
                       search={{
@@ -455,7 +552,7 @@ const Index: FC = (props) => {
                 />
               )}
             </Card>
-          </SplitPane>
+          </Col>
         </Row>
       )}
     </PageContainer>

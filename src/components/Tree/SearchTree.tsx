@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, Key, useState } from 'react';
 import { Col, Dropdown, Input, Row, Tree } from 'antd';
 import './SearchTree.less';
 import {
@@ -11,26 +11,22 @@ import { API } from '@/api';
 
 interface SelfProps {
   treeData: API.ICasePartResponse[];
-  blockNode?: boolean;
   onAddNode: any;
   menu: Function;
   selectedKeys: any;
   onSelect: any;
   addCasePart: any;
-  setTodo: any;
 }
 
 const SearchTree: FC<SelfProps> = ({
   treeData: gData,
-  blockNode = true,
   onAddNode,
   menu,
   selectedKeys,
   onSelect,
   addCasePart,
-  setTodo,
 }) => {
-  const [expandedKeys, setExpandedKeys] = useState<Array<string>>([]);
+  const [expandedKeys, setExpandedKeys] = useState<Key[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
   const [nodeKey, setNodeKey] = useState<any>(null);
@@ -40,13 +36,13 @@ const SearchTree: FC<SelfProps> = ({
   const getParentKey = (
     id: number,
     tree: API.ITreeNode[],
-  ): API.ITreeNode['id'] => {
+  ): API.ITreeNode['key'] => {
     let parentKey;
     for (let i = 0; i < tree.length; i++) {
       const node = tree[i];
       if (node.children) {
         if (node.children.some((item) => item.id === id)) {
-          parentKey = node.id;
+          parentKey = node.key;
         } else if (getParentKey(id, node.children)) {
           parentKey = getParentKey(id, node.children);
         }
@@ -69,8 +65,9 @@ const SearchTree: FC<SelfProps> = ({
   generateList(gData);
 
   //展开/收起节点时触发
-  const onExpand = (expandedKeys: any) => {
+  const onExpand = (expandedKeys: Key[]) => {
     setExpandedKeys(expandedKeys);
+    //关闭自动展开父节点
     setAutoExpandParent(false);
   };
 
@@ -89,8 +86,8 @@ const SearchTree: FC<SelfProps> = ({
     setAutoExpandParent(true);
   };
 
-  const loop = (data: any) =>
-    data.map((item: API.ICasePartResponse) => {
+  const loop: any = (data: API.ICasePartResponse[]) =>
+    data.map((item) => {
       const index = item.partName.indexOf(searchValue);
       const beforeStr = item.partName.substring(0, index);
       const afterStr = item.partName.substring(index + searchValue.length);
@@ -105,16 +102,16 @@ const SearchTree: FC<SelfProps> = ({
           <span>{item.partName}</span>
         );
       if (item.children) {
-        return { name, id: item.id, children: loop(item.children) };
+        return { name, key: item.id, children: loop(item.children) };
       }
       return {
         name,
-        id: item.id,
+        key: item.id,
       };
     });
 
   return (
-    <div>
+    <>
       <Row gutter={8}>
         <Col span={18}>
           <Input
@@ -128,18 +125,18 @@ const SearchTree: FC<SelfProps> = ({
         <Col span={6}>{addCasePart}</Col>
       </Row>
       <Tree
-        onExpand={onExpand}
+        onExpand={onExpand} //展开/收起节点时触发
         defaultExpandAll
-        blockNode={blockNode}
-        selectedKeys={selectedKeys}
-        onSelect={onSelect}
-        expandedKeys={expandedKeys}
-        autoExpandParent={autoExpandParent}
-        treeData={loop(gData)}
+        blockNode={true} //是否节点占据一行
+        selectedKeys={selectedKeys} //（受控）设置选中的树节点
+        onSelect={onSelect} //点击树节点触发
+        expandedKeys={expandedKeys} //（受控）展开指定的树节点
+        autoExpandParent={autoExpandParent} //是否自动展开父节点
+        treeData={loop(gData)} //treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一）
         titleRender={(node: any) => {
           return (
             <div
-              onMouseOver={() => setNodeKey(node.id)}
+              onMouseOver={() => setNodeKey(node.key)}
               onMouseLeave={() => setNodeKey(null)}
             >
               <FolderTwoTone
@@ -147,7 +144,7 @@ const SearchTree: FC<SelfProps> = ({
                 twoToneColor="rgb(255, 173, 210)"
               />
               {node.name}
-              {nodeKey === node.id ? (
+              {nodeKey === node.key ? (
                 <span className="suffixButton">
                   <PlusOutlined
                     onClick={(event) => {
@@ -165,7 +162,7 @@ const SearchTree: FC<SelfProps> = ({
           );
         }}
       />
-    </div>
+    </>
   );
 };
 
