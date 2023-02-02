@@ -20,14 +20,12 @@ import {
   ExclamationCircleOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import SplitPane, { Props } from 'react-split-pane';
 import { queryProject } from '@/api/project';
 import FormForModal from '@/components/InterfaceComponent/FormForModal';
 import TestResult from '@/components/InterfaceComponent/TestResult';
 import AddTestCaseComponent from '@/components/InterfaceComponent/AddTestCaseComponent';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-layout';
-import './caseApiLess.less';
 import RecorderDrawer from '@/components/InterfaceComponent/RecorderDrawer';
 import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
 import { API } from '@/api';

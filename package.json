@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && umi dev",
+    "start": "umi dev",
     "build": "umi build",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
@@ -23,13 +23,10 @@
     "@ant-design/pro-components": "^1.x",
     "@icon-park/react": "^1.4.2",
     "@monaco-editor/react": "^4.4.6",
-    "@types/inline-style-prefixer": "^5.0.0",
     "inline-style-prefixer": "^7.0.0",
     "react": "17.x",
     "react-ace": "^9.4.3",
-    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "17.x",
-    "react-split-pane": "^2.0.3",
     "umi": "^3.5.36"
   },
   "devDependencies": {
