@@ -33,15 +33,12 @@ const SearchTree: FC<SelfProps> = ({
 
   const dataList: { id: number; partName: string }[] = [];
 
-  const getParentKey = (
-    id: number,
-    tree: API.ITreeNode[],
-  ): API.ITreeNode['key'] => {
+  const getParentKey = (id: number, tree: any): API.ITreeNode['key'] => {
     let parentKey;
     for (let i = 0; i < tree.length; i++) {
       const node = tree[i];
       if (node.children) {
-        if (node.children.some((item) => item.id === id)) {
+        if (node.children.some((item: any) => item.key === id)) {
           parentKey = node.key;
         } else if (getParentKey(id, node.children)) {
           parentKey = getParentKey(id, node.children);
@@ -126,7 +123,6 @@ const SearchTree: FC<SelfProps> = ({
       </Row>
       <Tree
         onExpand={onExpand} //展开/收起节点时触发
-        defaultExpandAll
         blockNode={true} //是否节点占据一行
         selectedKeys={selectedKeys} //（受控）设置选中的树节点
         onSelect={onSelect} //点击树节点触发

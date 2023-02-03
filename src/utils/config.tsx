@@ -5,7 +5,38 @@ import TextIcon from '@/utils/TextIcon';
 
 export const CONFIG = {
   CASE_LEVEL: ['P1', 'P2', 'P3', 'P4'],
-
+  CASE_LEVEL_ENUM: {
+    1: {
+      text: 'P1',
+      level: 'P1',
+    },
+    2: {
+      text: 'P2',
+      status: 'P2',
+    },
+    3: {
+      text: 'P3',
+      status: 'P3',
+    },
+    4: {
+      text: 'P4',
+      status: 'P4',
+    },
+  },
+  CASE_STATUS_ENUM: {
+    1: {
+      text: '待调试',
+      status: 'DEBUG',
+    },
+    2: {
+      text: '已停用',
+      status: 'CLOSE',
+    },
+    3: {
+      text: '正常',
+      status: 'NORMAL',
+    },
+  },
   RENDER_CASE_STATUS: {
     DEBUG: {
       color: 'blue',
@@ -17,7 +48,7 @@ export const CONFIG = {
     },
     NORMAL: {
       color: 'green',
-      text: 'NORMAL',
+      text: '正常',
     },
   },
 

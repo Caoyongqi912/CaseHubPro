@@ -10,7 +10,7 @@ const { Option } = Select;
 interface SelfProps {
   casePartID: number;
   projectID: number;
-  isReload: Function;
+  queryCaseApis: Function;
 }
 
 const AddApiCase: FC<SelfProps> = (props) => {
@@ -19,7 +19,6 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const [bodyType, setBodyType] = useState(0);
   const [headers, setHeaders] = useState([]);
   const [formData, setFormData] = useState([]);
-  const [suffix, setSuffix] = useState(false);
 
   const caseInfo: API.IAPICaseInfo[] = [
     {
@@ -54,8 +53,9 @@ const AddApiCase: FC<SelfProps> = (props) => {
       required: true,
       component: (
         <Select placeholder="请选择用例当前状态">
-          {Object.keys(CONFIG.CASE_STATUS).map((key) => (
-            <Option key={key} value={CONFIG.CASE_STATUS[key]}>
+          {Object.keys(CONFIG.CASE_STATUS).map((key, val) => (
+            <Option key={key} value={val}>
+              {/*// @ts-ignore*/}
               {<Badge {...CONFIG.CASE_BADGE[key]} />}
             </Option>
           ))}
@@ -72,6 +72,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
         <Select placeholder="请选择请求协议类型">
           {Object.keys(CONFIG.REQUEST_TYPE).map((key) => (
             <Option key={key} value={key} disabled={key !== '1'}>
+              {/*// @ts-ignore*/}
               {CONFIG.REQUEST_TYPE[key]}
             </Option>
           ))}
@@ -103,12 +104,11 @@ const AddApiCase: FC<SelfProps> = (props) => {
     data.steps = [{ ...step }];
     data.projectID = props.projectID;
     data.casePartID = props.casePartID;
-    console.log(data);
     const res = await addApiCase(data);
     if (res.code === 0) {
       message.success(res.msg);
       setAddCaseVisible(false);
-      props.isReload!(true);
+      await props.queryCaseApis();
     }
   };
 
@@ -117,7 +117,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
       <Drawer
         bodyStyle={{ padding: 0 }}
         visible={addCaseVisible}
-        width={1000}
+        width={'65%'}
         title="添加用例"
         onClose={() => setAddCaseVisible(false)}
         maskClosable={false}

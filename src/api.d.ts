@@ -68,6 +68,9 @@ declare namespace API {
     pageSize: number;
     uid?: string;
     name?: string;
+    status?: string;
+    level?: string;
+    casePartID?: number;
   }
 
   interface IQueryDepartmentTags {

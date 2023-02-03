@@ -5,6 +5,7 @@ const CasePartTreeUrl: string = '/api/case/part/query';
 const CasePartOptUrl: string = '/api/case/part/opt';
 const CaseAPIOptURl: string = '/api/case/interface/opt';
 const QueryCaseAPIByCasePartID: string = '/api/case/part/interfaces';
+const PageCaseAPI = '/api/case/interface/page';
 
 interface ICasePartTree {
   projectID: number;
@@ -96,6 +97,17 @@ export async function delApiCase(
   return request<API.IResponse<any>>(CaseAPIOptURl, {
     method: 'DELETE',
     data: body,
+    ...(options || {}),
+  });
+}
+
+export async function pageApiCase(
+  params: API.ISearch,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<any>>(PageCaseAPI, {
+    method: 'GET',
+    params: params,
     ...(options || {}),
   });
 }

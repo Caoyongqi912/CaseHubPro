@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import {
   Row,
-  Drawer,
   Col,
   Select,
   Modal,
@@ -23,8 +22,12 @@ import {
 import { queryProject } from '@/api/project';
 import FormForModal from '@/components/InterfaceComponent/FormForModal';
 import TestResult from '@/components/InterfaceComponent/TestResult';
-import AddTestCaseComponent from '@/components/InterfaceComponent/AddTestCaseComponent';
-import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import {
+  ActionType,
+  ProColumns,
+  ProFormInstance,
+  ProTable,
+} from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-layout';
 import RecorderDrawer from '@/components/InterfaceComponent/RecorderDrawer';
 import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
@@ -36,18 +39,11 @@ import {
   casePartTree,
   delApiCase,
   delCasePart,
+  pageApiCase,
   putCasePart,
   queryApiCaseByCasePartID,
 } from '@/api/interface';
 import { CONFIG } from '@/utils/config';
-
-const SplitProps: Props = {
-  className: 'caseSplit',
-  split: 'vertical',
-  minSize: 100,
-  maxSize: -100,
-  defaultSize: '10%',
-};
 
 const Index: FC = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
@@ -67,6 +63,7 @@ const Index: FC = (props) => {
   const [currentCaseAPI, setCurrentCaseAPI] = useState([]);
   const [projectsOpt, setProjectOpt] = useState([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
+  const ref = useRef<ProFormInstance>();
 
   useEffect(() => {
     queryProjects();
@@ -76,7 +73,7 @@ const Index: FC = (props) => {
   }, [projectID]);
   useEffect(() => {
     queryCaseApis();
-  }, [currentCasePartID]);
+  }, [currentCasePartID, currentCasePart]);
 
   /**
    * 查询所有项目
@@ -104,7 +101,6 @@ const Index: FC = (props) => {
       (p) => p.id === projectID,
     );
     if (filter_project.length === 0) {
-      // changeProject(projects[0].id);
       return projects[0];
     }
     return filter_project[0];
@@ -151,7 +147,6 @@ const Index: FC = (props) => {
       const res = await queryApiCaseByCasePartID({
         casePartID: currentCasePartID,
       });
-      console.log(res.data);
       setCurrentCaseAPI(res.data);
     }
   };
@@ -161,12 +156,12 @@ const Index: FC = (props) => {
     const res = await delApiCase({ uid: uid });
     if (res.code === 0) {
       message.success(res.msg);
-      queryCaseApis();
+      await queryCaseApis();
     }
-
     return;
   };
 
+  // table columns
   const columns: ProColumns[] = [
     {
       title: '名称',
@@ -176,6 +171,7 @@ const Index: FC = (props) => {
     {
       title: '请求协议',
       dataIndex: 'http',
+      search: false,
       render: (text, record) => {
         // @ts-ignore
         return CONFIG.REQUEST_TYPE[text];
@@ -184,6 +180,8 @@ const Index: FC = (props) => {
     {
       title: '优先级',
       dataIndex: 'level',
+      valueType: 'select',
+      valueEnum: CONFIG.CASE_LEVEL_ENUM,
       render: (text, record) => {
         return <Tag color={'blue'}>{text}</Tag>;
         // return <Tag color={CONFIG.RENDER_CASE_STATUS[text].color}>{
@@ -194,10 +192,14 @@ const Index: FC = (props) => {
     {
       title: '状态',
       dataIndex: 'status',
+      valueType: 'select',
+      valueEnum: CONFIG.CASE_STATUS_ENUM,
       render: (text, record) => {
         return (
-          <Tag color={CONFIG.RENDER_CASE_STATUS[text].color}>
-            {CONFIG.RENDER_CASE_STATUS[text].text}
+          // @ts-ignore
+          <Tag color={CONFIG.RENDER_CASE_STATUS[record.status].color}>
+            {/*// @ts-ignore*/}
+            {CONFIG.RENDER_CASE_STATUS[record.status].text}
           </Tag>
         );
       },
@@ -205,14 +207,12 @@ const Index: FC = (props) => {
     {
       title: '创建人',
       dataIndex: 'creatorName',
-      // render: (text, record) => {
-      //   return <Avatar >{text}</Avatar>;
-      // }
     },
     {
       title: '创建时间',
       dataIndex: 'create_time',
       valueType: 'date',
+      search: false,
     },
     {
       title: '操作',
@@ -257,11 +257,6 @@ const Index: FC = (props) => {
       },
     },
   ];
-  const isReload = (value: boolean) => {
-    if (value) {
-      actionRef.current?.reload();
-    }
-  };
 
   // 新增目录filed
   const fields = [
@@ -274,9 +269,12 @@ const Index: FC = (props) => {
     },
   ];
 
-  const saveCase = (data) => {};
+  const saveCase = (data: any) => {};
+
+  // 切换项目
   const changeProject = (projectID: number) => {
     setProjectID(projectID);
+    setCurrentCaseAPI([]);
   };
 
   /**
@@ -286,7 +284,11 @@ const Index: FC = (props) => {
     if (projectID) {
       const res = await casePartTree({ projectID: projectID });
       setCaseParts(res.data);
-      1;
+      setCurrentCasePartID(res.data[0].id);
+      setCurrentPart([res.data[0].id]);
+
+      console.log(currentCasePart);
+      console.log(currentCasePartID);
     }
   };
   //删除用例分组
@@ -352,7 +354,12 @@ const Index: FC = (props) => {
   const AddCasePart = (
     <Tooltip title="点击可新建根目录, 子目录需要在树上新建">
       <a
-        className="casePartAddButton"
+        style={{
+          float: 'right',
+          marginRight: '20px',
+          fontSize: '14px',
+          lineHeight: '26px',
+        }}
         onClick={() => {
           setRootModal(true);
           setRecord({ partName: '' });
@@ -365,6 +372,7 @@ const Index: FC = (props) => {
       </a>
     </Tooltip>
   );
+
   return (
     <PageContainer title={false}>
       {/*<TestResult flag={true} width={1000} caseName={name} />*/}
@@ -385,21 +393,10 @@ const Index: FC = (props) => {
             width={400}
             formName="root"
           />
-          <Drawer
-            bodyStyle={{ padding: 0 }}
-            visible={addCaseVisible}
-            width={1300}
-            title="添加用例"
-            onClose={() => setAddCaseVisible(false)}
-            maskClosable={false}
-          >
-            <AddTestCaseComponent />
-          </Drawer>
           <RecorderDrawer
             visible={addCaseVisible}
             setVisible={setAddCaseVisible}
           />
-
           <Col span={6}>
             <Card
               style={{
@@ -442,7 +439,7 @@ const Index: FC = (props) => {
                             display: 'inline-block',
                             marginLeft: 12,
                             fontWeight: 400,
-                            fontSize: 14,
+                            fontSize: 15,
                           }}
                         >
                           {getProject().name}
@@ -459,7 +456,14 @@ const Index: FC = (props) => {
                     addCasePart={AddCasePart}
                     menu={content}
                     onSelect={(keys: React.Key[], info: any) => {
-                      setCurrentCasePartID(info.node.key);
+                      console.log('kkk', keys);
+                      console.log('key', info.node.key);
+
+                      if (keys[0] != currentCasePart[0]) {
+                        // setCurrentPart(keys)
+                        setCurrentCasePartID(info.node.key);
+                        setCurrentPart([keys[0]]);
+                      }
                     }}
                     onAddNode={(node: any) => {
                       setCurrentNode(node.key);
@@ -506,11 +510,18 @@ const Index: FC = (props) => {
                 <Row style={{ marginTop: 16 }}>
                   <Col span={24}>
                     <ProTable
+                      formRef={ref}
                       editable={{
                         type: 'single',
                       }}
                       rowKey={(record) => record.uid}
                       actionRef={actionRef}
+                      // @ts-ignore
+                      request={async (param: API.ISearch) => {
+                        param.casePartID = currentCasePartID;
+                        const res: any = await pageApiCase(param);
+                        setCurrentCaseAPI(res.data.items);
+                      }}
                       dataSource={currentCaseAPI}
                       rowSelection={{}}
                       pagination={{
@@ -535,9 +546,9 @@ const Index: FC = (props) => {
                       columns={columns}
                       toolBarRender={() => [
                         <AddApiCase
+                          queryCaseApis={queryCaseApis}
                           casePartID={currentCasePartID}
                           projectID={projectID}
-                          isReload={isReload}
                         />,
                       ]}
                     ></ProTable>
