@@ -51,6 +51,27 @@ export const CONFIG = {
       text: '正常',
     },
   },
+  // 用例状态
+  CASE_STATUS: ['DEBUG', 'CLOSE', 'NORMAL'],
+  CASESTATUS: {
+    DEBUG: '待调试',
+    CLOSE: '停用',
+    NORMAL: '正常',
+  },
+  CASE_BADGE: {
+    DEBUG: {
+      status: 'processing',
+      text: '调试中',
+    },
+    CLOSE: {
+      status: 'error',
+      text: '已停用',
+    },
+    NORMAL: {
+      status: 'success',
+      text: '正常',
+    },
+  },
 
   ASSERT_TYPE: {
     equal: '等于',
@@ -84,12 +105,7 @@ export const CONFIG = {
     text_not_in: <Tag color="skyblue">文本不包含于</Tag>,
     text_in: <Tag color="orange">文本包含于</Tag>,
   },
-  // 用例状态
-  CASE_STATUS: {
-    1: 'DEBUG',
-    2: 'CLOSE',
-    3: 'NORMAL',
-  },
+
   REQUEST_TYPE: {
     // 1: <TextIcon font={18} icon="icon-http3" text="HTTP"/>,
     1: (
@@ -156,20 +172,6 @@ export const CONFIG = {
     4: 'orange',
   },
 
-  CASE_BADGE: {
-    1: {
-      status: 'processing',
-      text: '调试中',
-    },
-    2: {
-      status: 'error',
-      text: '已停用',
-    },
-    3: {
-      status: 'success',
-      text: '正常',
-    },
-  },
   SQL_TYPE: {
     0: 'MySQL',
     1: 'Postgresql',

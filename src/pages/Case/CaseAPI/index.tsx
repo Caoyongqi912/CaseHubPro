@@ -284,8 +284,10 @@ const Index: FC = (props) => {
     if (projectID) {
       const res = await casePartTree({ projectID: projectID });
       setCaseParts(res.data);
-      setCurrentCasePartID(res.data[0].id);
-      setCurrentPart([res.data[0].id]);
+      if (res.data.length > 0) {
+        setCurrentCasePartID(res.data[0].id);
+        setCurrentPart([res.data[0].id]);
+      }
 
       console.log(currentCasePart);
       console.log(currentCasePartID);
