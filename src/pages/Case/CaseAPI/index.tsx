@@ -288,9 +288,6 @@ const Index: FC = (props) => {
         setCurrentCasePartID(res.data[0].id);
         setCurrentPart([res.data[0].id]);
       }
-
-      console.log(currentCasePart);
-      console.log(currentCasePartID);
     }
   };
   //删除用例分组
@@ -458,12 +455,9 @@ const Index: FC = (props) => {
                     addCasePart={AddCasePart}
                     menu={content}
                     onSelect={(keys: React.Key[], info: any) => {
-                      console.log('kkk', keys);
-                      console.log('key', info.node.key);
-
                       if (keys[0] != currentCasePart[0]) {
-                        // setCurrentPart(keys)
                         setCurrentCasePartID(info.node.key);
+                        // @ts-ignore
                         setCurrentPart([keys[0]]);
                       }
                     }}

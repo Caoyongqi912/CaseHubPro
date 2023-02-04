@@ -55,14 +55,10 @@ const AddApiCase: FC<SelfProps> = (props) => {
         <Select placeholder="请选择用例当前状态">
           {Object.keys(CONFIG.CASESTATUS).map((key, value) => (
             <Option key={key} value={key}>
+              {/*// @ts-ignore*/}
               {CONFIG.CASESTATUS[key]}
             </Option>
           ))}
-          {/*{CONFIG.CASE_STATUS.map((value) => (*/}
-          {/*  <Option key={value} value={value}>*/}
-          {/*    {value}*/}
-          {/*  </Option>*/}
-          {/*))}*/}
         </Select>
       ),
       type: 'select',
