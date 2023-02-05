@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Steps } from 'antd';
+import { Button, FormInstance, Steps } from 'antd';
 import FormDemo from '@/pages/Case/Demo/formDEMO';
 
 const Index = () => {
-  const [form] = Form.useForm();
-  const [form2] = Form.useForm();
+  const [formList, setFormList] = useState<FormInstance[]>([]);
+  const getFormInstance = (form: FormInstance) => {
+    setFormList([...formList, form]);
+  };
   const [current, setCurrent] = useState(0);
+  const [items, setItems] = useState<{ key: string; title: string }[]>([]);
+  const [stepsData, setStepsData] = useState([]);
   const [steps, setSteps] = useState<{ title: string; content: any }[]>([
     {
       title: 'step1',
-      content: <FormDemo form={form} />,
+      content: <FormDemo getFormInstance={getFormInstance} />,
     },
   ]);
-  const [items, setItems] = useState<{ key: string; title: string }[]>([]);
   useEffect(() => {
     const i = steps.map((item) => ({ key: item.title, title: item.title }));
     setItems(i);
@@ -24,10 +27,12 @@ const Index = () => {
     setCurrent(nextCurrent);
     const _ = {
       title: 'step' + stepStr,
-      content: <FormDemo form={form2} />,
+      content: <FormDemo getFormInstance={getFormInstance} />,
     };
     steps.push(_);
     setSteps(steps);
+    console.log('formList', formList);
+    setFormList(formList);
   };
 
   const delStep = () => {
@@ -35,6 +40,8 @@ const Index = () => {
     setCurrent(nextCurrent);
     steps.pop();
     setSteps(steps);
+    formList.pop();
+    setFormList(formList);
   };
   const prev = () => {
     setCurrent(current - 1);
@@ -43,14 +50,33 @@ const Index = () => {
     setCurrent(current + 1);
   };
 
+  const getForm = () => {
+    console.dir(formList);
+    let valArr = [];
+    formList.forEach((e: FormInstance) => {
+      valArr.push(e.getFieldsValue());
+    });
+
+    console.log(valArr);
+  };
   return (
     <>
       {/*//step*/}
       <Steps current={current} items={items} initial={0} />
       {/*//content*/}
-      <div>{steps[current].content}</div>
+      <div>
+        {steps.map((el, i) => (
+          <div
+            style={{ display: i === current ? 'block' : 'none' }}
+            key={el.title}
+          >
+            {el.content}
+          </div>
+        ))}
+      </div>
       {/*//button*/}
       <div style={{ marginTop: 24 }}>
+        <Button onClick={() => getForm()}>Submit</Button>
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next
