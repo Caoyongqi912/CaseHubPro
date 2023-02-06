@@ -93,6 +93,7 @@ declare namespace API {
     required: boolean;
     message?: string;
     type: string;
+    default?: string;
     placeholder?: string;
     component: null | React.ReactElement;
     span: number;

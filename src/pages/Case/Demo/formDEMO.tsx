@@ -9,6 +9,7 @@ interface SelfProps {
 
 const FormDemo: FC<SelfProps> = ({ getFormInstance }) => {
   const [form] = Form.useForm();
+
   useEffect(() => {
     getFormInstance(form);
   }, []);

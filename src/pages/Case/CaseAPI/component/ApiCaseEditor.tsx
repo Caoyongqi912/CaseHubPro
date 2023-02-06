@@ -29,16 +29,10 @@ const getComponent = (
 interface SelfProps {
   onSubmit: Function;
   form: any;
-  stepsForm: any;
   caseInfo: API.IAPICaseInfo[];
-  body: string;
-  bodyType: number;
-  setBody: any;
-  setBodyType: any;
-  headers: Array<any>;
-  setHeaders: any;
-  formData: Array<any>;
-  setFromData: any;
+  getFormInstance: any;
+  SH: any;
+  SB: any;
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
@@ -61,6 +55,7 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
   return (
     <Form form={form}>
       <Card title={cardTitle} extra={cardExtra}>
+        {/*基本信息*/}
         <Row gutter={[8, 8]}>
           {caseInfo.map((item) => (
             <Col span={item.span || 24}>
@@ -69,6 +64,7 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
                 colon={true}
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
+                initialValue={item.default}
                 rules={[{ required: item.required, message: item.message }]}
                 name={item.name}
                 valuePropName={'value'}
@@ -78,7 +74,7 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
             </Col>
           ))}
         </Row>
-
+        {/*详情信息*/}
         <Row style={{ marginTop: 8 }}>
           <Col span={24}>
             <ApiCaseBottom {...props} />

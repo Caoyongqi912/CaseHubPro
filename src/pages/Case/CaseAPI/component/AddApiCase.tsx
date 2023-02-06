@@ -1,9 +1,18 @@
 import React, { FC, useState } from 'react';
-import { Badge, Button, Drawer, Form, message, Select } from 'antd';
+import {
+  Badge,
+  Button,
+  Drawer,
+  Form,
+  FormInstance,
+  message,
+  Select,
+} from 'antd';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import { CONFIG } from '@/utils/config';
 import { API } from '@/api';
 import { addApiCase } from '@/api/interface';
+import { EditableFormInstance } from '@ant-design/pro-components';
 
 const { Option } = Select;
 
@@ -15,11 +24,6 @@ interface SelfProps {
 
 const AddApiCase: FC<SelfProps> = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
-  const [body, setBody] = useState('');
-  const [bodyType, setBodyType] = useState(0);
-  const [headers, setHeaders] = useState([]);
-  const [formData, setFormData] = useState([]);
-
   const caseInfo: API.IAPICaseInfo[] = [
     {
       name: 'title',
@@ -44,6 +48,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
           ))}
         </Select>
       ),
+      default: 'P1',
       type: 'select',
       span: 8,
     },
@@ -62,6 +67,8 @@ const AddApiCase: FC<SelfProps> = (props) => {
         </Select>
       ),
       type: 'select',
+      default: 'DEBUG',
+
       span: 8,
     },
     {
@@ -79,6 +86,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
         </Select>
       ),
       type: 'select',
+      default: 'HTTP',
       span: 8,
     },
     {
@@ -91,25 +99,46 @@ const AddApiCase: FC<SelfProps> = (props) => {
     },
   ];
   const [infoForm] = Form.useForm<API.IInterface>();
-  const [stepsForm] = Form.useForm<API.IInterfaceStep>();
+  const [formList, setFormList] = useState<FormInstance[]>([]);
+  const [headers, setHeaders] = useState<any>([]);
+  const [bodys, setBodys] = useState<any>([]);
+  const getFormInstance = (form: FormInstance) => {
+    setFormList([...formList, form]);
+  };
 
+  const setH = (h: any) => {
+    console.log('setH', h);
+    setHeaders([...headers, h]);
+  };
+  const setB = (b: any) => {
+    setBodys([...bodys, b]);
+  };
   /**
    * 提交新增用例
    */
   const onSubmit = async () => {
     const data = await infoForm.validateFields();
-    const step = await stepsForm.validateFields();
-    step.body = body;
-    step.headers = headers;
-    data.steps = [{ ...step }];
-    data.projectID = props.projectID;
-    data.casePartID = props.casePartID;
-    const res = await addApiCase(data);
-    if (res.code === 0) {
-      message.success(res.msg);
-      setAddCaseVisible(false);
-      await props.queryCaseApis();
-    }
+    let arr: any[] = [];
+    let h: any = [];
+    formList.forEach((e: FormInstance) => {
+      arr.push(e.getFieldsValue());
+    });
+    console.log('info', data);
+    console.log('arr', arr);
+    console.log('h', headers);
+    console.log('b', bodys);
+    // const step = await stepsForm.validateFields();
+    // step.body = body;
+    // step.headers = headers;
+    // data.steps = [{ ...step }];
+    // data.projectID = props.projectID;
+    // data.casePartID = props.casePartID;
+    // const res = await addApiCase(data);
+    // if (res.code === 0) {
+    //   message.success(res.msg);
+    //   setAddCaseVisible(false);
+    //   await props.queryCaseApis();
+    // }
   };
 
   return (
@@ -124,17 +153,11 @@ const AddApiCase: FC<SelfProps> = (props) => {
       >
         <ApiCaseEditor
           form={infoForm}
-          stepsForm={stepsForm}
+          getFormInstance={getFormInstance}
           onSubmit={onSubmit}
           caseInfo={caseInfo}
-          body={body}
-          setBody={setBody}
-          formData={formData}
-          setFromData={setFormData}
-          headers={headers}
-          setHeaders={setHeaders}
-          bodyType={bodyType}
-          setBodyType={setBodyType}
+          SH={setH}
+          SB={setB}
         />
       </Drawer>
       <Button type="primary" onClick={() => setAddCaseVisible(true)}>

@@ -1,7 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { EditableProTable } from '@ant-design/pro-components';
 
-const EditableTable = ({
+interface SelfProps {
+  form?: any;
+  columns: any;
+  dataSource: any;
+  title: string;
+  setDataSource: any;
+  editableKeys: any;
+  setEditableRowKeys: any;
+  extra?: any;
+}
+
+const EditableTable: FC<SelfProps> = ({
+  form,
   columns,
   dataSource,
   title,
@@ -11,11 +23,12 @@ const EditableTable = ({
   extra,
 }) => {
   useEffect(() => {
-    setEditableRowKeys(dataSource.map((v) => v.id));
+    setEditableRowKeys(dataSource.map((v: any) => v.id));
   }, [dataSource]);
 
   return (
     <EditableProTable
+      form={form}
       headerTitle={title}
       columns={columns}
       rowKey="id"

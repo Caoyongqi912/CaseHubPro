@@ -21,6 +21,7 @@ const Index = () => {
     setItems(i);
   }, [steps, current]);
 
+  //添加一步
   const addStep = () => {
     const nextCurrent = current + 1;
     const stepStr = nextCurrent + 1;
@@ -31,10 +32,10 @@ const Index = () => {
     };
     steps.push(_);
     setSteps(steps);
-    console.log('formList', formList);
     setFormList(formList);
+    console.log('add', formList);
   };
-
+  // 删除最后一步
   const delStep = () => {
     const nextCurrent = current - 1;
     setCurrent(nextCurrent);
@@ -42,7 +43,16 @@ const Index = () => {
     setSteps(steps);
     formList.pop();
     setFormList(formList);
+    console.log('del', formList);
   };
+
+  const getForm = () => {
+    console.dir(formList);
+    formList.forEach((e: FormInstance) => {
+      stepsData.push(e.getFieldsValue());
+    });
+  };
+
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -50,19 +60,10 @@ const Index = () => {
     setCurrent(current + 1);
   };
 
-  const getForm = () => {
-    console.dir(formList);
-    let valArr = [];
-    formList.forEach((e: FormInstance) => {
-      valArr.push(e.getFieldsValue());
-    });
-
-    console.log(valArr);
-  };
   return (
     <>
       {/*//step*/}
-      <Steps current={current} items={items} initial={0} />
+      <Steps current={current} items={items} initial={0} size={'small'} />
       {/*//content*/}
       <div>
         {steps.map((el, i) => (

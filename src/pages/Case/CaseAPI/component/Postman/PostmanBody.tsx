@@ -27,15 +27,9 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 interface SelfProps {
-  stepsForm: any;
-  body: string;
-  bodyType: number;
-  setBody: any;
-  setBodyType: any;
-  headers: Array<any>;
-  setHeaders: any;
-  formData: Array<any>;
-  setFromData: any;
+  getFormInstance: any;
+  SH: any;
+  SB: any;
 }
 
 interface KV {
@@ -46,43 +40,50 @@ interface KV {
 }
 
 const PostmanBody: FC<SelfProps> = (props, context) => {
-  const {
-    body,
-    setBody,
-    headers,
-    setBodyType,
-    setHeaders,
-    stepsForm,
-    bodyType,
-  } = props;
+  const { getFormInstance } = props;
+  const [form] = Form.useForm();
+  const [headerForm] = Form.useForm();
+
   const [method, setMethod] = useState('GET');
   const [paramsData, setParamsData] = useState([]);
-  const [editableKeys, setEditableRowKeys] = useState(() =>
-    paramsData.map((item) => item.id),
+  const [headers, setHeaders] = useState([]);
+
+  const [body, setBody] = useState([]);
+  const [bodyType, setBodyType] = useState(0);
+
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
+    paramsData.map((item: any) => item.id),
   );
-  const [headersKeys, setHeadersKeys] = useState(() =>
-    headers.map((item) => item.id),
+  const [headersKeys, setHeadersKeys] = useState<React.Key[]>(() =>
+    headers.map((item: any) => item.id),
   );
 
+  useEffect(() => {
+    getFormInstance(form);
+  }, []);
+  useEffect(() => {
+    props.SH(headers);
+    props.SB(body);
+  }, [headers, body]);
   const columns = (columnType: string) => {
     return [
       {
-        title: 'KEY',
+        title: 'key',
         key: 'key',
         dataIndex: 'key',
       },
       {
-        title: 'VALUE',
+        title: 'value',
         key: 'value',
         dataIndex: 'value',
       },
       {
-        title: 'DESCRIPTION',
+        title: 'desc',
         key: 'desc',
         dataIndex: 'desc',
       },
       {
-        title: '操作',
+        title: 'opt',
         valueType: 'option',
         render: (_: any, record: any) => {
           return (
@@ -90,6 +91,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
               <EditTwoTone
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
+                  console.log('add');
                   setEditableRowKeys([record.id]);
                 }}
               />
@@ -120,7 +122,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
 
   // 根据paramsData拼接url
   const joinUrl = (data: KV[]) => {
-    const url = stepsForm.getFieldValue('url');
+    const url = form.getFieldValue('url');
     let tempUrl: string;
     if (url === undefined) {
       tempUrl = '';
@@ -137,7 +139,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
         }
       }
     });
-    stepsForm.setFieldsValue({ url: tempUrl });
+    form.setFieldsValue({ url: tempUrl });
   };
 
   // 返回body 类型 component
@@ -151,20 +153,11 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
         </div>
       );
     }
-    if (bd === 2) {
-      return (
-        <div
-          style={{ height: '20vh', lineHeight: '20vh', textAlign: 'center' }}
-        >
-          This request does not have a body
-        </div>
-      );
-    }
     return (
       <Row style={{ marginTop: 12 }}>
         <Col span={24}>
           <Card bodyStyle={{ padding: 0 }}>
-            <CodeEditor onChange={(e) => setBody(JSON.parse(e))} />
+            <CodeEditor onChange={(e) => setBody(JSON.parse(e!))} />
           </Card>
         </Col>
       </Row>
@@ -172,10 +165,11 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
   };
 
   return (
-    <Form form={stepsForm}>
+    <Form form={form}>
       <Row gutter={[8, 8]}>
+        {/*请求方式*/}
         <Col span={20}>
-          <Form layout="inline" form={stepsForm}>
+          <Form layout="inline" form={form}>
             <Col span={8}>
               <Form.Item
                 colon={false}
@@ -220,6 +214,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
             </Col>
           </Form>
         </Col>
+        {/*url*/}
         <Col span={4}>
           <div style={{ float: 'right' }}>
             <Button type={'primary'}>Send</Button>
@@ -241,10 +236,10 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
           </TabPane>
           <TabPane tab="Headers" key={'2'}>
             <EditableTable
+              form={headerForm}
               columns={columns('headers')}
               title="Headers"
               dataSource={headers}
-              extra={null}
               setDataSource={setHeaders}
               editableKeys={headersKeys}
               setEditableRowKeys={setHeadersKeys}
@@ -260,7 +255,6 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
                 }}
               >
                 <Radio value={0}>none</Radio>
-                {/*<Radio value={2}>form-data</Radio>*/}
                 <Radio value={1}>json</Radio>
               </Radio.Group>
             </Row>
