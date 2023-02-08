@@ -31,8 +31,12 @@ interface SelfProps {
   form: any;
   caseInfo: API.IAPICaseInfo[];
   getFormInstance: any;
+  headers: any;
+  body: any;
   SH: any;
   SB: any;
+  stepInfo: any;
+  setStepInfo: any;
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {

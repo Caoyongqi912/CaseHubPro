@@ -6,6 +6,7 @@ const CasePartOptUrl: string = '/api/case/part/opt';
 const CaseAPIOptURl: string = '/api/case/interface/opt';
 const QueryCaseAPIByCasePartID: string = '/api/case/part/interfaces';
 const PageCaseAPI = '/api/case/interface/page';
+const RunApiDemoURL = '/api/case/interface/demo';
 
 interface ICasePartTree {
   projectID: number;
@@ -108,6 +109,14 @@ export async function pageApiCase(
   return request<API.IResponse<any>>(PageCaseAPI, {
     method: 'GET',
     params: params,
+    ...(options || {}),
+  });
+}
+
+export async function runApiDemo(body: any, options?: { [key: string]: any }) {
+  return request<API.IResponse<any>>(RunApiDemoURL, {
+    method: 'POST',
+    data: body,
     ...(options || {}),
   });
 }

@@ -1,56 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, FormInstance, Steps } from 'antd';
 import FormDemo from '@/pages/Case/Demo/formDEMO';
 
 const Index = () => {
-  const [formList, setFormList] = useState<FormInstance[]>([]);
-  const getFormInstance = (form: FormInstance) => {
-    setFormList([...formList, form]);
+  const [formList, setFormList] = useState<
+    { curr: number; form: FormInstance }[]
+  >([]);
+  const getFormInstance = (data: { curr: number; form: FormInstance }) => {
+    setFormList([...formList, data]);
+  };
+  let uniqueKey = useRef(0);
+  const getK: () => number = () => {
+    return (uniqueKey.current = ++uniqueKey.current);
   };
   const [current, setCurrent] = useState(0);
   const [items, setItems] = useState<{ key: string; title: string }[]>([]);
-  const [stepsData, setStepsData] = useState([]);
-  const [steps, setSteps] = useState<{ title: string; content: any }[]>([
+  const [steps, setSteps] = useState<
+    { title: string; content: any; key: number }[]
+  >([
     {
-      title: 'step1',
-      content: <FormDemo getFormInstance={getFormInstance} />,
+      title: `step${current}`,
+      content: <FormDemo getFormInstance={getFormInstance} current={current} />,
+      key: getK(),
     },
   ]);
   useEffect(() => {
-    const i = steps.map((item) => ({ key: item.title, title: item.title }));
+    const i = steps.map((item, index) => ({
+      key: item.title,
+      title: item.title,
+    }));
     setItems(i);
   }, [steps, current]);
 
   //添加一步
   const addStep = () => {
     const nextCurrent = current + 1;
-    const stepStr = nextCurrent + 1;
     setCurrent(nextCurrent);
     const _ = {
-      title: 'step' + stepStr,
-      content: <FormDemo getFormInstance={getFormInstance} />,
+      title: `step${nextCurrent}`,
+      content: (
+        <FormDemo getFormInstance={getFormInstance} current={nextCurrent} />
+      ),
+      key: getK(),
     };
     steps.push(_);
     setSteps(steps);
+
     setFormList(formList);
     console.log('add', formList);
   };
-  // 删除最后一步
+  // 删除步骤
   const delStep = () => {
-    const nextCurrent = current - 1;
-    setCurrent(nextCurrent);
-    steps.pop();
+    console.log('steps', steps);
+    console.log('current', current);
+    console.log('form', formList);
+    steps.splice(current, 1);
+    formList.splice(current, 1);
+    steps.map((value, index, array) => {
+      steps[index].title = `step${index}`;
+    });
     setSteps(steps);
-    formList.pop();
     setFormList(formList);
-    console.log('del', formList);
+    setCurrent(current - 1);
   };
 
   const getForm = () => {
-    console.dir(formList);
-    formList.forEach((e: FormInstance) => {
-      stepsData.push(e.getFieldsValue());
+    let arr: any[] = [];
+    formList.forEach((value, index, array) => {
+      arr.push({
+        index: value.curr,
+        data: value.form.getFieldsValue().username,
+      });
     });
+    console.log('res', arr);
   };
 
   const prev = () => {
@@ -63,13 +85,14 @@ const Index = () => {
   return (
     <>
       {/*//step*/}
-      <Steps current={current} items={items} initial={0} size={'small'} />
+      <Steps current={current} items={items} size={'small'} />
       {/*//content*/}
-      <div>
+
+      <div style={{ marginTop: 10 }}>
         {steps.map((el, i) => (
           <div
             style={{ display: i === current ? 'block' : 'none' }}
-            key={el.title}
+            key={el.key}
           >
             {el.content}
           </div>
@@ -91,7 +114,7 @@ const Index = () => {
                 delStep();
               }}
             >
-              -
+              删除此步骤
             </Button>
             <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
               Previous
@@ -106,7 +129,7 @@ const Index = () => {
                 addStep();
               }}
             >
-              +
+              添加
             </Button>
           </>
         )}

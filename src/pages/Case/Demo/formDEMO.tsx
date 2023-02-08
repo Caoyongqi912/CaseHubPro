@@ -3,16 +3,18 @@ import { Button, Form, Input } from 'antd';
 
 interface SelfProps {
   getFormInstance: any;
+  current: number;
   v?: any[];
   setV?: any;
 }
 
-const FormDemo: FC<SelfProps> = ({ getFormInstance }) => {
+const FormDemo: FC<SelfProps> = ({ getFormInstance, current }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    getFormInstance(form);
+    getFormInstance({ curr: current, form: form });
   }, []);
+
   return (
     <Form form={form} autoComplete="off">
       <Form.Item

@@ -2,7 +2,6 @@ import { API } from '@/api';
 import { request } from '@@/plugin-request/request';
 
 const HostUrl = '/api/case/host/opt';
-
 /**
  * host 分页
  * @param params

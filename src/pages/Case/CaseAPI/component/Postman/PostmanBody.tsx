@@ -1,27 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Select,
-  Tabs,
-  Radio,
-  Dropdown,
-  Menu,
-  Card,
-} from 'antd';
-import {
-  DeleteTwoTone,
-  DownOutlined,
-  EditTwoTone,
-  QuestionCircleOutlined,
-} from '@ant-design/icons';
+import { Button, Col, Form, Input, Row, Select, Tabs, Radio, Card } from 'antd';
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
 import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
-import type { MenuProps } from 'antd';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
+import { runApiDemo } from '@/api/interface';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -30,6 +12,7 @@ interface SelfProps {
   getFormInstance: any;
   SH: any;
   SB: any;
+  setResponse: any;
 }
 
 interface KV {
@@ -39,10 +22,9 @@ interface KV {
   desc: string;
 }
 
-const PostmanBody: FC<SelfProps> = (props, context) => {
-  const { getFormInstance } = props;
+const PostmanBody: FC<SelfProps> = (props) => {
+  const { getFormInstance, setResponse } = props;
   const [form] = Form.useForm();
-  const [headerForm] = Form.useForm();
 
   const [method, setMethod] = useState('GET');
   const [paramsData, setParamsData] = useState([]);
@@ -65,6 +47,7 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
     props.SH(headers);
     props.SB(body);
   }, [headers, body]);
+
   const columns = (columnType: string) => {
     return [
       {
@@ -164,104 +147,144 @@ const PostmanBody: FC<SelfProps> = (props, context) => {
     );
   };
 
+  const sendReq = async () => {
+    const req = form.getFieldsValue();
+    req.headers = headers;
+    if (body.length > 0) {
+      req.body = body;
+    }
+    const res = await runApiDemo(req);
+    if (res.code === 0) {
+      setResponse(res.data);
+    }
+  };
+  const reqMethod = (
+    <>
+      <Option key="GET" value="GET">
+        GET
+      </Option>
+      <Option key="POST" value="POST">
+        POST
+      </Option>
+      <Option key="PUT" value="PUT">
+        PUT
+      </Option>
+      <Option key="DELETE" value="DELETE">
+        DELETE
+      </Option>
+    </>
+  );
   return (
     <Form form={form}>
-      <Row gutter={[8, 8]}>
-        {/*请求方式*/}
-        <Col span={20}>
-          <Form layout="inline" form={form}>
-            <Col span={8}>
-              <Form.Item
-                colon={false}
-                name="method"
-                label="请求方式"
-                rules={[{ required: true, message: '请选择请求方法' }]}
-                initialValue={method}
-              >
-                <Select
-                  placeholder="选择请求方式"
-                  onChange={(data) => setMethod(data)}
-                  style={{ width: 120, textAlign: 'left' }}
+      <Card style={{ width: '100%' }}>
+        <Row gutter={[8, 8]}>
+          <Col span={20}>
+            <Form layout="inline" form={form}>
+              <Row gutter={[8, 8]}>
+                <Col span={16}>
+                  <Form.Item
+                    name={'name'}
+                    label={'步骤名称'}
+                    colon={false}
+                    required={true}
+                  >
+                    <Input
+                      allowClear
+                      autoComplete={'off'}
+                      placeholder={'请输入步骤名称'}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name={'desc'} label={'步骤描述'} colon={false}>
+                    <Input allowClear autoComplete={'off'} />
+                  </Form.Item>
+                </Col>
+                <Col span={16}>
+                  <Form.Item
+                    colon={false}
+                    name="method"
+                    label="请求方式"
+                    rules={[{ required: true, message: '请选择请求方法' }]}
+                    initialValue={method}
+                  >
+                    <Select
+                      placeholder="选择请求方式"
+                      onChange={(data) => setMethod(data)}
+                      style={{ width: 120, textAlign: 'left' }}
+                    >
+                      {reqMethod}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    name={'url'}
+                    colon={false}
+                    label={'请求地址'}
+                    rules={[{ required: true, message: '请输入请求url' }]}
+                  >
+                    <Input
+                      placeholder="请输入要请求的url"
+                      allowClear
+                      autoComplete={'off'}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+          <Col span={4}>
+            <div style={{ float: 'right' }}>
+              <Button onClick={sendReq} type={'primary'}>
+                Send
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      </Card>
+      <Card style={{ width: '100%', marginTop: 5 }}>
+        <Row style={{ marginTop: 8 }}>
+          <Tabs defaultActiveKey="1" style={{ width: '100%' }}>
+            <TabPane tab="Params" key={'1'}>
+              <EditableTable
+                columns={columns('params')}
+                title="Query Params"
+                dataSource={paramsData}
+                setDataSource={setParamsData}
+                extra={joinUrl}
+                editableKeys={editableKeys}
+                setEditableRowKeys={setEditableRowKeys}
+              />
+            </TabPane>
+            <TabPane tab="Headers" key={'2'}>
+              <EditableTable
+                columns={columns('headers')}
+                title="Headers"
+                dataSource={headers}
+                setDataSource={setHeaders}
+                editableKeys={headersKeys}
+                setEditableRowKeys={setHeadersKeys}
+              />
+            </TabPane>
+            <TabPane tab="Body" key={'3'}>
+              <Row>
+                <Radio.Group
+                  defaultValue={bodyType}
+                  value={bodyType}
+                  onChange={(e) => {
+                    setBodyType(e.target.value);
+                  }}
                 >
-                  <Option key="GET" value="GET">
-                    GET
-                  </Option>
-                  <Option key="POST" value="POST">
-                    POST
-                  </Option>
-                  <Option key="PUT" value="PUT">
-                    PUT
-                  </Option>
-                  <Option key="DELETE" value="DELETE">
-                    DELETE
-                  </Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={16}>
-              <Form.Item
-                name={'url'}
-                colon={false}
-                label={'请求地址'}
-                rules={[{ required: true, message: '请输入请求url' }]}
-              >
-                <Input
-                  // addonBefore={prefixSelector}
-                  style={{ width: '100%' }}
-                  placeholder="请输入要请求的url"
-                />
-              </Form.Item>
-            </Col>
-          </Form>
-        </Col>
-        {/*url*/}
-        <Col span={4}>
-          <div style={{ float: 'right' }}>
-            <Button type={'primary'}>Send</Button>
-          </div>
-        </Col>
-      </Row>
-      <Row style={{ marginTop: 8 }}>
-        <Tabs defaultActiveKey="1" style={{ width: '100%' }}>
-          <TabPane tab="Params" key={'1'}>
-            <EditableTable
-              columns={columns('params')}
-              title="Query Params"
-              dataSource={paramsData}
-              setDataSource={setParamsData}
-              extra={joinUrl}
-              editableKeys={editableKeys}
-              setEditableRowKeys={setEditableRowKeys}
-            />
-          </TabPane>
-          <TabPane tab="Headers" key={'2'}>
-            <EditableTable
-              form={headerForm}
-              columns={columns('headers')}
-              title="Headers"
-              dataSource={headers}
-              setDataSource={setHeaders}
-              editableKeys={headersKeys}
-              setEditableRowKeys={setHeadersKeys}
-            />
-          </TabPane>
-          <TabPane tab="Body" key={'3'}>
-            <Row>
-              <Radio.Group
-                defaultValue={bodyType}
-                value={bodyType}
-                onChange={(e) => {
-                  setBodyType(e.target.value);
-                }}
-              >
-                <Radio value={0}>none</Radio>
-                <Radio value={1}>json</Radio>
-              </Radio.Group>
-            </Row>
-            {getBody(bodyType)}
-          </TabPane>
-        </Tabs>
-      </Row>
+                  <Radio value={0}>none</Radio>
+                  <Radio value={1}>json</Radio>
+                </Radio.Group>
+              </Row>
+              {getBody(bodyType)}
+            </TabPane>
+          </Tabs>
+        </Row>
+      </Card>
     </Form>
   );
 };

@@ -8,6 +8,7 @@ interface SelfProps {
   getFormInstance: any;
   SH: any;
   SB: any;
+  setResponse: any;
 }
 
 const { TabPane } = Tabs;

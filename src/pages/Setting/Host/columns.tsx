@@ -43,8 +43,8 @@ const Columns: ProColumns[] = [
     },
   },
   {
-    title: 'creator',
-    dataIndex: 'creator',
+    title: 'creatorName',
+    dataIndex: 'creatorName',
     ellipsis: true,
     editable: false,
     search: false,
@@ -79,9 +79,6 @@ const Columns: ProColumns[] = [
         }}
       >
         编辑
-      </a>,
-      <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-        查看
       </a>,
     ],
   },

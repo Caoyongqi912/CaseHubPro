@@ -3,6 +3,7 @@ import { ActionType, ProTable } from '@ant-design/pro-components';
 import columns from '@/pages/Setting/Host/columns';
 import { hostOpt, pageHost } from '@/api/host';
 import AddHost from '@/pages/Setting/Host/components/AddHost';
+import { API } from '@/api';
 
 const Index = () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发

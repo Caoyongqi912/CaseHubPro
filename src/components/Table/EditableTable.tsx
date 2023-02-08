@@ -2,7 +2,6 @@ import React, { FC, useEffect } from 'react';
 import { EditableProTable } from '@ant-design/pro-components';
 
 interface SelfProps {
-  form?: any;
   columns: any;
   dataSource: any;
   title: string;
@@ -13,7 +12,6 @@ interface SelfProps {
 }
 
 const EditableTable: FC<SelfProps> = ({
-  form,
   columns,
   dataSource,
   title,
@@ -28,7 +26,6 @@ const EditableTable: FC<SelfProps> = ({
 
   return (
     <EditableProTable
-      form={form}
       headerTitle={title}
       columns={columns}
       rowKey="id"
