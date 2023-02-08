@@ -45,9 +45,7 @@ const Index = () => {
     };
     steps.push(_);
     setSteps(steps);
-
     setFormList(formList);
-    console.log('add', formList);
   };
   // 删除步骤
   const delStep = () => {
