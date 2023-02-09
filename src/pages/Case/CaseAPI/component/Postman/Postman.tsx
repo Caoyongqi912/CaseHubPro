@@ -1,7 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Card, Col, Row, Tabs } from 'antd';
 import { API } from '@/api';
 import PostmanBody from '@/pages/Case/CaseAPI/component/Postman/PostmanBody';
+import CaseAssertTable from '@/pages/Case/CaseAPI/component/Postman/CaseAssertTable';
+import CaseVariableTable from '@/pages/Case/CaseAPI/component/Postman/CaseVariableTable';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfo[];
@@ -14,8 +16,14 @@ interface SelfProps {
 const { TabPane } = Tabs;
 
 const Postman: FC<SelfProps> = (props, context) => {
+  const [activeKey, setActiveKey] = useState('3');
   return (
-    <Tabs activeKey={'3'} onChange={(key) => {}}>
+    <Tabs
+      activeKey={activeKey}
+      onChange={(key) => {
+        setActiveKey(key);
+      }}
+    >
       <TabPane key="1" tab={<span>数据管理</span>}>
         {' '}
       </TabPane>
@@ -32,10 +40,10 @@ const Postman: FC<SelfProps> = (props, context) => {
         </Row>
       </TabPane>
       <TabPane key="4" tab={<span>出参提取</span>}>
-        {' '}
+        <CaseVariableTable />
       </TabPane>
       <TabPane key="5" tab={<span>断言</span>}>
-        {' '}
+        <CaseAssertTable />
       </TabPane>
       <TabPane key="6" tab={<span>后置条件</span>}>
         {' '}
