@@ -105,6 +105,9 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const [formList, setFormList] = useState<FormInstance[]>([]);
   const [headers, setHeaders] = useState<any>([]);
   const [body, setBody] = useState<any>([]);
+  const [assertList, setAssertList] = useState<any>([]);
+  const [extractList, setExtractList] = useState<any>([]);
+
   const getFormInstance = (form: FormInstance) => {
     setFormList([...formList, form]);
   };
@@ -116,6 +119,13 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const setB = (b: any) => {
     setBody([...body, b]);
   };
+  const setA = (b: any) => {
+    setAssertList([...assertList, b]);
+  };
+  const setE = (b: any) => {
+    setExtractList([...extractList, b]);
+  };
+
   /**
    * 提交新增用例
    * { title:str,level:str,status:str,http:str,desc:str
@@ -135,6 +145,8 @@ const AddApiCase: FC<SelfProps> = (props) => {
         ...e.getFieldsValue(),
         headers: headers[index],
         body: body[index],
+        asserts: assertList[index],
+        extracts: extractList[index],
         step: index,
       };
       steps.push(info);
@@ -175,11 +187,13 @@ const AddApiCase: FC<SelfProps> = (props) => {
           onSubmit={onSubmit}
           caseInfo={caseInfo}
           SH={setH}
+          SA={setA}
+          SB={setB}
+          SE={setE}
           headers={headers}
           body={body}
           stepInfo={formList}
           setStepInfo={setFormList}
-          SB={setB}
         />
       </Drawer>
       <Button type="primary" onClick={() => setAddCaseVisible(true)}>

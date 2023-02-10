@@ -108,19 +108,20 @@ export const CONFIG = {
 
   REQUEST_TYPE: {
     // 1: <TextIcon font={18} icon="icon-http3" text="HTTP"/>,
-    1: (
+    HTTP: (
       <span>
         <Send theme="outline" size="14" fill="#7ed321" /> HTTP
       </span>
     ),
-    2: <TextIcon font={14} icon="icon-GRPC" text="GRPC" />,
-    3: <TextIcon font={14} icon="icon-a-dubbo1" text="Dubbo" />,
+    GRPC: <TextIcon font={14} icon="icon-GRPC" text="GRPC" />,
+    Dubbo: <TextIcon font={14} icon="icon-a-dubbo1" text="Dubbo" />,
   },
   REQUEST_TYPE_TAG: {
     1: <Tag color="success">HTTP</Tag>,
     2: <Tag color="orange">GRPC</Tag>,
     3: <Tag color="blue">DUBBO</Tag>,
   },
+
   REQUEST_METHOD: {
     GET: <Tag color="success">GET</Tag>,
     POST: <Tag color="blue">POST</Tag>,

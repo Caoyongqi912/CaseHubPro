@@ -35,6 +35,8 @@ interface SelfProps {
   body: any;
   SH: any;
   SB: any;
+  SA: any;
+  SE: any;
   stepInfo: any;
   setStepInfo: any;
 }

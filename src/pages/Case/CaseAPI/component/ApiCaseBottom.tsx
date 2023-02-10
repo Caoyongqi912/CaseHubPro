@@ -9,6 +9,8 @@ interface SelfProps {
   getFormInstance: any;
   SH: any;
   SB: any;
+  SA: any;
+  SE: any;
   headers: any;
   body: any;
   stepInfo: any;

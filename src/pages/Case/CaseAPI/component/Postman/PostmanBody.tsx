@@ -74,7 +74,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
               <EditTwoTone
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                  console.log('add');
                   setEditableRowKeys([record.id]);
                 }}
               />

@@ -49,9 +49,6 @@ const Index = () => {
   };
   // 删除步骤
   const delStep = () => {
-    console.log('steps', steps);
-    console.log('current', current);
-    console.log('form', formList);
     steps.splice(current, 1);
     formList.splice(current, 1);
     steps.map((value, index, array) => {
@@ -70,7 +67,6 @@ const Index = () => {
         data: value.form.getFieldsValue().username,
       });
     });
-    console.log('res', arr);
   };
 
   const prev = () => {
