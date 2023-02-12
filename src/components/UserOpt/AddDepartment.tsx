@@ -8,6 +8,7 @@ import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { addDepartmentInfo } from '@/api/user';
 import MohuSearch from '@/components/UserOpt/MohuSearch';
+import { API } from '@/api';
 
 interface selfProps {
   reload: Function | undefined;
@@ -25,7 +26,7 @@ const AddDepartment: React.FC<selfProps> = (props) => {
     }>
       title="添加部门"
       trigger={
-        <Button>
+        <Button type={'primary'}>
           <PlusOutlined />
           添加部门
         </Button>

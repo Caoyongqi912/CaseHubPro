@@ -1,20 +1,10 @@
 import React, { FC, useState } from 'react';
-import {
-  Badge,
-  Button,
-  Drawer,
-  Form,
-  FormInstance,
-  message,
-  Select,
-} from 'antd';
+import { Button, Drawer, Form, FormInstance, message } from 'antd';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
-import { CONFIG } from '@/utils/config';
 import { API } from '@/api';
 import { addApiCase } from '@/api/interface';
 import Result from '@/pages/Case/CaseAPI/component/Result';
-
-const { Option } = Select;
+import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
 
 interface SelfProps {
   casePartID: number;
@@ -23,107 +13,31 @@ interface SelfProps {
 }
 
 const AddApiCase: FC<SelfProps> = (props) => {
-  const [resultModal, setResultModal] = useState(false);
+  const [resultModal, setResultModal] = useState<boolean>(false);
   const [testResult, setTestResult] = useState({});
-
-  const [addCaseVisible, setAddCaseVisible] = useState(false);
-  const caseInfo: API.IAPICaseInfo[] = [
-    {
-      name: 'title',
-      label: '用例名称',
-      required: true,
-      message: '请输入用例名称',
-      type: 'input',
-      placeholder: '请输入用例名称',
-      component: null,
-      span: 8,
-    },
-    {
-      name: 'level',
-      label: '优先级',
-      required: true,
-      component: (
-        <Select placeholder="请选择用例优先级">
-          {CONFIG.CASE_LEVEL.map((v) => (
-            <Option key={v} value={v}>
-              {v}
-            </Option>
-          ))}
-        </Select>
-      ),
-      default: 'P1',
-      type: 'select',
-      span: 8,
-    },
-    {
-      name: 'status',
-      label: '用例状态',
-      required: true,
-      component: (
-        <Select placeholder="请选择用例当前状态">
-          {Object.keys(CONFIG.CASESTATUS).map((key, value) => (
-            <Option key={key} value={key}>
-              {/*// @ts-ignore*/}
-              {CONFIG.CASESTATUS[key]}
-            </Option>
-          ))}
-        </Select>
-      ),
-      type: 'select',
-      default: 'DEBUG',
-
-      span: 8,
-    },
-    {
-      name: 'http',
-      label: '请求类型',
-      required: true,
-      component: (
-        <Select placeholder="请选择请求协议类型">
-          {Object.keys(CONFIG.REQUEST_TYPE).map((key) => (
-            <Option key={key} value={key} disabled={key !== '1'}>
-              {/*// @ts-ignore*/}
-              {CONFIG.REQUEST_TYPE[key]}
-            </Option>
-          ))}
-        </Select>
-      ),
-      type: 'select',
-      default: 'HTTP',
-      span: 8,
-    },
-    {
-      name: 'desc',
-      label: '描述',
-      required: false,
-      component: null,
-      type: 'textarea',
-      span: 8,
-    },
-  ];
+  const [addCaseVisible, setAddCaseVisible] = useState<boolean>(false);
   const [infoForm] = Form.useForm<API.IInterface>();
   const [formList, setFormList] = useState<FormInstance[]>([]);
-  const [headers, setHeaders] = useState<any>([]);
+  const [headers, setHeaders] = useState<API.IHeaders[]>([]);
   const [body, setBody] = useState<any>([]);
-  const [assertList, setAssertList] = useState<any>([]);
-  const [extractList, setExtractList] = useState<any>([]);
+  const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
+  const [extractList, setExtractList] = useState<API.IExtract[]>([]);
 
   const getFormInstance = (form: FormInstance) => {
     setFormList([...formList, form]);
   };
 
-  const setH = (h: any) => {
-    console.log('set', h);
-    setHeaders([...headers, h]);
+  const setH = (header: API.IHeaders) => {
+    setHeaders([...headers, header]);
   };
   const setB = (b: any) => {
     setBody([...body, b]);
   };
-  const setA = (b: any) => {
-    setAssertList([...assertList, b]);
+  const setA = (assert: API.IAssertList) => {
+    setAssertList([...assertList, assert]);
   };
-  const setE = (b: any) => {
-    setExtractList([...extractList, b]);
+  const setE = (extract: API.IExtract) => {
+    setExtractList([...extractList, extract]);
   };
 
   /**
@@ -134,7 +48,8 @@ const AddApiCase: FC<SelfProps> = (props) => {
    *          params:{key:str,val:str,desc:str}[],
    *          body:{},
    *          auth:{},
-   *          jsonpath:{jp:str,expect:str,option:str}[]
+   *          asserts:[ IAssertList[]]
+   *          extracts:[IExtract{}]
    *        }[]
    */
   const onSubmit = async () => {

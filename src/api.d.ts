@@ -3,7 +3,7 @@ import React from 'react';
 declare namespace API {
   interface IResponse<T> {
     code: number;
-    data?: T | undefined;
+    data?: T | undefined | null;
     msg: string;
   }
 
@@ -87,7 +87,7 @@ declare namespace API {
     updater?: string;
   }
 
-  interface IAPICaseInfo {
+  interface IAPICaseInfoForm {
     name: string;
     label: string;
     required: boolean;
@@ -125,9 +125,24 @@ declare namespace API {
     children?: ITreeNode[];
   }
 
-  interface IHeader {
-    key: string;
-    val: string;
+  interface IHeaders {
+    id?: number;
+    key?: string;
+    val?: string;
+  }
+
+  interface IExtract {
+    id?: number;
+    key?: string;
+    val?: string;
+  }
+
+  interface IAssertList {
+    id?: number;
+    extraOpt?: 'jsonpath' | 're';
+    extraValue?: string;
+    assertOpt?: string;
+    expect?: any;
   }
 
   interface IAuth {
@@ -142,17 +157,19 @@ declare namespace API {
     url: string;
     method: string;
     http: string;
-    headers?: IHeader[];
     body?: any;
+    headers?: IHeaders[] | [];
+    asserts?: IAssertList[] | [];
+    extracts?: IExtract[] | [];
   }
 
   interface IInterface {
     title: string;
-    desc?: string | null;
+    desc: string | null;
     status: string;
     level: string;
     casePartID: number;
     projectID: number;
-    steps?: IInterfaceStep[];
+    steps: IInterfaceStep[] | [];
   }
 }

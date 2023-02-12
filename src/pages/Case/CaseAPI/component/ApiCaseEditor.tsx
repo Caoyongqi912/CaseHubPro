@@ -29,7 +29,7 @@ const getComponent = (
 interface SelfProps {
   onSubmit: Function;
   form: any;
-  caseInfo: API.IAPICaseInfo[];
+  caseInfo: API.IAPICaseInfoForm[];
   getFormInstance: any;
   headers: any;
   body: any;

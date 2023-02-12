@@ -5,7 +5,7 @@ import Postman from '@/pages/Case/CaseAPI/component/Postman/Postman';
 import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
 
 interface SelfProps {
-  caseInfo: API.IAPICaseInfo[];
+  caseInfo: API.IAPICaseInfoForm[];
   getFormInstance: any;
   SH: any;
   SB: any;
@@ -39,7 +39,7 @@ const tabExtra = (response: ResponseProps) => {
   return response && response.response ? (
     <div style={{ marginRight: 16 }}>
       <span>
-        Status:
+        StatusCode:
         <span
           style={{
             // @ts-ignore
@@ -209,14 +209,14 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
               style={{ width: '100%' }}
               tabBarExtraContent={tabExtra(response)}
             >
-              <TabPane tab="Body" key="1">
+              <TabPane tab="Response-Body" key="1">
                 <CodeEditor
                   value={response.response}
                   language={'json'}
                   height={'30vh'}
                 />
               </TabPane>
-              <TabPane tab="Cookie" key="2">
+              <TabPane tab="Response-Cookie" key="2">
                 <Table
                   columns={responseColumns}
                   dataSource={toTable('cookies')}
@@ -224,7 +224,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
                   pagination={false}
                 />
               </TabPane>
-              <TabPane tab="Headers" key="3">
+              <TabPane tab="Response-Headers" key="3">
                 <Table
                   columns={responseColumns}
                   dataSource={toTable('headers')}

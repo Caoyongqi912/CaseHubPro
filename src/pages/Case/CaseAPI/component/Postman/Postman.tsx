@@ -6,7 +6,7 @@ import CaseAssertTable from '@/pages/Case/CaseAPI/component/Postman/CaseAssertTa
 import CaseVariableTable from '@/pages/Case/CaseAPI/component/Postman/CaseExtractTable';
 
 interface SelfProps {
-  caseInfo: API.IAPICaseInfo[];
+  caseInfo: API.IAPICaseInfoForm[];
   getFormInstance: any;
   SH: any;
   SB: any;

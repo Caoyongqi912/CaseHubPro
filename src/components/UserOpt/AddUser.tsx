@@ -27,7 +27,7 @@ const Index: React.FC<selfProps> = (props) => {
     }>
       title="添加用户"
       trigger={
-        <Button>
+        <Button type={'primary'}>
           <PlusOutlined />
           添加用户
         </Button>

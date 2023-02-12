@@ -3,6 +3,7 @@ import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { hostOpt } from '@/api/host';
+import { API } from '@/api';
 
 interface selfProps {
   reload: Function | undefined;
@@ -44,6 +45,12 @@ const AddHost: React.FC<selfProps> = (props) => {
         name="host"
         label="host"
         placeholder="input your host"
+        required={true}
+      />
+      <ProFormText
+        name="port"
+        label="port"
+        placeholder="input your port"
         required={true}
       />
       <ProFormText

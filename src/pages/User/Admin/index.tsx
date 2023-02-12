@@ -15,6 +15,7 @@ import { message } from 'antd';
 import AddUser from '@/components/UserOpt/AddUser';
 import AddDepartment from '@/components/UserOpt/AddDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
+import { API } from '@/api';
 
 interface Tags {
   name: string;

@@ -2,14 +2,7 @@ import { ProColumns } from '@ant-design/pro-components';
 
 const Columns: ProColumns[] = [
   {
-    title: 'uid',
-    dataIndex: 'uid',
-    ellipsis: false,
-    editable: false,
-    formItemProps: { label: 'uid' },
-  },
-  {
-    title: 'name',
+    title: '名称',
     dataIndex: 'name',
     ellipsis: true,
     width: '10%',
@@ -23,14 +16,29 @@ const Columns: ProColumns[] = [
     },
   },
   {
-    title: 'desc',
+    title: '描述',
     dataIndex: 'desc',
     ellipsis: true,
     width: '10%',
   },
   {
-    title: 'host',
+    title: '路由',
     dataIndex: 'host',
+    ellipsis: true,
+    width: '10%',
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: '此项为必填项',
+        },
+      ],
+    },
+    render: (text) => <a>{text}</a>,
+  },
+  {
+    title: '端口',
+    dataIndex: 'port',
     ellipsis: true,
     width: '10%',
     formItemProps: {
@@ -43,7 +51,7 @@ const Columns: ProColumns[] = [
     },
   },
   {
-    title: 'creatorName',
+    title: '创建人',
     dataIndex: 'creatorName',
     ellipsis: true,
     editable: false,
