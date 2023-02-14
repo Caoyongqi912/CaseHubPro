@@ -120,3 +120,18 @@ export async function runApiDemo(body: any, options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+interface DetailParams {
+  uid: string;
+}
+
+export async function getApiDetail(
+  params: DetailParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<API.IInterfaceDetail>>(CaseAPIOptURl, {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}

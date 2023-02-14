@@ -21,7 +21,6 @@ import {
 } from '@ant-design/icons';
 import { queryProject } from '@/api/project';
 import FormForModal from '@/components/InterfaceComponent/FormForModal';
-import TestResult from '@/components/InterfaceComponent/TestResult';
 import {
   ActionType,
   ProColumns,
@@ -44,8 +43,9 @@ import {
   queryApiCaseByCasePartID,
 } from '@/api/interface';
 import { CONFIG } from '@/utils/config';
+import { history } from 'umi';
 
-const Index: FC = (props) => {
+const CaseApi: FC = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
   const [caseParts, setCaseParts] = useState<API.ICasePartResponse[]>([]);
   const [projects, setProject] = useState<API.IProject[]>([]);
@@ -225,8 +225,9 @@ const Index: FC = (props) => {
               target="_blank"
               rel="noopener noreferrer"
               key="view"
-              // onClick={() => {
-              //   history.push("/project/detail/" + record.uid);
+              onClick={() => {
+                history.push(`/interface/caseApi/detail/${record.uid}`);
+              }}
             >
               详情
             </a>
@@ -564,4 +565,4 @@ const Index: FC = (props) => {
   );
 };
 
-export default Index;
+export default CaseApi;

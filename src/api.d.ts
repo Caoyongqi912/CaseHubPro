@@ -172,4 +172,9 @@ declare namespace API {
     projectID: number;
     steps: IInterfaceStep[] | [];
   }
+
+  interface IInterfaceDetail extends IInterface {
+    id: number;
+    uid: string;
+  }
 }

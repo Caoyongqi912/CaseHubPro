@@ -77,7 +77,13 @@ export default [
       {
         path: '/interface/caseApi',
         name: '接口用例',
-        component: '@/pages/Case/CaseAPI',
+        component: '@/pages/Case/CaseAPI/CaseApi',
+      },
+      {
+        path: '/interface/caseApi/detail/:uid',
+        name: '接口详情',
+        hideInMenu: true,
+        component: '@/pages/Case/CaseAPI/apiDetail/ApiDetail',
       },
       {
         path: '/interface/test',
