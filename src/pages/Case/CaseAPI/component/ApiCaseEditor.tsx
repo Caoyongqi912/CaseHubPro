@@ -37,6 +37,7 @@ interface SelfProps {
   SB: any;
   SA: any;
   SE: any;
+  SP: any;
   stepInfo: any;
   setStepInfo: any;
   stepLength?: number;

@@ -20,11 +20,15 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const [formList, setFormList] = useState<FormInstance[]>([]);
   const [headers, setHeaders] = useState<API.IHeaders[]>([]);
   const [body, setBody] = useState<any>([]);
+  const [params, setParams] = useState<API.IParams[]>([]);
   const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
 
   const getFormInstance = (form: FormInstance) => {
     setFormList([...formList, form]);
+  };
+  const setP = (param: API.IParams) => {
+    setParams([...params, param]);
   };
 
   const setH = (header: API.IHeaders) => {
@@ -58,6 +62,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
     formList.forEach((e: FormInstance, index) => {
       const info = {
         ...e.getFieldsValue(),
+        params: params[index],
         headers: headers[index],
         body: body[index],
         asserts: assertList[index],
@@ -105,6 +110,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
           SA={setA}
           SB={setB}
           SE={setE}
+          SP={setP}
           headers={headers}
           body={body}
           stepInfo={formList}

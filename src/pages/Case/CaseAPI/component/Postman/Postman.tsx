@@ -12,6 +12,7 @@ interface SelfProps {
   SB: any;
   SA: any;
   SE: any;
+  SP: any;
   setResponse: any;
   detail?: any;
 }

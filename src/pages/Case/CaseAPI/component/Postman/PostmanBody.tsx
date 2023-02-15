@@ -23,6 +23,7 @@ interface SelfProps {
   getFormInstance: any;
   SH: any;
   SB: any;
+  SP: any;
   setResponse: any;
   detail?: any;
 }
@@ -57,6 +58,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
     if (detail) {
       form.setFieldsValue(props.detail);
       setHeaders(detail.headers);
+      setParamsData(detail.params);
       setBody(detail.body);
       setBodyType(1);
     }
@@ -66,7 +68,8 @@ const PostmanBody: FC<SelfProps> = (props) => {
   useEffect(() => {
     props.SH(headers);
     props.SB(body);
-  }, [headers, body]);
+    props.SP(paramsData);
+  }, [headers, body, paramsData]);
 
   const columns = (columnType: string) => {
     return [

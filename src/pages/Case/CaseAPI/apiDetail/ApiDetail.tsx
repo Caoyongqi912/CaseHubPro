@@ -19,6 +19,7 @@ const ApiDetail: FC = (props, context) => {
   const [load, setLoad] = useState<boolean>(true);
   const [formList, setFormList] = useState<FormInstance[]>([]);
   const [headers, setHeaders] = useState<API.IHeaders[]>([]);
+  const [params, setParams] = useState<API.IParams[]>([]);
   const [body, setBody] = useState<any>([]);
   const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
@@ -28,6 +29,9 @@ const ApiDetail: FC = (props, context) => {
   };
   const setH = (header: API.IHeaders) => {
     setHeaders([...headers, header]);
+  };
+  const setP = (param: API.IParams) => {
+    setParams([...params, param]);
   };
   const setB = (b: any) => {
     setBody([...body, b]);
@@ -41,7 +45,6 @@ const ApiDetail: FC = (props, context) => {
   const fetchApiDetail = async () => {
     const res = await getApiDetail(ApiID);
     if (res.code === 0) {
-      console.log('fetch', res.data.steps);
       initCaseDetail(res.data!.steps);
       initCaseInfo(res.data!);
       setStepsLength(res.data!.steps.length);
@@ -78,6 +81,7 @@ const ApiDetail: FC = (props, context) => {
           SB={setB}
           SA={setA}
           SE={setE}
+          SP={setP}
           stepInfo={formList}
           stepLength={stepsLength}
           apiDetail={apiDetail}

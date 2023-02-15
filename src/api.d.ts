@@ -125,6 +125,12 @@ declare namespace API {
     children?: ITreeNode[];
   }
 
+  interface IParams {
+    id?: number;
+    key?: string;
+    val?: string;
+  }
+
   interface IHeaders {
     id?: number;
     key?: string;
@@ -158,6 +164,7 @@ declare namespace API {
     method: string;
     http: string;
     body?: any;
+    params?: IParams[] | [];
     headers?: IHeaders[] | [];
     asserts?: IAssertList[] | [];
     extracts?: IExtract[] | [];

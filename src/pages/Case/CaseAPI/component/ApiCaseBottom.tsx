@@ -11,6 +11,7 @@ interface SelfProps {
   SB: any;
   SA: any;
   SE: any;
+  SP: any;
   headers: any;
   body: any;
   stepInfo: any;
@@ -72,8 +73,6 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     body,
     SH,
     SB,
-    SA,
-    SE,
     headers,
     stepLength,
     apiDetail,
