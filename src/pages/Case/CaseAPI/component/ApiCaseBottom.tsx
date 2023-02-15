@@ -15,6 +15,8 @@ interface SelfProps {
   body: any;
   stepInfo: any;
   setStepInfo: any;
+  stepLength?: number;
+  apiDetail?: any;
 }
 
 interface ResponseProps {
@@ -64,7 +66,18 @@ const tabExtra = (response: ResponseProps) => {
 };
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
-  const { setStepInfo, stepInfo, body, SH, SB, headers } = props;
+  const {
+    setStepInfo,
+    stepInfo,
+    body,
+    SH,
+    SB,
+    SA,
+    SE,
+    headers,
+    stepLength,
+    apiDetail,
+  } = props;
   const [current, setCurrent] = useState(0);
   let uniqueKey = useRef(0);
   const [response, setResponse] = useState<ResponseProps>({});
@@ -82,6 +95,28 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
       key: getK(),
     },
   ]);
+
+  useEffect(() => {
+    if (stepLength && apiDetail) {
+      let s = [];
+      for (let i = 0; i < stepLength; i++) {
+        const _ = {
+          title: `step${i + 1}`,
+          content: (
+            <Postman
+              {...props}
+              detail={apiDetail[i]}
+              setResponse={setResponse}
+            />
+          ),
+          key: getK(),
+        };
+        s.push(_);
+      }
+      setSteps(s);
+    }
+  }, [stepLength, apiDetail]);
+
   useEffect(() => {
     const i = steps.map((item) => ({ key: item.title, title: item.title }));
     setItems(i);

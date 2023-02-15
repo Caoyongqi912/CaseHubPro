@@ -24,6 +24,7 @@ interface SelfProps {
   SH: any;
   SB: any;
   setResponse: any;
+  detail?: any;
 }
 
 interface KV {
@@ -34,6 +35,7 @@ interface KV {
 }
 
 const PostmanBody: FC<SelfProps> = (props) => {
+  const { detail } = props;
   const { getFormInstance, setResponse } = props;
   const [form] = Form.useForm();
 
@@ -52,8 +54,15 @@ const PostmanBody: FC<SelfProps> = (props) => {
   );
 
   useEffect(() => {
+    if (detail) {
+      form.setFieldsValue(props.detail);
+      setHeaders(detail.headers);
+      setBody(detail.body);
+      setBodyType(1);
+    }
     getFormInstance(form);
-  }, []);
+  }, [detail]);
+
   useEffect(() => {
     props.SH(headers);
     props.SB(body);
@@ -150,7 +159,10 @@ const PostmanBody: FC<SelfProps> = (props) => {
       <Row style={{ marginTop: 12 }}>
         <Col span={24}>
           <Card bodyStyle={{ padding: 0 }}>
-            <CodeEditor onChange={(e) => setBody(JSON.parse(e!))} />
+            <CodeEditor
+              value={JSON.stringify(body)}
+              onChange={(e) => setBody(JSON.parse(e!))}
+            />
           </Card>
         </Col>
       </Row>
@@ -160,7 +172,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
   const sendReq = async () => {
     const req = form.getFieldsValue();
     req.headers = headers;
-    if (body.length > 0) {
+    if (body) {
       req.body = body;
     }
     const res = await runApiDemo(req);

@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'umi';
 import { getApiDetail } from '@/api/interface';
-import { API, IInterfaceStep } from '@/api';
+import { API } from '@/api';
 import { Card, Col, Form, FormInstance, message, Row, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
@@ -13,11 +13,10 @@ interface DetailParams {
 
 const ApiDetail: FC = (props, context) => {
   const ApiID = useParams<DetailParams>();
-  const UID = ApiID.uid;
-  const [apiDetail, setApiDetail] = useState<API.IInterfaceDetail>();
+  const [caseInfoFrom] = Form.useForm<API.IInterface>();
+  const [apiDetail, setApiDetail] = useState<API.IInterfaceStep[]>([]);
   const [stepsLength, setStepsLength] = useState(1);
   const [load, setLoad] = useState<boolean>(true);
-  const [caseInfoFrom] = Form.useForm<API.IInterface>();
   const [formList, setFormList] = useState<FormInstance[]>([]);
   const [headers, setHeaders] = useState<API.IHeaders[]>([]);
   const [body, setBody] = useState<any>([]);
@@ -42,28 +41,26 @@ const ApiDetail: FC = (props, context) => {
   const fetchApiDetail = async () => {
     const res = await getApiDetail(ApiID);
     if (res.code === 0) {
-      setApiDetail(res.data!);
+      console.log('fetch', res.data.steps);
+      initCaseDetail(res.data!.steps);
       initCaseInfo(res.data!);
-      initCaseStepsInfo(res.data!.steps);
       setStepsLength(res.data!.steps.length);
       setLoad(false);
     } else {
       message.error(res.msg);
     }
   };
+  const initCaseDetail = (info: API.IInterfaceStep[]) => {
+    setApiDetail(info);
+  };
 
   const initCaseInfo = (info: API.IInterface) => {
     caseInfoFrom.setFieldsValue(info);
   };
-  const initCaseStepsInfo = (steps: API.IInterfaceStep[]) => {
-    console.log(steps);
-    formList.forEach((value) => {
-      value.setFieldsValue(steps);
-    });
-  };
+
   const onSubmit = () => {};
+
   useEffect(() => {
-    console.log(UID);
     fetchApiDetail();
   }, []);
 
@@ -82,6 +79,8 @@ const ApiDetail: FC = (props, context) => {
           SA={setA}
           SE={setE}
           stepInfo={formList}
+          stepLength={stepsLength}
+          apiDetail={apiDetail}
           setStepInfo={setFormList}
         />
       </Spin>

@@ -39,6 +39,8 @@ interface SelfProps {
   SE: any;
   stepInfo: any;
   setStepInfo: any;
+  stepLength?: number;
+  apiDetail?: any;
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {

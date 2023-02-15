@@ -13,6 +13,7 @@ interface SelfProps {
   SA: any;
   SE: any;
   setResponse: any;
+  detail?: any;
 }
 
 const { TabPane } = Tabs;
@@ -39,10 +40,10 @@ const Postman: FC<SelfProps> = (props, context) => {
         </Row>
       </TabPane>
       <TabPane key="4" tab={<span>出参提取</span>}>
-        <CaseVariableTable SE={props.SE} />
+        <CaseVariableTable {...props} SE={props.SE} />
       </TabPane>
       <TabPane key="5" tab={<span>断言</span>}>
-        <CaseAssertTable SA={props.SA} />
+        <CaseAssertTable {...props} SA={props.SA} />
       </TabPane>
     </Tabs>
   );

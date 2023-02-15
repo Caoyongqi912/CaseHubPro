@@ -13,6 +13,7 @@ const Index: FC<EditorProps> = (props) => {
       language={props.language || 'json'}
       theme={props.theme || 'vs-dark'}
       value={props.value}
+      defaultValue={props.defaultValue}
       onChange={props.onChange}
     />
   );
