@@ -172,8 +172,7 @@ const CaseApi: FC = (props) => {
       title: '请求协议',
       dataIndex: 'http',
       search: false,
-      render: (text, record) => {
-        // @ts-ignore
+      render: (text: any, record) => {
         return CONFIG.REQUEST_TYPE[text];
       },
     },
@@ -196,9 +195,7 @@ const CaseApi: FC = (props) => {
       valueEnum: CONFIG.CASE_STATUS_ENUM,
       render: (text, record) => {
         return (
-          // @ts-ignore
           <Tag color={CONFIG.RENDER_CASE_STATUS[record.status].color}>
-            {/*// @ts-ignore*/}
             {CONFIG.RENDER_CASE_STATUS[record.status].text}
           </Tag>
         );

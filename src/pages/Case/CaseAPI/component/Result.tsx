@@ -4,11 +4,12 @@ import MyDrawer from '@/components/MyDrawer';
 import NoRecord from '@/pages/Case/CaseAPI/component/NoRecord';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { vs2015 } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+import { API } from '@/api';
 
 const TabPane = Tabs.TabPane;
 const DescriptionsItem = Descriptions.Item;
 
-const STATUS = {
+const STATUS: API.IObjGet = {
   200: { color: '#67C23A', text: 'OK' },
   401: { color: '#F56C6C', text: 'unauthorized' },
   400: { color: '#F56C6C', text: 'Bad Request' },
@@ -45,7 +46,6 @@ const Result: FC<SelfProps> = (props) => {
                     <DescriptionsItem label={'HTTP状态码'}>
                       <span
                         style={{
-                          // @ts-ignore
                           color: STATUS[response[name].status_code]
                             ? STATUS[response[name].status_code].color
                             : '#F56C6C',
@@ -53,7 +53,7 @@ const Result: FC<SelfProps> = (props) => {
                           marginRight: 8,
                         }}
                       >
-                        {response[name].status_code} {/*@ts-ignore*/}
+                        {response[name].status_code}
                         {STATUS[response[name].status_code]
                           ? STATUS[response[name].status_code].text
                           : ''}

@@ -20,7 +20,7 @@ interface SelfProps {
   apiDetail?: any;
 }
 
-interface ResponseProps {
+interface ResponseProps extends API.IObjGet {
   body?: any;
   cost?: number;
   method?: string;
@@ -32,7 +32,7 @@ interface ResponseProps {
 
 const { TabPane } = Tabs;
 
-const STATUS = {
+const STATUS: API.IObjGet = {
   200: { color: '#67C23A', text: 'OK' },
   401: { color: '#F56C6C', text: 'unauthorized' },
   400: { color: '#F56C6C', text: 'Bad Request' },
@@ -45,17 +45,16 @@ const tabExtra = (response: ResponseProps) => {
         StatusCode:
         <span
           style={{
-            // @ts-ignore
-            color: STATUS[response.status_code]
-              ? STATUS[response.status_code].color
+            color: STATUS[response.status_code!]
+              ? STATUS[response.status_code!].color
               : '#F56C6C',
             marginLeft: 8,
             marginRight: 8,
           }}
         >
-          {response.status_code} {/*//@ts-ignore*/}
-          {STATUS[response.status_code]
-            ? STATUS[response.status_code].text
+          {response.status_code}
+          {STATUS[response.status_code!]
+            ? STATUS[response.status_code!].text
             : ''}
         </span>
         <span style={{ marginLeft: 8, marginRight: 8 }}>
@@ -177,11 +176,9 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     },
   ];
   const toTable = (field: string) => {
-    // @ts-ignore
     if (!response[field]) {
       return [];
     }
-    // @ts-ignore
     const data = response[field];
     return Object.keys(data).map((key) => ({
       key,

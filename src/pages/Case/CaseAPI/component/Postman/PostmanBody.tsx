@@ -59,8 +59,10 @@ const PostmanBody: FC<SelfProps> = (props) => {
       form.setFieldsValue(props.detail);
       setHeaders(detail.headers);
       setParamsData(detail.params);
-      setBody(detail.body);
-      setBodyType(1);
+      if (detail.body.length > 0) {
+        setBody(detail.body);
+        setBodyType(1);
+      }
     }
     getFormInstance(form);
   }, [detail]);

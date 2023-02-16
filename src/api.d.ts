@@ -1,9 +1,13 @@
 import React from 'react';
 
 declare namespace API {
+  interface IObjGet {
+    [key: string | number]: any;
+  }
+
   interface IResponse<T> {
     code: number;
-    data?: T | undefined | null;
+    data: T | null;
     msg: string;
   }
 

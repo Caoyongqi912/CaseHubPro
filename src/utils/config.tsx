@@ -2,8 +2,9 @@ import { Tag } from 'antd';
 import React from 'react';
 import { Send } from '@icon-park/react';
 import TextIcon from '@/utils/TextIcon';
+import { API } from '@/api';
 
-export const CONFIG = {
+export const CONFIG: API.IObjGet = {
   CASE_LEVEL: ['P1', 'P2', 'P3', 'P4'],
   CASE_LEVEL_ENUM: {
     1: {

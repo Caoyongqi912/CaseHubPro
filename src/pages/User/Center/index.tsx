@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { useModel } from '@@/plugin-model/useModel';
 import { GridContent } from '@ant-design/pro-components';
 import { Menu } from 'antd';
 import styles from './style.less';
 import BaseView from '@/pages/User/Center/components/base';
 import SetPwd from '@/pages/User/Center/components/setPwd';
+import { API } from '@/api';
 
 const { Item } = Menu;
-
 const Index = () => {
   const [initConfig, setInitConfig] = useState({
-    mode: 'inline',
     selectKey: 'base',
   });
-  const menuMap = {
+
+  const menuMap: API.IObjGet = {
     base: '基本信息',
     security: '更新密码',
   };
@@ -39,7 +38,7 @@ const Index = () => {
       <div className={styles.main}>
         <div className={styles.leftMenu}>
           <Menu
-            mode={initConfig.mode}
+            mode={'inline'}
             selectedKeys={[initConfig.selectKey]}
             onClick={({ key }) => {
               setInitConfig({ ...initConfig, selectKey: key });

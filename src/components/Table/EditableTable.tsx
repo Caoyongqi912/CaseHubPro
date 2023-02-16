@@ -21,7 +21,9 @@ const EditableTable: FC<SelfProps> = ({
   extra,
 }) => {
   useEffect(() => {
-    setEditableRowKeys(dataSource.map((v: any) => v.id));
+    if (dataSource) {
+      setEditableRowKeys(dataSource.map((v: any) => v.id));
+    }
   }, [dataSource]);
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './baseStyle.less';
 import { useModel } from '@@/plugin-model/useModel';
 import { Button, message, Upload } from 'antd';
@@ -13,12 +13,13 @@ const Avatar = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState ?? {};
   const [fileList, setFileList] = useState([]);
+
   const upload: UploadProps = {
     name: 'file',
     maxCount: 1,
     showUploadList: false,
     onRemove: (file: any) => {
-      const index = fileList.indexOf(file);
+      const index = fileList.indexOf(file as never);
       const newFileList = fileList.slice();
       newFileList.splice(index, 1);
       setFileList(newFileList);
@@ -26,9 +27,10 @@ const Avatar = () => {
     customRequest: async (fileData) => {
       const form = new FormData();
       form.append('file', fileData.file);
-      const res: API.IResponse = await uploadAvatar(form);
+      const res = await uploadAvatar(form);
       if (res.code === 0) {
         message.success(res.msg);
+
         return;
       }
     },

@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'umi';
 import { getApiDetail } from '@/api/interface';
 import { API } from '@/api';
-import { Card, Col, Form, FormInstance, message, Row, Spin } from 'antd';
+import { Form, FormInstance, message, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
@@ -11,7 +11,7 @@ interface DetailParams {
   uid: string;
 }
 
-const ApiDetail: FC = (props, context) => {
+const ApiDetail: FC = () => {
   const ApiID = useParams<DetailParams>();
   const [caseInfoFrom] = Form.useForm<API.IInterface>();
   const [apiDetail, setApiDetail] = useState<API.IInterfaceStep[]>([]);
