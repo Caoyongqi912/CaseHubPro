@@ -30,7 +30,7 @@ import {
 import { PageContainer } from '@ant-design/pro-layout';
 import RecorderDrawer from '@/components/InterfaceComponent/RecorderDrawer';
 import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
-import { API } from '@/api';
+import { API, ResponseAPI } from '@/api';
 import SearchTree from '@/components/Tree/SearchTree';
 import NoRecord from '@/pages/Case/CaseAPI/component/NoRecord';
 import {
@@ -45,9 +45,9 @@ import {
 import { CONFIG } from '@/utils/config';
 import { history } from 'umi';
 
-const CaseApi: FC = (props) => {
+const CaseApi: FC = () => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
-  const [caseParts, setCaseParts] = useState<API.ICasePartResponse[]>([]);
+  const [caseParts, setCaseParts] = useState<ResponseAPI.IQueryPartTree[]>([]);
   const [projects, setProject] = useState<API.IProject[]>([]);
   const [projectID, setProjectID] = useState<number>(0);
   const [editing, setEditing] = useState<boolean>(false);
@@ -58,8 +58,8 @@ const CaseApi: FC = (props) => {
   const [rootModal, setRootModal] = useState<boolean>(false);
   const [record, setRecord] = useState<API.ICasePart>({});
   const [currentNode, setCurrentNode] = useState(null);
-  const [currentCasePartID, setCurrentCasePartID] = useState(null);
-  const [currentCasePart, setCurrentPart] = useState<API.ICasePart[]>([]);
+  const [currentCasePartID, setCurrentCasePartID] = useState<number>();
+  const [currentCasePart, setCurrentPart] = useState<number[]>([]);
   const [currentCaseAPI, setCurrentCaseAPI] = useState([]);
   const [projectsOpt, setProjectOpt] = useState([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
@@ -134,9 +134,6 @@ const CaseApi: FC = (props) => {
     if (res.code === 0) {
       message.success(res.msg);
       setRootModal(false);
-      saveCase({
-        selectedRowKeys: [],
-      });
       listTestcaseTree();
     }
   };
@@ -172,7 +169,7 @@ const CaseApi: FC = (props) => {
       title: '请求协议',
       dataIndex: 'http',
       search: false,
-      render: (text: any, record) => {
+      render: (text: any) => {
         return CONFIG.REQUEST_TYPE[text];
       },
     },
@@ -181,7 +178,7 @@ const CaseApi: FC = (props) => {
       dataIndex: 'level',
       valueType: 'select',
       valueEnum: CONFIG.CASE_LEVEL_ENUM,
-      render: (text, record) => {
+      render: (text) => {
         return <Tag color={'blue'}>{text}</Tag>;
         // return <Tag color={CONFIG.RENDER_CASE_STATUS[text].color}>{
         //   CONFIG.RENDER_CASE_STATUS[text].text
@@ -215,7 +212,7 @@ const CaseApi: FC = (props) => {
       title: '操作',
       valueType: 'option',
       key: 'option',
-      render: (text, record, _, action) => {
+      render: (text, record, _) => {
         return (
           <>
             <a
@@ -223,7 +220,9 @@ const CaseApi: FC = (props) => {
               rel="noopener noreferrer"
               key="view"
               onClick={() => {
-                history.push(`/interface/caseApi/detail/${record.uid}`);
+                history.push(
+                  `/interface/caseApi/detail/projectID=${projectID}&casePartID=${currentCasePartID}&uid=${record.uid}`,
+                );
               }}
             >
               详情
@@ -266,8 +265,6 @@ const CaseApi: FC = (props) => {
       type: 'input',
     },
   ];
-
-  const saveCase = (data: any) => {};
 
   // 切换项目
   const changeProject = (projectID: number) => {

@@ -72,7 +72,6 @@ const AddApiCase: FC<SelfProps> = (props) => {
       steps.push(info);
     });
     data.steps = steps;
-    console.log(data);
     data.projectID = props.projectID;
     data.casePartID = props.casePartID;
     const res = await addApiCase(data);

@@ -7,7 +7,7 @@ declare namespace API {
 
   interface IResponse<T> {
     code: number;
-    data: T | null;
+    data: T;
     msg: string;
   }
 
@@ -187,5 +187,45 @@ declare namespace API {
   interface IInterfaceDetail extends IInterface {
     id: number;
     uid: string;
+  }
+}
+
+declare namespace ResponseAPI {
+  interface IPageInfo {
+    limit: number;
+    page: number;
+    pages: number;
+    total: number;
+  }
+
+  interface IHostResponse {
+    id: number;
+    uid: string;
+    name: string;
+    host: string;
+    port: string;
+    desc: string | null;
+    creatorID: number;
+    creatorName: string;
+    updaterID: number;
+    updaterName: string | null;
+    create_time: string;
+    update_time: string | null;
+  }
+
+  interface IQueryPartTree {
+    id: number;
+    parentID: number | null;
+    partName: string;
+    projectID: number;
+    uid: string;
+    create_time: string;
+    update_time: string | null;
+    children: IQueryPartTree[] | [];
+  }
+
+  interface IPageHost {
+    items: IHostResponse[] | [];
+    pageInfo: IPageInfo;
   }
 }

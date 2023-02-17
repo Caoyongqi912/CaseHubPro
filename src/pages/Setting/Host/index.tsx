@@ -18,8 +18,9 @@ const Index = () => {
       columns={columns}
       actionRef={actionRef}
       cardBordered
-      request={async (param: API.ISearch) => {
-        const res: any = await pageHost(param);
+      // @ts-ignore
+      request={async (params, sort, filter) => {
+        const res = await pageHost(params as API.ISearch);
         return {
           data: res.data.items,
           total: res.data.pageInfo.total,

@@ -9,13 +9,16 @@ import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
 
 interface DetailParams {
   uid: string;
+  projectID: string;
+  casePartID: string;
 }
 
 const ApiDetail: FC = () => {
-  const ApiID = useParams<DetailParams>();
+  const Api = useParams<DetailParams>();
+  const { uid, projectID, casePartID } = Api;
   const [caseInfoFrom] = Form.useForm<API.IInterface>();
   const [apiDetail, setApiDetail] = useState<API.IInterfaceStep[]>([]);
-  const [stepsLength, setStepsLength] = useState(1);
+  const [stepsLength, setStepsLength] = useState<number>();
   const [load, setLoad] = useState<boolean>(true);
   const [formList, setFormList] = useState<FormInstance[]>([]);
   const [headers, setHeaders] = useState<API.IHeaders[]>([]);
@@ -43,7 +46,7 @@ const ApiDetail: FC = () => {
     setExtractList([...extractList, extract]);
   };
   const fetchApiDetail = async () => {
-    const res = await getApiDetail(ApiID);
+    const res = await getApiDetail({ uid: uid });
     if (res.code === 0) {
       initCaseDetail(res.data!.steps);
       initCaseInfo(res.data!);
@@ -61,7 +64,28 @@ const ApiDetail: FC = () => {
     caseInfoFrom.setFieldsValue(info);
   };
 
-  const onSubmit = () => {};
+  const onSubmit = async () => {
+    const data = await caseInfoFrom.validateFields();
+    let steps: any[] = [];
+    formList.forEach((e: FormInstance, index) => {
+      const info = {
+        ...e.getFieldsValue(),
+        params: params[index],
+        headers: headers[index],
+        body: body[index],
+        asserts: assertList[index],
+        extracts: extractList[index],
+        step: index,
+      };
+      steps.push(info);
+    });
+    // steps.splice(0,1)
+    data.steps = steps;
+    data.casePartID = parseInt(casePartID);
+    data.projectID = parseInt(projectID);
+
+    console.log(data);
+  };
 
   useEffect(() => {
     fetchApiDetail();

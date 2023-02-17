@@ -44,7 +44,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
   const [paramsData, setParamsData] = useState([]);
   const [headers, setHeaders] = useState([]);
 
-  const [body, setBody] = useState([]);
+  const [body, setBody] = useState();
   const [bodyType, setBodyType] = useState(0);
 
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
@@ -59,7 +59,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
       form.setFieldsValue(props.detail);
       setHeaders(detail.headers);
       setParamsData(detail.params);
-      if (detail.body.length > 0) {
+      if (detail.body) {
         setBody(detail.body);
         setBodyType(1);
       }
@@ -212,8 +212,8 @@ const PostmanBody: FC<SelfProps> = (props) => {
                   <Form.Item
                     name={'name'}
                     label={'步骤名称'}
-                    colon={false}
                     required={true}
+                    rules={[{ required: true, message: '步骤名称不能为空' }]}
                   >
                     <Input
                       allowClear
@@ -223,13 +223,12 @@ const PostmanBody: FC<SelfProps> = (props) => {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item name={'desc'} label={'步骤描述'} colon={false}>
+                  <Form.Item name={'desc'} label={'步骤描述'}>
                     <Input allowClear autoComplete={'off'} />
                   </Form.Item>
                 </Col>
                 <Col span={16}>
                   <Form.Item
-                    colon={false}
                     name="method"
                     label="请求方式"
                     rules={[{ required: true, message: '请选择请求方法' }]}
@@ -247,7 +246,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
                 <Col span={8}>
                   <Form.Item
                     name={'url'}
-                    colon={false}
                     label={'请求地址'}
                     rules={[{ required: true, message: '请输入请求url' }]}
                   >

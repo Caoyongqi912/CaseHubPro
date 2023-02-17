@@ -8,11 +8,11 @@ import CaseVariableTable from '@/pages/Case/CaseAPI/component/Postman/CaseExtrac
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
   getFormInstance: any;
-  SH: any;
-  SB: any;
-  SA: any;
-  SE: any;
-  SP: any;
+  SH: Function;
+  SB: Function;
+  SA: Function;
+  SE: Function;
+  SP: Function;
   setResponse: any;
   detail?: any;
 }

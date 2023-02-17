@@ -80,7 +80,7 @@ export default [
         component: '@/pages/Case/CaseAPI/CaseApi',
       },
       {
-        path: '/interface/caseApi/detail/:uid',
+        path: '/interface/caseApi/detail/projectID=:projectID&casePartID=:casePartID&uid=:uid',
         name: '接口详情',
         hideInMenu: true,
         component: '@/pages/Case/CaseAPI/apiDetail/ApiDetail',

@@ -1,17 +1,15 @@
-import { API } from '@/api';
+import { API, ResponseAPI } from '@/api';
 import { request } from '@@/plugin-request/request';
 
 const HostUrl = '/api/case/host/opt';
+
 /**
  * host 分页
  * @param params
  * @param options
  */
-export async function pageHost(
-  params: API.ISearch,
-  options?: { [key: string]: any },
-) {
-  return request<API.IResponse<any>>(HostUrl, {
+export async function pageHost(params: API.ISearch, options?: API.IObjGet) {
+  return request<API.IResponse<ResponseAPI.IPageHost>>(HostUrl, {
     method: 'GET',
     params: params,
     ...(options || {}),
@@ -21,9 +19,9 @@ export async function pageHost(
 export async function hostOpt(
   method: string,
   params?: API.IHost,
-  options?: { [key: string]: any },
+  options?: API.IObjGet,
 ) {
-  return request<API.IResponse<any>>(HostUrl, {
+  return request<API.IResponse<null>>(HostUrl, {
     method,
     data: params,
     ...(options || {}),

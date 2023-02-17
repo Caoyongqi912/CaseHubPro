@@ -7,10 +7,10 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import { API } from '@/api';
+import { API, ResponseAPI } from '@/api';
 
 interface SelfProps {
-  treeData: API.ICasePartResponse[];
+  treeData: ResponseAPI.IQueryPartTree[];
   onAddNode: any;
   menu: Function;
   selectedKeys: any;
@@ -48,7 +48,7 @@ const SearchTree: FC<SelfProps> = ({
     return parentKey;
   };
 
-  const generateList = (data: API.ICasePartResponse[]) => {
+  const generateList = (data: ResponseAPI.IQueryPartTree[]) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i];
       const { id, partName } = node;

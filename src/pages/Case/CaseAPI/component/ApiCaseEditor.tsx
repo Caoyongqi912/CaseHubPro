@@ -1,5 +1,14 @@
-import React, { FC, useState } from 'react';
-import { Button, Card, Col, Row, Form, Input, Switch } from 'antd';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Form,
+  Input,
+  Switch,
+  FormInstance,
+} from 'antd';
 import { API } from '@/api';
 import ApiCaseBottom from '@/pages/Case/CaseAPI/component/ApiCaseBottom';
 
@@ -28,20 +37,20 @@ const getComponent = (
 
 interface SelfProps {
   onSubmit: Function;
-  form: any;
+  form: FormInstance<API.IInterface>;
   caseInfo: API.IAPICaseInfoForm[];
-  getFormInstance: any;
-  headers: any;
+  getFormInstance: Function;
+  headers: API.IHeaders[];
   body: any;
-  SH: any;
-  SB: any;
-  SA: any;
-  SE: any;
-  SP: any;
-  stepInfo: any;
-  setStepInfo: any;
+  SH: Function;
+  SB: Function;
+  SA: Function;
+  SE: Function;
+  SP: Function;
+  stepInfo: FormInstance[];
+  setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
   stepLength?: number;
-  apiDetail?: any;
+  apiDetail?: API.IInterfaceStep[];
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
@@ -67,10 +76,9 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
         {/*基本信息*/}
         <Row gutter={[8, 8]}>
           {caseInfo.map((item) => (
-            <Col span={item.span || 24}>
+            <Col span={item.span || 20}>
               <FormItem
                 label={item.label}
-                colon={true}
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 initialValue={item.default}
@@ -84,7 +92,7 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
           ))}
         </Row>
         {/*详情信息*/}
-        <Row style={{ marginTop: 8 }}>
+        <Row style={{ marginTop: 10 }}>
           <Col span={24}>
             <ApiCaseBottom {...props} />
           </Col>

@@ -1,23 +1,30 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Steps, Col, Row, Table, Tabs, Button, Card } from 'antd';
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Steps, Col, Row, Table, Tabs, Button, Card, FormInstance } from 'antd';
 import { API } from '@/api';
 import Postman from '@/pages/Case/CaseAPI/component/Postman/Postman';
 import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
-  getFormInstance: any;
-  SH: any;
-  SB: any;
-  SA: any;
-  SE: any;
-  SP: any;
-  headers: any;
+  getFormInstance: Function;
+  SH: Function;
+  SB: Function;
+  SA: Function;
+  SE: Function;
+  SP: Function;
+  headers: API.IHeaders[];
   body: any;
-  stepInfo: any;
-  setStepInfo: any;
+  stepInfo: FormInstance[];
+  setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
   stepLength?: number;
-  apiDetail?: any;
+  apiDetail?: API.IInterfaceStep[];
 }
 
 interface ResponseProps extends API.IObjGet {
@@ -95,6 +102,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   ]);
 
   useEffect(() => {
+    console.log('stepLength', stepLength);
     if (stepLength && apiDetail) {
       let s = [];
       for (let i = 0; i < stepLength; i++) {

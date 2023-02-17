@@ -1,5 +1,5 @@
 import { request } from '@@/plugin-request/request';
-import { API } from '@/api';
+import { API, ResponseAPI } from '@/api';
 
 const CasePartTreeUrl: string = '/api/case/part/query';
 const CasePartOptUrl: string = '/api/case/part/opt';
@@ -16,7 +16,7 @@ export async function casePartTree(
   params?: ICasePartTree,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse<any>>(CasePartTreeUrl, {
+  return request<API.IResponse<ResponseAPI.IQueryPartTree[]>>(CasePartTreeUrl, {
     method: 'GET',
     params: params,
     ...(options || {}),
