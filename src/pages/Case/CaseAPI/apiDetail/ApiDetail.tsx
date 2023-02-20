@@ -41,9 +41,10 @@ const ApiDetail: FC = () => {
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
 
   const setFormInstance = (form: FormInstance) => {
-    console.log('set', form.getFieldsValue());
+    console.log('setFormInstance', form.getFieldsValue());
     setStepFormList([...stepFormList, form]);
   };
+
   const setH = (header: API.IHeaders) => {
     setHeaders([...headers, header]);
   };
@@ -79,7 +80,6 @@ const ApiDetail: FC = () => {
   const onSubmit = async () => {
     const data = await caseInfoFrom.validateFields();
     let steps: any[] = [];
-    console.log('formList', stepFormList);
     stepFormList.forEach((e: FormInstance, index) => {
       console.log(`submit ${index}`, e.getFieldsValue());
       const info = {
@@ -93,6 +93,7 @@ const ApiDetail: FC = () => {
       };
       steps.push(info);
     });
+
     data.steps = steps;
     data.casePartID = parseInt(casePartID);
     data.projectID = parseInt(projectID);

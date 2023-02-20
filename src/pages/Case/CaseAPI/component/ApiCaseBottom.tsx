@@ -102,7 +102,8 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   ]);
 
   useEffect(() => {
-    if (stepLength! > 0 && apiStepsDetail?.length > 0) {
+    if (stepLength! > 0 && apiStepsDetail!.length > 0) {
+      console.log('APIButtom', apiStepsDetail);
       let s = [];
       for (let i = 0; i < stepLength!; i++) {
         const _ = {

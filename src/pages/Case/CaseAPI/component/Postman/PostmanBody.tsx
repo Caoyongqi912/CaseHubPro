@@ -52,8 +52,9 @@ const PostmanBody: FC<SelfProps> = (props) => {
   );
 
   useEffect(() => {
+    console.log('postmanBody', apiStepDetail);
     if (apiStepDetail) {
-      console.log('length', apiStepDetail);
+      console.log('setFieldsValue', apiStepDetail);
       form.setFieldsValue(props.apiStepDetail);
       setHeaders(apiStepDetail.headers);
       setParamsData(apiStepDetail.params);
@@ -61,10 +62,9 @@ const PostmanBody: FC<SelfProps> = (props) => {
         setBody(apiStepDetail.body);
         setBodyType(1);
       }
-      console.log('form', form.getFieldsValue());
-      setFormInstance(form);
     }
-  }, [apiStepDetail]);
+    setFormInstance(form);
+  }, []);
 
   useEffect(() => {
     props.SH(headers);
