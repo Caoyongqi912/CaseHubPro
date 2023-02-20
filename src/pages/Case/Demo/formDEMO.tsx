@@ -2,17 +2,17 @@ import React, { FC, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 
 interface SelfProps {
-  getFormInstance: any;
+  setFormInstance: any;
   current: number;
   v?: any[];
   setV?: any;
 }
 
-const FormDemo: FC<SelfProps> = ({ getFormInstance, current }) => {
+const FormDemo: FC<SelfProps> = ({ setFormInstance, current }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    getFormInstance({ curr: current, form: form });
+    setFormInstance({ curr: current, form: form });
   }, []);
 
   return (

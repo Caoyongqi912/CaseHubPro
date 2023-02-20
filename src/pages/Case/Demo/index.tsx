@@ -6,7 +6,7 @@ const Index = () => {
   const [formList, setFormList] = useState<
     { curr: number; form: FormInstance }[]
   >([]);
-  const getFormInstance = (data: { curr: number; form: FormInstance }) => {
+  const setFormInstance = (data: { curr: number; form: FormInstance }) => {
     setFormList([...formList, data]);
   };
   let uniqueKey = useRef(0);
@@ -20,7 +20,7 @@ const Index = () => {
   >([
     {
       title: `step${current}`,
-      content: <FormDemo getFormInstance={getFormInstance} current={current} />,
+      content: <FormDemo setFormInstance={setFormInstance} current={current} />,
       key: getK(),
     },
   ]);
@@ -39,7 +39,7 @@ const Index = () => {
     const _ = {
       title: `step${nextCurrent}`,
       content: (
-        <FormDemo getFormInstance={getFormInstance} current={nextCurrent} />
+        <FormDemo setFormInstance={setFormInstance} current={nextCurrent} />
       ),
       key: getK(),
     };

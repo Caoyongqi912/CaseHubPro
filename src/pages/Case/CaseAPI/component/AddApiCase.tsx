@@ -24,7 +24,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
 
-  const getFormInstance = (form: FormInstance) => {
+  const setFormInstance = (form: FormInstance) => {
     setFormList([...formList, form]);
   };
   const setP = (param: API.IParams) => {
@@ -74,6 +74,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
     data.steps = steps;
     data.projectID = props.projectID;
     data.casePartID = props.casePartID;
+    console.log('add', data);
     const res = await addApiCase(data);
     if (res.code === 0) {
       message.success(res.msg);
@@ -102,7 +103,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
 
         <ApiCaseEditor
           form={infoForm}
-          getFormInstance={getFormInstance}
+          setFormInstance={setFormInstance}
           onSubmit={onSubmit}
           caseInfo={caseInfo}
           SH={setH}

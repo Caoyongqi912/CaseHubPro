@@ -7,14 +7,14 @@ import CaseVariableTable from '@/pages/Case/CaseAPI/component/Postman/CaseExtrac
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
-  getFormInstance: any;
+  setFormInstance: any;
   SH: Function;
   SB: Function;
   SA: Function;
   SE: Function;
   SP: Function;
   setResponse: any;
-  detail?: any;
+  apiStepDetail?: any;
 }
 
 const { TabPane } = Tabs;

@@ -13,7 +13,7 @@ import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
-  getFormInstance: Function;
+  setFormInstance: Function;
   SH: Function;
   SB: Function;
   SA: Function;
@@ -24,7 +24,7 @@ interface SelfProps {
   stepInfo: FormInstance[];
   setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
   stepLength?: number;
-  apiDetail?: API.IInterfaceStep[];
+  apiStepsDetail?: API.IInterfaceStep[];
 }
 
 interface ResponseProps extends API.IObjGet {
@@ -81,7 +81,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     SB,
     headers,
     stepLength,
-    apiDetail,
+    apiStepsDetail,
   } = props;
   const [current, setCurrent] = useState(0);
   let uniqueKey = useRef(0);
@@ -102,16 +102,15 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   ]);
 
   useEffect(() => {
-    console.log('stepLength', stepLength);
-    if (stepLength && apiDetail) {
+    if (stepLength! > 0 && apiStepsDetail?.length > 0) {
       let s = [];
-      for (let i = 0; i < stepLength; i++) {
+      for (let i = 0; i < stepLength!; i++) {
         const _ = {
           title: `step${i + 1}`,
           content: (
             <Postman
               {...props}
-              detail={apiDetail[i]}
+              apiStepDetail={apiStepsDetail![i]}
               setResponse={setResponse}
             />
           ),
@@ -121,7 +120,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
       }
       setSteps(s);
     }
-  }, [stepLength, apiDetail]);
+  }, [stepLength, apiStepsDetail]);
 
   useEffect(() => {
     const i = steps.map((item) => ({ key: item.title, title: item.title }));

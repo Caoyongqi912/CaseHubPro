@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import {
   Button,
   Col,
@@ -20,12 +20,12 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 interface SelfProps {
-  getFormInstance: any;
+  setFormInstance: any;
   SH: any;
   SB: any;
   SP: any;
   setResponse: any;
-  detail?: any;
+  apiStepDetail?: any;
 }
 
 interface KV {
@@ -36,17 +36,14 @@ interface KV {
 }
 
 const PostmanBody: FC<SelfProps> = (props) => {
-  const { detail } = props;
-  const { getFormInstance, setResponse } = props;
+  const { apiStepDetail } = props;
+  const { setFormInstance, setResponse } = props;
   const [form] = Form.useForm();
-
   const [method, setMethod] = useState('GET');
   const [paramsData, setParamsData] = useState([]);
   const [headers, setHeaders] = useState([]);
-
   const [body, setBody] = useState();
   const [bodyType, setBodyType] = useState(0);
-
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     paramsData.map((item: any) => item.id),
   );
@@ -55,17 +52,19 @@ const PostmanBody: FC<SelfProps> = (props) => {
   );
 
   useEffect(() => {
-    if (detail) {
-      form.setFieldsValue(props.detail);
-      setHeaders(detail.headers);
-      setParamsData(detail.params);
-      if (detail.body) {
-        setBody(detail.body);
+    if (apiStepDetail) {
+      console.log('length', apiStepDetail);
+      form.setFieldsValue(props.apiStepDetail);
+      setHeaders(apiStepDetail.headers);
+      setParamsData(apiStepDetail.params);
+      if (apiStepDetail.body) {
+        setBody(apiStepDetail.body);
         setBodyType(1);
       }
+      console.log('form', form.getFieldsValue());
+      setFormInstance(form);
     }
-    getFormInstance(form);
-  }, [detail]);
+  }, [apiStepDetail]);
 
   useEffect(() => {
     props.SH(headers);

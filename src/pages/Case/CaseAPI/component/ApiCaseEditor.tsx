@@ -39,7 +39,7 @@ interface SelfProps {
   onSubmit: Function;
   form: FormInstance<API.IInterface>;
   caseInfo: API.IAPICaseInfoForm[];
-  getFormInstance: Function;
+  setFormInstance: Function;
   headers: API.IHeaders[];
   body: any;
   SH: Function;
@@ -50,7 +50,7 @@ interface SelfProps {
   stepInfo: FormInstance[];
   setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
   stepLength?: number;
-  apiDetail?: API.IInterfaceStep[];
+  apiStepsDetail?: API.IInterfaceStep[];
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
