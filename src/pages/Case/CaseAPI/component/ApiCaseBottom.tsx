@@ -22,8 +22,6 @@ interface SelfProps {
   headers: API.IHeaders[];
   body: any;
   stepInfo: FormInstance[];
-  setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
-  stepLength?: number;
   apiStepsDetail?: API.IInterfaceStep[];
 }
 
@@ -73,39 +71,22 @@ const tabExtra = (response: ResponseProps) => {
 };
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
-  const {
-    setStepInfo,
-    stepInfo,
-    body,
-    SH,
-    SB,
-    headers,
-    stepLength,
-    apiStepsDetail,
-  } = props;
+  const { stepInfo, body, SH, SB, headers, apiStepsDetail } = props;
   const [current, setCurrent] = useState(0);
   let uniqueKey = useRef(0);
   const [response, setResponse] = useState<ResponseProps>({});
-
+  const arrRef = useRef<any[]>([]);
   const getK: () => number = () => {
     return (uniqueKey.current = ++uniqueKey.current);
   };
   const [items, setItems] = useState<{ key: string; title: string }[]>([]);
   const [steps, setSteps] = useState<
     { title: string; content: any; key: number }[]
-  >([
-    {
-      title: 'step1',
-      content: <Postman {...props} setResponse={setResponse} />,
-      key: getK(),
-    },
-  ]);
+  >([]);
 
   useEffect(() => {
-    if (stepLength! > 0 && apiStepsDetail!.length > 0) {
-      console.log('APIButtom', apiStepsDetail);
-      let s = [];
-      for (let i = 0; i < stepLength!; i++) {
+    if (apiStepsDetail) {
+      for (let i = 0; i < apiStepsDetail?.length!; i++) {
         const _ = {
           title: `step${i + 1}`,
           content: (
@@ -117,16 +98,24 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
           ),
           key: getK(),
         };
-        s.push(_);
+        arrRef.current.push(_);
       }
-      setSteps(s);
+      setSteps(arrRef.current);
+    } else {
+      const _ = {
+        title: 'step1',
+        content: <Postman {...props} setResponse={setResponse} />,
+        key: getK(),
+      };
+      arrRef.current.push(_);
+      setSteps(arrRef.current);
     }
-  }, [stepLength, apiStepsDetail]);
+  }, [apiStepsDetail]);
 
   useEffect(() => {
     const i = steps.map((item) => ({ key: item.title, title: item.title }));
     setItems(i);
-  }, [steps, current]);
+  }, [steps, current, apiStepsDetail]);
 
   /**
    * 添加一步
@@ -135,13 +124,13 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     const nextCurrent = current + 1;
     const stepStr = nextCurrent + 1;
     setCurrent(nextCurrent);
-    steps.push({
+
+    arrRef.current.push({
       title: `step${stepStr}`,
       content: <Postman {...props} setResponse={setResponse} />,
       key: getK(),
     });
-
-    setSteps(steps);
+    setSteps(arrRef.current);
   };
 
   /**
@@ -150,15 +139,13 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   const delStep = () => {
     steps.splice(current, 1);
     stepInfo.splice(current, 1);
-    setStepInfo(props.stepInfo);
-    steps.map((value, index, array) => {
-      steps[index].title = `step${index}`;
+    arrRef.current.map((value, index, array) => {
+      arrRef.current[index].title = `step${value.key}`;
     });
-    body.splice(current, 1);
-    SB(body);
-    headers.splice(current, 1);
-    SH(headers);
-    setSteps(steps);
+
+    SB(body.splice(current, 1));
+    SH(headers.splice(current, 1));
+    setSteps(arrRef.current);
     setCurrent(current - 1);
   };
 

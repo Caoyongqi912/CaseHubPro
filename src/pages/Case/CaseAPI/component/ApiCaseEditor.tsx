@@ -47,50 +47,67 @@ interface SelfProps {
   SA: Function;
   SE: Function;
   SP: Function;
-  stepInfo: FormInstance[];
+  stepInfo: any;
   setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
-  stepLength?: number;
   apiStepsDetail?: API.IInterfaceStep[];
+  isDetail?: boolean;
+  run?: Function;
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
-  const { onSubmit, form, caseInfo } = props;
+  const { onSubmit, form, caseInfo, run } = props;
 
   const cardTitle = (
     <span style={{ fontWeight: 700, fontSize: '16px' }}>API CASE INFO</span>
   );
   const cardExtra = (
-    <Button
-      type="primary"
-      onClick={async () => {
-        await onSubmit();
-      }}
-    >
-      提交
-    </Button>
+    <>
+      {props.isDetail ? (
+        <Button
+          type={'primary'}
+          style={{ marginRight: 5 }}
+          onClick={async () => {
+            await run!();
+          }}
+        >
+          Run
+        </Button>
+      ) : null}
+
+      <Button
+        type="primary"
+        onClick={async () => {
+          await onSubmit();
+        }}
+      >
+        提交
+      </Button>
+    </>
   );
 
   return (
     <Form form={form}>
-      <Card title={cardTitle} extra={cardExtra}>
+      <Card title={cardTitle} extra={cardExtra} style={{ marginTop: 5 }}>
         {/*基本信息*/}
-        <Row gutter={[8, 8]}>
-          {caseInfo.map((item) => (
-            <Col span={item.span || 20}>
-              <FormItem
-                label={item.label}
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                initialValue={item.default}
-                rules={[{ required: item.required, message: item.message }]}
-                name={item.name}
-                valuePropName={'value'}
-              >
-                {getComponent(item.type, item.placeholder!, item.component)}
-              </FormItem>
-            </Col>
-          ))}
-        </Row>
+        <Card>
+          <Row gutter={24}>
+            {caseInfo.map((item) => (
+              <Col span={item.span || 16}>
+                <FormItem
+                  label={item.label}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
+                  initialValue={item.default}
+                  rules={[{ required: item.required, message: item.message }]}
+                  name={item.name}
+                  valuePropName={'value'}
+                >
+                  {getComponent(item.type, item.placeholder!, item.component)}
+                </FormItem>
+              </Col>
+            ))}
+          </Row>
+        </Card>
         {/*详情信息*/}
         <Row style={{ marginTop: 10 }}>
           <Col span={24}>

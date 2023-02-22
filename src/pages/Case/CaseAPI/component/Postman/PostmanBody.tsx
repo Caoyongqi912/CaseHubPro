@@ -15,6 +15,9 @@ import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
 import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
 import { runApiDemo } from '@/api/interface';
+import { ProColumns } from '@ant-design/pro-table/lib/typing';
+import opt from '@/pages/Case/CaseAPI/component/Postman/HeadersSelectOpt';
+import HeadersSelectOpt from '@/pages/Case/CaseAPI/component/Postman/HeadersSelectOpt';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -52,9 +55,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
   );
 
   useEffect(() => {
-    console.log('postmanBody', apiStepDetail);
     if (apiStepDetail) {
-      console.log('setFieldsValue', apiStepDetail);
       form.setFieldsValue(props.apiStepDetail);
       setHeaders(apiStepDetail.headers);
       setParamsData(apiStepDetail.params);
@@ -64,7 +65,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
       }
     }
     setFormInstance(form);
-  }, []);
+  }, [apiStepDetail]);
 
   useEffect(() => {
     props.SH(headers);
@@ -72,7 +73,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
     props.SP(paramsData);
   }, [headers, body, paramsData]);
 
-  const columns = (columnType: string) => {
+  const columns = (columnType: string): ProColumns[] => {
     return [
       {
         title: 'key',
@@ -150,6 +151,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
 
   // 返回body 类型 component
   const getBody = (bd: number) => {
+    console.log('--------', bd);
     if (bd === 0) {
       return (
         <div
@@ -158,19 +160,22 @@ const PostmanBody: FC<SelfProps> = (props) => {
           This request does not have a body
         </div>
       );
+    } else if (bd === 1) {
+      return (
+        <Row style={{ marginTop: 12 }}>
+          <Col span={24}>
+            <Card bodyStyle={{ padding: 0 }}>
+              <CodeEditor
+                value={JSON.stringify(body)}
+                onChange={(e) => {
+                  setBody(JSON.parse(e!));
+                }}
+              />
+            </Card>
+          </Col>
+        </Row>
+      );
     }
-    return (
-      <Row style={{ marginTop: 12 }}>
-        <Col span={24}>
-          <Card bodyStyle={{ padding: 0 }}>
-            <CodeEditor
-              value={JSON.stringify(body)}
-              onChange={(e) => setBody(JSON.parse(e!))}
-            />
-          </Card>
-        </Col>
-      </Row>
-    );
   };
 
   const sendReq = async () => {

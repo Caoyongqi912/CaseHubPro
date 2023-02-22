@@ -100,7 +100,7 @@ declare namespace API {
     default?: string;
     placeholder?: string;
     component: null | React.ReactElement;
-    span: number;
+    span?: number;
   }
 
   interface ICasePart {

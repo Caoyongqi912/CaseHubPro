@@ -135,3 +135,14 @@ export async function getApiDetail(
     ...(options || {}),
   });
 }
+
+export async function putApi(
+  params: API.IInterfaceDetail,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<null>>(CaseAPIOptURl, {
+    method: 'PUT',
+    data: params,
+    ...(options || {}),
+  });
+}

@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { useParams } from 'umi';
-import { getApiDetail } from '@/api/interface';
+import { getApiDetail, putApi } from '@/api/interface';
 import { API } from '@/api';
 import { Form, FormInstance, message, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -18,17 +18,14 @@ const ApiDetail: FC = () => {
   const { uid, projectID, casePartID } = Api;
   const [load, setLoad] = useState<boolean>(true);
   // 基本信息
-  const [caseInfoFrom] = Form.useForm<API.IInterface>();
+  const [caseInfoFrom] = Form.useForm<API.IInterfaceDetail>();
   // 步骤信息
   const [apiStepsDetail, setApiStepsDetail] = useState<API.IInterfaceStep[]>(
     [],
   );
   // 步骤基本信息
   const [stepFormList, setStepFormList] = useState<FormInstance[]>([]);
-
-  // 步长
-  const [stepsLength, setStepsLength] = useState<number>();
-
+  const stepsFormList = useRef<{ curr: number; form: FormInstance }[]>([]);
   // 每步请求头
   const [headers, setHeaders] = useState<API.IHeaders[]>([]);
   // 每步请求参数
@@ -40,9 +37,8 @@ const ApiDetail: FC = () => {
   // 每步提取
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
 
-  const setFormInstance = (form: FormInstance) => {
-    console.log('setFormInstance', form.getFieldsValue());
-    setStepFormList([...stepFormList, form]);
+  const setFormInstance = (data: { curr: number; form: FormInstance }) => {
+    stepsFormList.current.push(data);
   };
 
   const setH = (header: API.IHeaders) => {
@@ -70,7 +66,6 @@ const ApiDetail: FC = () => {
     if (res.code === 0) {
       caseInfoFrom.setFieldsValue(res.data);
       setApiStepsDetail(res.data.steps);
-      setStepsLength(res.data!.steps.length);
       setLoad(false);
     } else {
       message.error(res.msg);
@@ -80,8 +75,7 @@ const ApiDetail: FC = () => {
   const onSubmit = async () => {
     const data = await caseInfoFrom.validateFields();
     let steps: any[] = [];
-    stepFormList.forEach((e: FormInstance, index) => {
-      console.log(`submit ${index}`, e.getFieldsValue());
+    stepsFormList.current.forEach((e: any, index: number) => {
       const info = {
         ...e.getFieldsValue(),
         params: params[index],
@@ -93,12 +87,17 @@ const ApiDetail: FC = () => {
       };
       steps.push(info);
     });
-
     data.steps = steps;
     data.casePartID = parseInt(casePartID);
     data.projectID = parseInt(projectID);
+    data.uid = uid;
+    const res = await putApi(data);
+    if (res.code === 0) {
+      message.success(res.msg);
+    }
   };
 
+  const run = async () => {};
   return (
     <PageContainer title={false}>
       <Spin tip={'努力加载中。。'} size={'large'} spinning={load}>
@@ -114,10 +113,11 @@ const ApiDetail: FC = () => {
           SA={setA}
           SE={setE}
           SP={setP}
-          stepInfo={stepFormList}
-          stepLength={stepsLength}
+          stepInfo={stepsFormList}
           apiStepsDetail={apiStepsDetail}
           setStepInfo={setStepFormList}
+          isDetail={true}
+          run={run}
         />
       </Spin>
     </PageContainer>

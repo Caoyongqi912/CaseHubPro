@@ -74,7 +74,6 @@ const AddApiCase: FC<SelfProps> = (props) => {
     data.steps = steps;
     data.projectID = props.projectID;
     data.casePartID = props.casePartID;
-    console.log('add', data);
     const res = await addApiCase(data);
     if (res.code === 0) {
       message.success(res.msg);
