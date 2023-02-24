@@ -17,7 +17,9 @@ const Index: FC<SelfProps> = (props, context) => {
       title={name}
       onClose={() => setModal(false)}
       maskClosable={false}
-    />
+    >
+      {context}
+    </Drawer>
   );
 };
 

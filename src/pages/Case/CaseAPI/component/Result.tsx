@@ -1,10 +1,8 @@
-import React, { FC } from 'react';
-import { Badge, Descriptions, Row, Tabs } from 'antd';
-import MyDrawer from '@/components/MyDrawer';
-import NoRecord from '@/pages/Case/CaseAPI/component/NoRecord';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { vs2015 } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+import React, { FC, useEffect, useState } from 'react';
+import { Badge, Descriptions, Drawer, Row, Tabs } from 'antd';
 import { API } from '@/api';
+import { getApiResponse } from '@/api/interface';
+import { IconFont } from '@/utils/IconFont';
 
 const TabPane = Tabs.TabPane;
 const DescriptionsItem = Descriptions.Item;
@@ -16,80 +14,110 @@ const STATUS: API.IObjGet = {
 };
 
 interface SelfProps {
-  response: any;
-  name: any;
+  uid: string | undefined;
   modal: any;
   setModal: any;
   single: boolean;
 }
 
 const Result: FC<SelfProps> = (props) => {
-  const { response, name, modal, setModal, single } = props;
+  const { modal, setModal, single, uid } = props;
+  const [response, setResponse] = useState({});
+
+  const getResponse = async () => {
+    if (uid) {
+      const res = await getApiResponse({ uid: uid });
+      console.log(res);
+      if (res.code === 0) {
+        setResponse(res.data);
+      }
+    }
+  };
+  useEffect(() => {
+    getResponse();
+  }, [uid]);
+
   return (
-    <>
-      <MyDrawer name={name} modal={modal} setModal={setModal}>
-        <Row gutter={[8, 8]}>
-          {!single ? (
-            <Tabs>
-              {Object.keys(response).map((name, index) => (
-                <TabPane tab={name} key={index.toString()}>
-                  <Descriptions column={2} bordered size={'middle'}>
-                    <DescriptionsItem label={'测试结果'}>
-                      <Badge
-                        status={response[name].status ? 'success' : 'error'}
-                        text={response[name].status ? 'success' : 'error'}
-                      />
-                    </DescriptionsItem>
-                    <DescriptionsItem label={'请求方式'}>
-                      {response[name].method}
-                    </DescriptionsItem>
-                    <DescriptionsItem label={'HTTP状态码'}>
-                      <span
-                        style={{
-                          color: STATUS[response[name].status_code]
-                            ? STATUS[response[name].status_code].color
-                            : '#F56C6C',
-                          marginLeft: 8,
-                          marginRight: 8,
-                        }}
-                      >
-                        {response[name].status_code}
-                        {STATUS[response[name].status_code]
-                          ? STATUS[response[name].status_code].text
-                          : ''}
-                      </span>
-                    </DescriptionsItem>
-                    <DescriptionsItem label={'执行时间'}>
-                      <span style={{ marginLeft: 8, marginRight: 8 }}>
-                        <span style={{ color: '#67C23A' }}>
-                          {response[name].cost}
-                        </span>
-                      </span>
-                    </DescriptionsItem>
-                    <DescriptionsItem label={'URL'} span={2}>
-                      {response[name].url}
-                    </DescriptionsItem>
-                    <DescriptionsItem label={'请求体'} span={2}>
-                      {response[name].requestData ? (
-                        <SyntaxHighlighter language={'json'} style={vs2015}>
-                          {response[name].requestData}
-                        </SyntaxHighlighter>
-                      ) : (
-                        <NoRecord height={120} />
-                      )}
-                    </DescriptionsItem>
-                  </Descriptions>
-                </TabPane>
-              ))}
-            </Tabs>
-          ) : (
-            <Tabs>
-              <span>断言</span>
-            </Tabs>
-          )}
-        </Row>
-      </MyDrawer>
-    </>
+    <Drawer
+      title={'测试结果'}
+      width={'70%'}
+      maskClosable={false}
+      visible={modal}
+      onClose={() => {
+        setModal(false);
+      }}
+      placement={'right'}
+    >
+      <Row gutter={[8, 8]}>
+        <Tabs style={{ width: '100%', minHeight: 460 }} tabPosition={'left'}>
+          <TabPane
+            tab={
+              <span>
+                <IconFont type={'icon-yongliliebiao'} />
+                基本信息
+              </span>
+            }
+            key={'1'}
+          >
+            <Descriptions column={2} bordered size={'default'}>
+              <DescriptionsItem label="测试人">
+                {response.starterName}
+              </DescriptionsItem>
+
+              <DescriptionsItem label="测试结果">
+                <Badge
+                  status={response.status ? 'success' : 'error'}
+                  text={response.status ? 'SUCCESS' : 'FAIL'}
+                />
+              </DescriptionsItem>
+              <DescriptionsItem label="请求方式">{'GET'}</DescriptionsItem>
+              <DescriptionsItem label="测试时间">
+                {response.create_time}
+              </DescriptionsItem>
+              <DescriptionsItem label="运行时间">
+                {response.useTime}
+              </DescriptionsItem>
+            </Descriptions>
+          </TabPane>
+          <TabPane
+            tab={
+              <span>
+                <IconFont type="icon-duanyan" />
+                断言
+              </span>
+            }
+            key="2"
+          ></TabPane>
+          <TabPane
+            tab={
+              <span>
+                <IconFont type="icon-rizhi" />
+                执行日志
+              </span>
+            }
+            key="3"
+          ></TabPane>
+          <TabPane
+            tab={
+              <span>
+                <IconFont type="icon-header" />
+                Header
+              </span>
+            }
+            key="4"
+          ></TabPane>
+          <TabPane
+            tab={
+              <span>
+                <IconFont type="icon-cookies-1" />
+                Cookie
+              </span>
+            }
+            key="5"
+          ></TabPane>
+        </Tabs>
+      </Row>
+    </Drawer>
   );
 };
 

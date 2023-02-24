@@ -92,13 +92,13 @@ const AddApiCase: FC<SelfProps> = (props) => {
         onClose={() => setAddCaseVisible(false)}
         maskClosable={false}
       >
-        <Result
-          response={testResult}
-          name={'test'}
-          modal={resultModal}
-          setModal={setResultModal}
-          single={false}
-        />
+        {/*<Result*/}
+        {/*  response={testResult}*/}
+        {/*  name={'test'}*/}
+        {/*  modal={resultModal}*/}
+        {/*  setModal={setResultModal}*/}
+        {/*  single={false}*/}
+        {/*/>*/}
 
         <ApiCaseEditor
           form={infoForm}

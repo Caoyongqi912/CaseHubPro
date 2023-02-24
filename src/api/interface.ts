@@ -7,6 +7,8 @@ const CaseAPIOptURl: string = '/api/case/interface/opt';
 const QueryCaseAPIByCasePartID: string = '/api/case/part/interfaces';
 const PageCaseAPI = '/api/case/interface/page';
 const RunApiDemoURL = '/api/case/interface/demo';
+const RunApiURL = '/api/case/interface/run';
+const GetApiResponseURL = '/api/case/interface/response';
 
 interface ICasePartTree {
   projectID: number;
@@ -143,6 +145,28 @@ export async function putApi(
   return request<API.IResponse<null>>(CaseAPIOptURl, {
     method: 'PUT',
     data: params,
+    ...(options || {}),
+  });
+}
+
+export async function runApi(
+  body: DetailParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<string>>(RunApiURL, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+export async function getApiResponse(
+  params: DetailParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<null>>(GetApiResponseURL, {
+    method: 'GET',
+    params,
     ...(options || {}),
   });
 }

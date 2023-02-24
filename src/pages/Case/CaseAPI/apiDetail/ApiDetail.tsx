@@ -1,11 +1,12 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useParams } from 'umi';
-import { getApiDetail, putApi } from '@/api/interface';
+import { getApiDetail, putApi, runApi } from '@/api/interface';
 import { API } from '@/api';
 import { Form, FormInstance, message, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
+import Result from '@/pages/Case/CaseAPI/component/Result';
 
 interface DetailParams {
   uid: string;
@@ -36,6 +37,8 @@ const ApiDetail: FC = () => {
   const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
   // 每步提取
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
+  const [resultModal, setResultModal] = useState(false);
+  const [responseUid, setResponseUid] = useState<string>();
 
   const setFormInstance = (data: { curr: number; form: FormInstance }) => {
     stepsFormList.current.push(data);
@@ -97,9 +100,21 @@ const ApiDetail: FC = () => {
     }
   };
 
-  const run = async () => {};
+  const run = async () => {
+    const res = await runApi({ uid: uid });
+    if (res.code === 0) {
+      setResultModal(true);
+      setResponseUid(res.data);
+    }
+  };
   return (
     <PageContainer title={false}>
+      <Result
+        uid={responseUid}
+        modal={resultModal}
+        setModal={setResultModal}
+        single={false}
+      />
       <Spin tip={'努力加载中。。'} size={'large'} spinning={load}>
         <ApiCaseEditor
           onSubmit={onSubmit}
