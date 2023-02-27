@@ -40,7 +40,7 @@ interface SelfProps {
   form: FormInstance<API.IInterface>;
   caseInfo: API.IAPICaseInfoForm[];
   setFormInstance: Function;
-  headers: API.IHeaders[];
+  headers: any;
   body: any;
   SH: Function;
   SB: Function;
@@ -48,7 +48,6 @@ interface SelfProps {
   SE: Function;
   SP: Function;
   stepInfo: any;
-  setStepInfo: Dispatch<SetStateAction<FormInstance[]>>;
   apiStepsDetail?: API.IInterfaceStep[];
   isDetail?: boolean;
   run?: Function;

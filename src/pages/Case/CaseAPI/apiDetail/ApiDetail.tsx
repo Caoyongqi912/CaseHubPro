@@ -25,14 +25,14 @@ const ApiDetail: FC = () => {
     [],
   );
   // 步骤基本信息
-  const [stepFormList, setStepFormList] = useState<FormInstance[]>([]);
   const stepsFormList = useRef<{ curr: number; form: FormInstance }[]>([]);
   // 每步请求头
-  const [headers, setHeaders] = useState<API.IHeaders[]>([]);
+  const headers = useRef<API.IHeaders[][]>([]);
+
   // 每步请求参数
-  const [params, setParams] = useState<API.IParams[]>([]);
+  const params = useRef<API.IParams[][]>([]);
   // 每步请求体
-  const [body, setBody] = useState<any>([]);
+  const body = useRef<any>([]);
   // 每步断言
   const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
   // 每步提取
@@ -44,14 +44,14 @@ const ApiDetail: FC = () => {
     stepsFormList.current.push(data);
   };
 
-  const setH = (header: API.IHeaders) => {
-    setHeaders([...headers, header]);
+  const setH = (step: number, header: API.IHeaders[]) => {
+    headers.current[step] = header;
   };
-  const setP = (param: API.IParams) => {
-    setParams([...params, param]);
+  const setP = (step: number, param: API.IParams[]) => {
+    params.current[step] = param;
   };
-  const setB = (b: any) => {
-    setBody([...body, b]);
+  const setB = (step: number, b: any) => {
+    body.current[step] = b;
   };
   const setA = (assert: API.IAssertList) => {
     setAssertList([...assertList, assert]);
@@ -81,9 +81,9 @@ const ApiDetail: FC = () => {
     stepsFormList.current.forEach((e: any, index: number) => {
       const info = {
         ...e.getFieldsValue(),
-        params: params[index],
-        headers: headers[index],
-        body: body[index],
+        params: params.current[index],
+        headers: headers.current[index],
+        body: body.current[index],
         asserts: assertList[index],
         extracts: extractList[index],
         step: index,
@@ -94,6 +94,7 @@ const ApiDetail: FC = () => {
     data.casePartID = parseInt(casePartID);
     data.projectID = parseInt(projectID);
     data.uid = uid;
+    console.log(data);
     const res = await putApi(data);
     if (res.code === 0) {
       message.success(res.msg);
@@ -130,7 +131,6 @@ const ApiDetail: FC = () => {
           SP={setP}
           stepInfo={stepsFormList}
           apiStepsDetail={apiStepsDetail}
-          setStepInfo={setStepFormList}
           isDetail={true}
           run={run}
         />

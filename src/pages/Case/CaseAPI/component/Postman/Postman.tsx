@@ -14,6 +14,7 @@ interface SelfProps {
   SE: Function;
   SP: Function;
   setResponse: any;
+  step: number;
   apiStepDetail?: any;
 }
 

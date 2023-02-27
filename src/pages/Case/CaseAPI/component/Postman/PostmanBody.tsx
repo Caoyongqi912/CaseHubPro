@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, Tabs, Radio, Card } from 'antd';
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
@@ -14,6 +14,7 @@ interface SelfProps {
   SH: any;
   SB: any;
   SP: any;
+  step: number;
   setResponse: any;
   apiStepDetail?: any;
 }
@@ -26,7 +27,7 @@ interface KV {
 }
 
 const PostmanBody: FC<SelfProps> = (props) => {
-  const { apiStepDetail } = props;
+  const { apiStepDetail, step } = props;
   const { setFormInstance, setResponse } = props;
   const [form] = Form.useForm();
   const [method, setMethod] = useState('GET');
@@ -55,10 +56,21 @@ const PostmanBody: FC<SelfProps> = (props) => {
   }, [apiStepDetail]);
 
   useEffect(() => {
-    props.SH(headers);
-    props.SB(body);
-    props.SP(paramsData);
-  }, [headers, body, paramsData]);
+    if (headers && headers.length > 0) {
+      props.SH(step, headers);
+    }
+  }, [headers]);
+
+  useEffect(() => {
+    if (body) {
+      props.SB(step, body);
+    }
+  }, [body]);
+  useEffect(() => {
+    if (paramsData) {
+      props.SP(step, paramsData);
+    }
+  }, [paramsData]);
 
   const columns = (columnType: string): ProColumns[] => {
     return [

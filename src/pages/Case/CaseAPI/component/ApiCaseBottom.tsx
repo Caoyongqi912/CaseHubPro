@@ -19,7 +19,7 @@ interface SelfProps {
   SA: Function;
   SE: Function;
   SP: Function;
-  headers: API.IHeaders[];
+  headers: any;
   body: any;
   stepInfo: FormInstance[];
   apiStepsDetail?: API.IInterfaceStep[];
@@ -71,7 +71,7 @@ const tabExtra = (response: ResponseProps) => {
 };
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
-  const { stepInfo, body, SH, SB, headers, apiStepsDetail } = props;
+  const { stepInfo, SH, SB, headers, body, apiStepsDetail } = props;
   const [current, setCurrent] = useState(0);
   let uniqueKey = useRef(0);
   const [response, setResponse] = useState<ResponseProps>({});
@@ -94,6 +94,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
               {...props}
               apiStepDetail={apiStepsDetail![i]}
               setResponse={setResponse}
+              step={i}
             />
           ),
           key: getK(),
@@ -104,7 +105,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     } else {
       const _ = {
         title: 'step1',
-        content: <Postman {...props} setResponse={setResponse} />,
+        content: <Postman {...props} setResponse={setResponse} step={0} />,
         key: getK(),
       };
       arrRef.current.push(_);
@@ -127,7 +128,9 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
 
     arrRef.current.push({
       title: `step${stepStr}`,
-      content: <Postman {...props} setResponse={setResponse} />,
+      content: (
+        <Postman {...props} setResponse={setResponse} step={nextCurrent} />
+      ),
       key: getK(),
     });
     setSteps(arrRef.current);
@@ -143,8 +146,8 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
       arrRef.current[index].title = `step${value.key}`;
     });
 
-    SB(body.splice(current, 1));
-    SH(headers.splice(current, 1));
+    SB(body.current.splice(current, 1));
+    SH(headers.current.splice(current, 1));
     setSteps(arrRef.current);
     setCurrent(current - 1);
   };

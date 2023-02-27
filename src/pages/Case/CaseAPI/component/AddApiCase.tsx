@@ -1,10 +1,9 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { Button, Drawer, Form, FormInstance, message } from 'antd';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import { API } from '@/api';
-import { addApiCase } from '@/api/interface';
-import Result from '@/pages/Case/CaseAPI/component/Result';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
+import { addApiCase } from '@/api/interface';
 
 interface SelfProps {
   casePartID: number;
@@ -13,30 +12,30 @@ interface SelfProps {
 }
 
 const AddApiCase: FC<SelfProps> = (props) => {
-  const [resultModal, setResultModal] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState({});
   const [addCaseVisible, setAddCaseVisible] = useState<boolean>(false);
   const [infoForm] = Form.useForm<API.IInterface>();
-  const [formList, setFormList] = useState<FormInstance[]>([]);
-  const [headers, setHeaders] = useState<API.IHeaders[]>([]);
-  const [body, setBody] = useState<any>([]);
-  const [params, setParams] = useState<API.IParams[]>([]);
+  const stepsFormList = useRef<{ curr: number; form: FormInstance }[]>([]);
+  const headers = useRef<API.IHeaders[][]>([]);
+  const body = useRef<any>([]);
+  const params = useRef<API.IParams[][]>([]);
   const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
   const [extractList, setExtractList] = useState<API.IExtract[]>([]);
 
-  const setFormInstance = (form: FormInstance) => {
-    setFormList([...formList, form]);
-  };
-  const setP = (param: API.IParams) => {
-    setParams([...params, param]);
+  const setFormInstance = (data: { curr: number; form: FormInstance }) => {
+    stepsFormList.current.push(data);
   };
 
-  const setH = (header: API.IHeaders) => {
-    setHeaders([...headers, header]);
+  const setP = (step: number, param: API.IParams[]) => {
+    params.current[step] = param;
   };
-  const setB = (b: any) => {
-    setBody([...body, b]);
+
+  const setH = (step: number, header: API.IHeaders[]) => {
+    headers.current[step] = header;
   };
+  const setB = (step: number, b: any) => {
+    body.current[step] = b;
+  };
+
   const setA = (assert: API.IAssertList) => {
     setAssertList([...assertList, assert]);
   };
@@ -59,12 +58,12 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const onSubmit = async () => {
     const data = await infoForm.validateFields();
     let steps: any[] = [];
-    formList.forEach((e: FormInstance, index) => {
+    stepsFormList.current.forEach((e: any, index) => {
       const info = {
         ...e.getFieldsValue(),
-        params: params[index],
-        headers: headers[index],
-        body: body[index],
+        params: params.current[index],
+        headers: headers.current[index],
+        body: body.current[index],
         asserts: assertList[index],
         extracts: extractList[index],
         step: index,
@@ -112,8 +111,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
           SP={setP}
           headers={headers}
           body={body}
-          stepInfo={formList}
-          setStepInfo={setFormList}
+          stepInfo={stepsFormList}
         />
       </Drawer>
       <Button type="primary" onClick={() => setAddCaseVisible(true)}>
