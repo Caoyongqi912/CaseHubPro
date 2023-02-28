@@ -4,23 +4,26 @@ import ExtractColumns from '@/pages/Case/CaseAPI/component/Postman/CaseExtractTa
 
 interface SelfProps {
   SE: any;
-  detail?: any;
+  apiStepDetail?: any;
+  step: number;
 }
 
 const Index: FC<SelfProps> = (props) => {
-  const { detail } = props;
+  const { apiStepDetail, step } = props;
   const [extractData, setExtractData] = useState([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     extractData.map((item: any) => item.id),
   );
   useEffect(() => {
-    if (detail) {
-      setExtractData(detail.extracts);
+    if (apiStepDetail) {
+      setExtractData(apiStepDetail.extracts);
     }
-  }, []);
+  }, [apiStepDetail]);
 
   useEffect(() => {
-    props.SE(extractData);
+    if (extractData) {
+      props.SE(step, extractData);
+    }
   }, [extractData]);
 
   return (

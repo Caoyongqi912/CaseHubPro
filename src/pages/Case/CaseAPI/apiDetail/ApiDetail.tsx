@@ -34,9 +34,9 @@ const ApiDetail: FC = () => {
   // 每步请求体
   const body = useRef<any>([]);
   // 每步断言
-  const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
+  const assertList = useRef<API.IAssertList[][]>([]);
   // 每步提取
-  const [extractList, setExtractList] = useState<API.IExtract[]>([]);
+  const extractList = useRef<API.IExtract[][]>([]);
   const [resultModal, setResultModal] = useState(false);
   const [responseUid, setResponseUid] = useState<string>();
 
@@ -53,13 +53,12 @@ const ApiDetail: FC = () => {
   const setB = (step: number, b: any) => {
     body.current[step] = b;
   };
-  const setA = (assert: API.IAssertList) => {
-    setAssertList([...assertList, assert]);
+  const setA = (step: number, assert: API.IAssertList[]) => {
+    assertList.current[step] = assert;
   };
-  const setE = (extract: API.IExtract) => {
-    setExtractList([...extractList, extract]);
+  const setE = (step: number, extract: API.IExtract[]) => {
+    extractList.current[step] = extract;
   };
-
   useEffect(() => {
     fetchApiDetail();
   }, []);
@@ -84,8 +83,8 @@ const ApiDetail: FC = () => {
         params: params.current[index],
         headers: headers.current[index],
         body: body.current[index],
-        asserts: assertList[index],
-        extracts: extractList[index],
+        asserts: assertList.current[index],
+        extracts: extractList.current[index],
         step: index,
       };
       steps.push(info);

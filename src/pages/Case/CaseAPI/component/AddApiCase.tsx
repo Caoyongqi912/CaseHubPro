@@ -18,8 +18,8 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const headers = useRef<API.IHeaders[][]>([]);
   const body = useRef<any>([]);
   const params = useRef<API.IParams[][]>([]);
-  const [assertList, setAssertList] = useState<API.IAssertList[]>([]);
-  const [extractList, setExtractList] = useState<API.IExtract[]>([]);
+  const extractList = useRef<API.IExtract[][]>([]);
+  const assertList = useRef<API.IAssertList[][]>([]);
 
   const setFormInstance = (data: { curr: number; form: FormInstance }) => {
     stepsFormList.current.push(data);
@@ -36,11 +36,11 @@ const AddApiCase: FC<SelfProps> = (props) => {
     body.current[step] = b;
   };
 
-  const setA = (assert: API.IAssertList) => {
-    setAssertList([...assertList, assert]);
+  const setA = (step: number, assert: API.IAssertList[]) => {
+    assertList.current[step] = assert;
   };
-  const setE = (extract: API.IExtract) => {
-    setExtractList([...extractList, extract]);
+  const setE = (step: number, extract: API.IExtract[]) => {
+    extractList.current[step] = extract;
   };
 
   /**
@@ -64,8 +64,8 @@ const AddApiCase: FC<SelfProps> = (props) => {
         params: params.current[index],
         headers: headers.current[index],
         body: body.current[index],
-        asserts: assertList[index],
-        extracts: extractList[index],
+        asserts: assertList.current[index],
+        extracts: extractList.current[index],
         step: index,
       };
       steps.push(info);

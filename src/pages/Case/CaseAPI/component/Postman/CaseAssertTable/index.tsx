@@ -4,23 +4,26 @@ import EditableTable from '@/components/Table/EditableTable';
 
 interface SelfProps {
   SA: any;
-  detail?: any;
+  apiStepDetail?: any;
+  step: number;
 }
 
 const Index: FC<SelfProps> = (props) => {
-  const { detail } = props;
+  const { apiStepDetail, step } = props;
   const [assertData, setAssertData] = useState([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     assertData.map((item: any) => item.id),
   );
   useEffect(() => {
-    if (detail) {
-      setAssertData(detail.asserts);
+    if (apiStepDetail) {
+      setAssertData(apiStepDetail.asserts);
     }
-  }, []);
+  }, [apiStepDetail]);
 
   useEffect(() => {
-    props.SA(assertData);
+    if (assertData) {
+      props.SA(step, assertData);
+    }
   }, [assertData]);
 
   return (
