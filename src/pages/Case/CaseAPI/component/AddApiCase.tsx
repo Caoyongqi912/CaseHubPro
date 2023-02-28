@@ -4,6 +4,14 @@ import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import { API } from '@/api';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
 import { addApiCase } from '@/api/interface';
+import {
+  setAsserts,
+  setBody,
+  setExtract,
+  SetFormInstance,
+  setHeaders,
+  setParams,
+} from '@/pages/Case/CaseAPI/func';
 
 interface SelfProps {
   casePartID: number;
@@ -14,33 +22,48 @@ interface SelfProps {
 const AddApiCase: FC<SelfProps> = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState<boolean>(false);
   const [infoForm] = Form.useForm<API.IInterface>();
-  const stepsFormList = useRef<{ curr: number; form: FormInstance }[]>([]);
+  const stepsFormList = useRef<FormInstance[]>([]);
   const headers = useRef<API.IHeaders[][]>([]);
   const body = useRef<any>([]);
   const params = useRef<API.IParams[][]>([]);
   const extractList = useRef<API.IExtract[][]>([]);
   const assertList = useRef<API.IAssertList[][]>([]);
 
-  const setFormInstance = (data: { curr: number; form: FormInstance }) => {
-    stepsFormList.current.push(data);
+  const setFormInstance: SetFormInstance = (form: FormInstance) => {
+    stepsFormList.current.push(form);
   };
 
-  const setP = (step: number, param: API.IParams[]) => {
-    params.current[step] = param;
+  const setH: setHeaders = (step, header, del) => {
+    if (del) {
+      headers.current.splice(step, 1);
+    } else {
+      headers.current[step] = header!;
+    }
   };
-
-  const setH = (step: number, header: API.IHeaders[]) => {
-    headers.current[step] = header;
+  const setP: setParams = (step, param, del) => {
+    params.current[step] = param!;
   };
-  const setB = (step: number, b: any) => {
-    body.current[step] = b;
+  const setB: setBody = (step, b, del) => {
+    if (del) {
+      body.current.splice(step, 1);
+    } else {
+      body.current[step] = b!;
+    }
   };
-
-  const setA = (step: number, assert: API.IAssertList[]) => {
-    assertList.current[step] = assert;
+  const setA: setAsserts = (step, asserts, del) => {
+    if (del) {
+      assertList.current.splice(step, 1);
+    } else {
+      assertList.current[step] = asserts!;
+    }
   };
-  const setE = (step: number, extract: API.IExtract[]) => {
-    extractList.current[step] = extract;
+  const setE: setExtract = (step, extract, del) => {
+    if (del) {
+      assertList.current.splice(step, 1);
+    }
+    {
+      extractList.current[step] = extract!;
+    }
   };
 
   /**
@@ -58,9 +81,9 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const onSubmit = async () => {
     const data = await infoForm.validateFields();
     let steps: any[] = [];
-    stepsFormList.current.forEach((e: any, index) => {
+    stepsFormList.current.forEach((form: FormInstance, index) => {
       const info = {
-        ...e.getFieldsValue(),
+        ...form.getFieldsValue(),
         params: params.current[index],
         headers: headers.current[index],
         body: body.current[index],
@@ -91,14 +114,6 @@ const AddApiCase: FC<SelfProps> = (props) => {
         onClose={() => setAddCaseVisible(false)}
         maskClosable={false}
       >
-        {/*<Result*/}
-        {/*  response={testResult}*/}
-        {/*  name={'test'}*/}
-        {/*  modal={resultModal}*/}
-        {/*  setModal={setResultModal}*/}
-        {/*  single={false}*/}
-        {/*/>*/}
-
         <ApiCaseEditor
           form={infoForm}
           setFormInstance={setFormInstance}
@@ -109,8 +124,6 @@ const AddApiCase: FC<SelfProps> = (props) => {
           SB={setB}
           SE={setE}
           SP={setP}
-          headers={headers}
-          body={body}
           stepInfo={stepsFormList}
         />
       </Drawer>

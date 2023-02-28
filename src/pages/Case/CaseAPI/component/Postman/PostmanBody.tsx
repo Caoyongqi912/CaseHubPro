@@ -5,15 +5,21 @@ import EditableTable from '@/components/Table/EditableTable';
 import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
 import { runApiDemo } from '@/api/interface';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
+import {
+  setBody,
+  SetFormInstance,
+  setHeaders,
+  setParams,
+} from '@/pages/Case/CaseAPI/func';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 interface SelfProps {
-  setFormInstance: any;
-  SH: any;
-  SB: any;
-  SP: any;
+  setFormInstance: SetFormInstance;
+  SH: setHeaders;
+  SB: setBody;
+  SP: setParams;
   step: number;
   setResponse: any;
   apiStepDetail?: any;

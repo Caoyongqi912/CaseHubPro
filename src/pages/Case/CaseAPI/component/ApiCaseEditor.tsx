@@ -11,6 +11,14 @@ import {
 } from 'antd';
 import { API } from '@/api';
 import ApiCaseBottom from '@/pages/Case/CaseAPI/component/ApiCaseBottom';
+import {
+  setAsserts,
+  setBody,
+  setExtract,
+  SetFormInstance,
+  setHeaders,
+  setParams,
+} from '@/pages/Case/CaseAPI/func';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -39,14 +47,12 @@ interface SelfProps {
   onSubmit: Function;
   form: FormInstance<API.IInterface>;
   caseInfo: API.IAPICaseInfoForm[];
-  setFormInstance: Function;
-  headers: any;
-  body: any;
-  SH: Function;
-  SB: Function;
-  SA: Function;
-  SE: Function;
-  SP: Function;
+  setFormInstance: SetFormInstance;
+  SH: setHeaders;
+  SB: setBody;
+  SA: setAsserts;
+  SE: setExtract;
+  SP: setParams;
   stepInfo: any;
   apiStepsDetail?: API.IInterfaceStep[];
   isDetail?: boolean;

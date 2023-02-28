@@ -7,6 +7,14 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
 import Result from '@/pages/Case/CaseAPI/component/Result';
+import {
+  setAsserts,
+  setBody,
+  setExtract,
+  SetFormInstance,
+  setHeaders,
+  setParams,
+} from '@/pages/Case/CaseAPI/func';
 
 interface DetailParams {
   uid: string;
@@ -25,7 +33,7 @@ const ApiDetail: FC = () => {
     [],
   );
   // 步骤基本信息
-  const stepsFormList = useRef<{ curr: number; form: FormInstance }[]>([]);
+  const stepsFormList = useRef<FormInstance[]>([]);
   // 每步请求头
   const headers = useRef<API.IHeaders[][]>([]);
 
@@ -40,24 +48,44 @@ const ApiDetail: FC = () => {
   const [resultModal, setResultModal] = useState(false);
   const [responseUid, setResponseUid] = useState<string>();
 
-  const setFormInstance = (data: { curr: number; form: FormInstance }) => {
-    stepsFormList.current.push(data);
+  const setFormInstance: SetFormInstance = (form: FormInstance) => {
+    stepsFormList.current.push(form);
   };
 
-  const setH = (step: number, header: API.IHeaders[]) => {
-    headers.current[step] = header;
+  const setH: setHeaders = (step, header, del) => {
+    if (del) {
+      headers.current.splice(step, 1);
+    } else {
+      headers.current[step] = header!;
+    }
   };
-  const setP = (step: number, param: API.IParams[]) => {
-    params.current[step] = param;
+  const setP: setParams = (step, param, del) => {
+    if (del) {
+      params.current.splice(step, 1);
+    } else {
+      params.current[step] = param!;
+    }
   };
-  const setB = (step: number, b: any) => {
-    body.current[step] = b;
+  const setB: setBody = (step, b, del) => {
+    if (del) {
+      body.current.splice(step, 1);
+    } else {
+      body.current[step] = b!;
+    }
   };
-  const setA = (step: number, assert: API.IAssertList[]) => {
-    assertList.current[step] = assert;
+  const setA: setAsserts = (step, asserts, del) => {
+    if (del) {
+      assertList.current.splice(step, 1);
+    } else {
+      assertList.current[step] = asserts!;
+    }
   };
-  const setE = (step: number, extract: API.IExtract[]) => {
-    extractList.current[step] = extract;
+  const setE: setExtract = (step, extract, del) => {
+    if (del) {
+      extractList.current.splice(step, 1);
+    } else {
+      extractList.current[step] = extract!;
+    }
   };
   useEffect(() => {
     fetchApiDetail();
@@ -77,9 +105,9 @@ const ApiDetail: FC = () => {
   const onSubmit = async () => {
     const data = await caseInfoFrom.validateFields();
     let steps: any[] = [];
-    stepsFormList.current.forEach((e: any, index: number) => {
+    stepsFormList.current.forEach((form: FormInstance, index: number) => {
       const info = {
-        ...e.getFieldsValue(),
+        ...form.getFieldsValue(),
         params: params.current[index],
         headers: headers.current[index],
         body: body.current[index],
@@ -121,8 +149,6 @@ const ApiDetail: FC = () => {
           form={caseInfoFrom}
           caseInfo={caseInfo}
           setFormInstance={setFormInstance}
-          headers={headers}
-          body={body}
           SH={setH}
           SB={setB}
           SA={setA}

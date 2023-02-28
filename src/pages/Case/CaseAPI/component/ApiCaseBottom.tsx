@@ -10,18 +10,24 @@ import { Steps, Col, Row, Table, Tabs, Button, Card, FormInstance } from 'antd';
 import { API } from '@/api';
 import Postman from '@/pages/Case/CaseAPI/component/Postman/Postman';
 import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
+import {
+  setAsserts,
+  setBody,
+  setExtract,
+  SetFormInstance,
+  setHeaders,
+  setParams,
+} from '@/pages/Case/CaseAPI/func';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
-  setFormInstance: Function;
-  SH: Function;
-  SB: Function;
-  SA: Function;
-  SE: Function;
-  SP: Function;
-  headers: any;
-  body: any;
-  stepInfo: FormInstance[];
+  setFormInstance: SetFormInstance;
+  SH: setHeaders;
+  SB: setBody;
+  SA: setAsserts;
+  SE: setExtract;
+  SP: setParams;
+  stepInfo: any;
   apiStepsDetail?: API.IInterfaceStep[];
 }
 
@@ -71,7 +77,7 @@ const tabExtra = (response: ResponseProps) => {
 };
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
-  const { stepInfo, SH, SB, headers, body, apiStepsDetail } = props;
+  const { stepInfo, SH, SB, SP, SE, SA, apiStepsDetail } = props;
   const [current, setCurrent] = useState(0);
   let uniqueKey = useRef(0);
   const [response, setResponse] = useState<ResponseProps>({});
@@ -79,16 +85,13 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   const getK: () => number = () => {
     return (uniqueKey.current = ++uniqueKey.current);
   };
-  const [items, setItems] = useState<{ key: string; title: string }[]>([]);
-  const [steps, setSteps] = useState<
-    { title: string; content: any; key: number }[]
-  >([]);
+  const [items, setItems] = useState<any>([]);
+  const [steps, setSteps] = useState<{ content: any; key: number }[]>([]);
 
   useEffect(() => {
     if (apiStepsDetail) {
       for (let i = 0; i < apiStepsDetail?.length!; i++) {
         const _ = {
-          title: `step${i + 1}`,
           content: (
             <Postman
               {...props}
@@ -104,7 +107,6 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
       setSteps(arrRef.current);
     } else {
       const _ = {
-        title: 'step1',
         content: <Postman {...props} setResponse={setResponse} step={0} />,
         key: getK(),
       };
@@ -114,7 +116,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   }, [apiStepsDetail]);
 
   useEffect(() => {
-    const i = steps.map((item) => ({ key: item.title, title: item.title }));
+    const i = steps.map((item) => ({ key: item.key }));
     setItems(i);
   }, [steps, current, apiStepsDetail]);
 
@@ -123,11 +125,9 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
    */
   const addStep = () => {
     const nextCurrent = current + 1;
-    const stepStr = nextCurrent + 1;
+    // const stepStr = nextCurrent + 1;
     setCurrent(nextCurrent);
-
     arrRef.current.push({
-      title: `step${stepStr}`,
       content: (
         <Postman {...props} setResponse={setResponse} step={nextCurrent} />
       ),
@@ -141,13 +141,13 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
    */
   const delStep = () => {
     steps.splice(current, 1);
-    stepInfo.splice(current, 1);
-    arrRef.current.map((value, index, array) => {
-      arrRef.current[index].title = `step${value.key}`;
-    });
-
-    SB(body.current.splice(current, 1));
-    SH(headers.current.splice(current, 1));
+    // console.log(steps);
+    stepInfo.current.splice(current, 1);
+    SH(current, null, true);
+    SB(current, null, true);
+    SA(current, null, true);
+    SP(current, null, true);
+    SE(current, null, true);
     setSteps(arrRef.current);
     setCurrent(current - 1);
   };
@@ -187,6 +187,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     <>
       <Row gutter={[8, 8]} style={{ marginTop: 10, minHeight: 500 }}>
         <Col span={24}>
+          {/*// @ts-ignore*/}
           <Steps current={current} items={items} size={'small'} />
           <br />
           <Col span={24}>
