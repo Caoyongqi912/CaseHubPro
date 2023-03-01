@@ -2,11 +2,11 @@ import { ProColumns } from '@ant-design/pro-components';
 
 const ExtractColumns: ProColumns[] = [
   {
-    title: 'Key',
+    title: '变量名',
     dataIndex: 'key',
   },
   {
-    title: 'Value',
+    title: '提取语法',
     dataIndex: 'val',
   },
   {

@@ -6,6 +6,7 @@ const Index: FC<EditorProps> = (props) => {
     selectOnLineNumbers: true,
     renderSideBySide: false,
     loading: false,
+    foldingHighlight: true,
   };
   return (
     <Editor

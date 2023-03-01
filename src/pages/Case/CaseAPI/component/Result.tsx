@@ -3,6 +3,7 @@ import { Badge, Descriptions, Drawer, Row, Tabs } from 'antd';
 import { API } from '@/api';
 import { getApiResponse } from '@/api/interface';
 import { IconFont } from '@/utils/IconFont';
+import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
 
 const TabPane = Tabs.TabPane;
 const DescriptionsItem = Descriptions.Item;
@@ -96,7 +97,13 @@ const Result: FC<SelfProps> = (props) => {
               </span>
             }
             key="3"
-          ></TabPane>
+          >
+            <CodeEditor
+              height={'100vh'}
+              language={'plaintext'}
+              value={response.interfaceLog}
+            />
+          </TabPane>
           <TabPane
             tab={
               <span>
