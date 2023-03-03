@@ -21,7 +21,7 @@ const Index: FC<SelfProps> = (props) => {
   }, [apiStepDetail]);
 
   useEffect(() => {
-    if (assertData) {
+    if (assertData && assertData.length > 0) {
       props.SA(step, assertData);
     }
   }, [assertData]);
