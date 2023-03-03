@@ -1,17 +1,24 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 
-const Index: FC<EditorProps> = (props) => {
+interface SelfProps extends EditorProps {
+  read?: boolean;
+}
+
+const Index: FC<SelfProps> = (props) => {
   const opt = {
     selectOnLineNumbers: true,
     renderSideBySide: false,
-    loading: false,
     foldingHighlight: true,
+    overviewRulerBorder: true,
+    tabSize: 2,
+    readOnly: props.read || false,
   };
+
   return (
     <Editor
       height={props.height || '20vh'}
-      options={props.options || opt}
+      options={opt}
       language={props.language || 'json'}
       theme={props.theme || 'vs-dark'}
       value={props.value}

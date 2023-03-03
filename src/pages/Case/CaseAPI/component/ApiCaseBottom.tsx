@@ -9,7 +9,7 @@ import React, {
 import { Steps, Col, Row, Table, Tabs, Button, Card, FormInstance } from 'antd';
 import { API } from '@/api';
 import Postman from '@/pages/Case/CaseAPI/component/Postman/Postman';
-import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
+import CodeEditor from '@/components/CodeEditor';
 import {
   setAsserts,
   setBody,

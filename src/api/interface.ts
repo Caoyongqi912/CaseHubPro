@@ -164,7 +164,7 @@ export async function getApiResponse(
   params: DetailParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse<null>>(GetApiResponseURL, {
+  return request<API.IResponse<ResponseAPI.IApiResponse>>(GetApiResponseURL, {
     method: 'GET',
     params,
     ...(options || {}),

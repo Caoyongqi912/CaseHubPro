@@ -228,4 +228,47 @@ declare namespace ResponseAPI {
     items: IHostResponse[] | [];
     pageInfo: IPageInfo;
   }
+
+  interface IRequest {
+    headers: [key: string | any][];
+    method: string;
+  }
+  interface IResponse {
+    cookie: any[];
+    elapsed: string;
+    headers: [key: string | any][];
+    response: any;
+    status_code: number;
+  }
+  interface IVerify {
+    actual: any;
+    assertOpt: string;
+    expect: any;
+    extraOpt: string;
+    extraValue: string;
+    id: number;
+    result: boolean;
+  }
+  interface IApiResponseResultInfo {
+    request: IRequest;
+    response: IResponse;
+    step: number;
+    verify: IVerify[];
+  }
+
+  interface IApiResponse {
+    id: number;
+    interfaceID: number;
+    create_time: string;
+    update_time: string;
+    interfaceName: string;
+    interfaceLog: string;
+    interfaceSteps: number;
+    starterID: number;
+    starterName: string;
+    status: string;
+    uid: string;
+    useTime: string;
+    resultInfo: IApiResponseResultInfo[];
+  }
 }

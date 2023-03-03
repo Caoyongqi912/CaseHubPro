@@ -60,7 +60,7 @@ interface SelfProps {
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
-  const { onSubmit, form, caseInfo, run } = props;
+  const { onSubmit, form, caseInfo, run, isDetail } = props;
 
   const cardTitle = (
     <span style={{ fontWeight: 700, fontSize: '16px' }}>API CASE INFO</span>

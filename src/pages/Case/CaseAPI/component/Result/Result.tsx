@@ -1,9 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Badge, Descriptions, Drawer, Row, Tabs } from 'antd';
-import { API } from '@/api';
+import { API, ResponseAPI } from '@/api';
 import { getApiResponse } from '@/api/interface';
 import { IconFont } from '@/utils/IconFont';
-import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
+import CodeEditor from '@/components/CodeEditor';
+import VerifyInfo from './verifyInfo/verifyInfo';
 
 const TabPane = Tabs.TabPane;
 const DescriptionsItem = Descriptions.Item;
@@ -23,7 +24,7 @@ interface SelfProps {
 
 const Result: FC<SelfProps> = (props) => {
   const { modal, setModal, single, uid } = props;
-  const [response, setResponse] = useState({});
+  const [response, setResponse] = useState<ResponseAPI.IApiResponse>();
 
   const getResponse = async () => {
     if (uid) {
@@ -61,22 +62,27 @@ const Result: FC<SelfProps> = (props) => {
             key={'1'}
           >
             <Descriptions column={2} bordered size={'default'}>
-              <DescriptionsItem label="测试人">
-                {response.starterName}
+              <DescriptionsItem label="用例名称">
+                {response?.interfaceName}
               </DescriptionsItem>
-
               <DescriptionsItem label="测试结果">
                 <Badge
-                  status={response.status ? 'success' : 'error'}
-                  text={response.status ? 'SUCCESS' : 'FAIL'}
+                  status={response?.status === 'SUCCESS' ? 'success' : 'error'}
+                  text={response?.status}
                 />
               </DescriptionsItem>
-              <DescriptionsItem label="请求方式">{'GET'}</DescriptionsItem>
+              <DescriptionsItem label="用例描述">
+                {response?.interfaceName}
+              </DescriptionsItem>
+
+              <DescriptionsItem label="测试人">
+                {response?.starterName}
+              </DescriptionsItem>
               <DescriptionsItem label="测试时间">
-                {response.create_time}
+                {response?.create_time}
               </DescriptionsItem>
               <DescriptionsItem label="运行时间">
-                {response.useTime}
+                {response?.useTime}
               </DescriptionsItem>
             </Descriptions>
           </TabPane>
@@ -88,7 +94,9 @@ const Result: FC<SelfProps> = (props) => {
               </span>
             }
             key="2"
-          ></TabPane>
+          >
+            <VerifyInfo responseInfo={response?.resultInfo} />
+          </TabPane>
           <TabPane
             tab={
               <span>
@@ -101,7 +109,8 @@ const Result: FC<SelfProps> = (props) => {
             <CodeEditor
               height={'100vh'}
               language={'plaintext'}
-              value={response.interfaceLog}
+              read={true}
+              value={response?.interfaceLog}
             />
           </TabPane>
           <TabPane

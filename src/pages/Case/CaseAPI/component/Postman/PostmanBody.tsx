@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, Tabs, Radio, Card } from 'antd';
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
-import CodeEditor from '@/pages/Case/CaseAPI/component/Postman/CodeEditor';
+import CodeEditor from '@/components/CodeEditor';
 import { runApiDemo } from '@/api/interface';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
 import {

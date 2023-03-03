@@ -6,7 +6,7 @@ import { Form, FormInstance, message, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
-import Result from '@/pages/Case/CaseAPI/component/Result';
+import Result from '@/pages/Case/CaseAPI/component/Result/Result';
 import {
   setAsserts,
   setBody,
@@ -117,6 +117,7 @@ const ApiDetail: FC = () => {
       };
       steps.push(info);
     });
+    console.log(steps);
     data.steps = steps;
     data.casePartID = parseInt(casePartID);
     data.projectID = parseInt(projectID);
