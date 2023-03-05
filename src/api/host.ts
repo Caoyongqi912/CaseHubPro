@@ -2,6 +2,7 @@ import { API, ResponseAPI } from '@/api';
 import { request } from '@@/plugin-request/request';
 
 const HostUrl = '/api/case/host/opt';
+const QueryHostUrl = '/api/case/host/query';
 
 /**
  * host 分页
@@ -24,6 +25,12 @@ export async function hostOpt(
   return request<API.IResponse<null>>(HostUrl, {
     method,
     data: params,
+    ...(options || {}),
+  });
+}
+
+export async function queryHost(options?: API.IObjGet) {
+  return request<API.IResponse<ResponseAPI.IQueryHost[]>>(QueryHostUrl, {
     ...(options || {}),
   });
 }

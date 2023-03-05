@@ -233,6 +233,7 @@ declare namespace ResponseAPI {
     headers: [key: string | any][];
     method: string;
   }
+
   interface IResponse {
     cookie: any[];
     elapsed: string;
@@ -240,6 +241,7 @@ declare namespace ResponseAPI {
     response: any;
     status_code: number;
   }
+
   interface IVerify {
     actual: any;
     assertOpt: string;
@@ -249,6 +251,7 @@ declare namespace ResponseAPI {
     id: number;
     result: boolean;
   }
+
   interface IApiResponseResultInfo {
     request: IRequest;
     response: IResponse;
@@ -270,5 +273,20 @@ declare namespace ResponseAPI {
     uid: string;
     useTime: string;
     resultInfo: IApiResponseResultInfo[];
+  }
+
+  interface IQueryHost {
+    id: number;
+    uid: string;
+    name: string;
+    host: string;
+    port: string;
+    desc: string;
+    create_time: string;
+    update_time: string;
+    creatorID: number;
+    creatorName: string;
+    updaterID: number;
+    updaterName: string;
   }
 }

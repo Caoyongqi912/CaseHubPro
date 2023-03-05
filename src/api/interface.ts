@@ -125,6 +125,7 @@ export async function runApiDemo(body: any, options?: { [key: string]: any }) {
 
 interface DetailParams {
   uid: string;
+  HostID: string;
 }
 
 export async function getApiDetail(

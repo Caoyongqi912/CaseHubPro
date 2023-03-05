@@ -19,6 +19,7 @@ import {
   setHeaders,
   setParams,
 } from '@/pages/Case/CaseAPI/func';
+import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -67,17 +68,7 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
   );
   const cardExtra = (
     <>
-      {props.isDetail ? (
-        <Button
-          type={'primary'}
-          style={{ marginRight: 5 }}
-          onClick={async () => {
-            await run!();
-          }}
-        >
-          Run
-        </Button>
-      ) : null}
+      {isDetail ? <HostDropdown run={run!} /> : null}
 
       <Button
         type="primary"
