@@ -21,10 +21,12 @@ const Index: FC<SelfProps> = (props) => {
   }, [apiStepDetail]);
 
   useEffect(() => {
-    if (extractData && extractData.length > 0) {
-      props.SE(step, extractData);
-    }
-  }, [extractData]);
+    // if (extractData && extractData.length > 0) {
+
+    console.log('==', extractData);
+    props.SE(step, extractData);
+    // }
+  }, [extractData, apiStepDetail]);
 
   return (
     <EditableTable

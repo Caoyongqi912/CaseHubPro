@@ -99,7 +99,7 @@ declare namespace API {
     type: string;
     default?: string;
     placeholder?: string;
-    component: null | React.ReactElement;
+    component: Function | null;
     span?: number;
   }
 

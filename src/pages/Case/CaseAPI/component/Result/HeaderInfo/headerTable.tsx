@@ -13,7 +13,7 @@ const HeaderTable: FC<SelfProps> = (props) => {
   const [respHeaders, setRespHeaders] = useState<[key: string | any][]>([]);
 
   // useEffect(() => {
-  //   setHeadersData(resultInfo);
+  //   setHeadersData(resultInfyaro);
   //
   // }, [resultInfo]);
   return <></>;

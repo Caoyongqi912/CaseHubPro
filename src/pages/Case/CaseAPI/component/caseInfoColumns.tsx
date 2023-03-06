@@ -2,6 +2,7 @@ import { API } from '@/api';
 import { Select } from 'antd';
 import { CONFIG } from '@/utils/config';
 import React from 'react';
+
 const { Option } = Select;
 
 const caseInfo: API.IAPICaseInfoForm[] = [
@@ -19,8 +20,8 @@ const caseInfo: API.IAPICaseInfoForm[] = [
     name: 'level',
     label: '优先级',
     required: true,
-    component: (
-      <Select placeholder="请选择用例优先级">
+    component: (props: any) => (
+      <Select placeholder="请选择用例优先级" {...props}>
         {CONFIG.CASE_LEVEL.map((v: string) => (
           <Option key={v} value={v}>
             {v}
@@ -36,8 +37,8 @@ const caseInfo: API.IAPICaseInfoForm[] = [
     name: 'status',
     label: '用例状态',
     required: true,
-    component: (
-      <Select placeholder="请选择用例当前状态">
+    component: (props: any) => (
+      <Select placeholder="请选择用例当前状态" {...props}>
         {Object.keys(CONFIG.CASESTATUS).map((key, value) => (
           <Option key={key} value={key}>
             {CONFIG.CASESTATUS[key]}
@@ -45,6 +46,7 @@ const caseInfo: API.IAPICaseInfoForm[] = [
         ))}
       </Select>
     ),
+
     type: 'select',
     default: 'DEBUG',
 
@@ -54,8 +56,8 @@ const caseInfo: API.IAPICaseInfoForm[] = [
     name: 'http',
     label: '请求类型',
     required: true,
-    component: (
-      <Select placeholder="请选择请求协议类型">
+    component: (props: any) => (
+      <Select placeholder="请选择请求协议类型" {...props}>
         {Object.keys(CONFIG.REQUEST_TYPE).map((key) => (
           <Option key={key} value={key} disabled={key !== '1'}>
             {CONFIG.REQUEST_TYPE[key]}

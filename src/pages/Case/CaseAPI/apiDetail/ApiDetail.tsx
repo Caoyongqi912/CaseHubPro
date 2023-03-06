@@ -111,8 +111,8 @@ const ApiDetail: FC = () => {
         params: params.current[index],
         headers: headers.current[index],
         body: body.current[index],
-        asserts: assertList.current[index],
-        extracts: extractList.current[index],
+        asserts: assertList.current[index] || apiStepsDetail[index].asserts,
+        extracts: extractList.current[index] || apiStepsDetail[index].extracts,
         step: index,
       };
       steps.push(info);

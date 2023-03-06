@@ -11,6 +11,7 @@ import {
   setHeaders,
   setParams,
 } from '@/pages/Case/CaseAPI/func';
+import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -182,12 +183,13 @@ const PostmanBody: FC<SelfProps> = (props) => {
     }
   };
 
-  const sendReq = async () => {
+  const sendReq = async (HostID: string) => {
     const req = form.getFieldsValue();
     req.headers = headers;
     if (body) {
       req.body = body;
     }
+    req.HostID = HostID;
     const res = await runApiDemo(req);
     if (res.code === 0) {
       setResponse(res.data);
@@ -269,9 +271,10 @@ const PostmanBody: FC<SelfProps> = (props) => {
           </Col>
           <Col span={4}>
             <div style={{ float: 'right' }}>
-              <Button onClick={sendReq} type={'primary'}>
-                Send
-              </Button>
+              {/*<Button onClick={sendReq} type={'primary'}>*/}
+              {/*  Send*/}
+              {/*</Button>*/}
+              <HostDropdown run={sendReq!} buttonName={'Send'} />
             </div>
           </Col>
         </Row>

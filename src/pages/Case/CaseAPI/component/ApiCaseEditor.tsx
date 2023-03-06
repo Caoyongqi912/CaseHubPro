@@ -1,14 +1,5 @@
-import React, { Dispatch, FC, SetStateAction, useState } from 'react';
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Form,
-  Input,
-  Switch,
-  FormInstance,
-} from 'antd';
+import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
+import { Button, Card, Col, Row, Form, Input, FormInstance } from 'antd';
 import { API } from '@/api';
 import ApiCaseBottom from '@/pages/Case/CaseAPI/component/ApiCaseBottom';
 import {
@@ -20,26 +11,23 @@ import {
   setParams,
 } from '@/pages/Case/CaseAPI/func';
 import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
-
 const { TextArea } = Input;
 const FormItem = Form.Item;
 
 const getComponent = (
   type: string,
   placeholder: string,
-  component: null | React.ReactElement = null,
+  component: any,
+  read: boolean,
 ) => {
   if (component) {
-    return component;
+    return component({ disabled: read });
   }
   if (type === 'input') {
-    return <Input placeholder={placeholder} />;
+    return <Input placeholder={placeholder} disabled={read} />;
   }
   if (type === 'textarea') {
-    return <TextArea placeholder={placeholder} />;
-  }
-  if (type === 'switch') {
-    return <Switch />;
+    return <TextArea placeholder={placeholder} disabled={read} />;
   }
   return null;
 };
@@ -62,22 +50,38 @@ interface SelfProps {
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
   const { onSubmit, form, caseInfo, run, isDetail } = props;
-
+  const [detail, setDetail] = useState(isDetail);
   const cardTitle = (
     <span style={{ fontWeight: 700, fontSize: '16px' }}>API CASE INFO</span>
   );
+  const setD = (d: boolean) => {
+    setDetail(d);
+  };
   const cardExtra = (
     <>
-      {isDetail ? <HostDropdown run={run!} /> : null}
-
-      <Button
-        type="primary"
-        onClick={async () => {
-          await onSubmit();
-        }}
-      >
-        提交
-      </Button>
+      {detail ? (
+        <>
+          <HostDropdown run={run!} buttonName={'RUN'} />
+          <Button
+            type="primary"
+            onClick={() => {
+              setD(false);
+            }}
+          >
+            修改
+          </Button>
+        </>
+      ) : (
+        <Button
+          type="primary"
+          onClick={async () => {
+            setD(true);
+            await onSubmit();
+          }}
+        >
+          提交
+        </Button>
+      )}
     </>
   );
 
@@ -98,7 +102,12 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
                   name={item.name}
                   valuePropName={'value'}
                 >
-                  {getComponent(item.type, item.placeholder!, item.component)}
+                  {getComponent(
+                    item.type,
+                    item.placeholder!,
+                    item.component,
+                    detail!,
+                  )}
                 </FormItem>
               </Col>
             ))}
