@@ -136,6 +136,7 @@ const ApiDetail: FC = () => {
       setResponseUid(data);
     }
   };
+
   return (
     <PageContainer title={false}>
       <Result

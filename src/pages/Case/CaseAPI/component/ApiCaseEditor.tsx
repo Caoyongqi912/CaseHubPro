@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, Card, Col, Row, Form, Input, FormInstance } from 'antd';
 import { API } from '@/api';
 import ApiCaseBottom from '@/pages/Case/CaseAPI/component/ApiCaseBottom';
@@ -11,6 +11,7 @@ import {
   setParams,
 } from '@/pages/Case/CaseAPI/func';
 import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
+
 const { TextArea } = Input;
 const FormItem = Form.Item;
 
@@ -43,6 +44,8 @@ interface SelfProps {
   SE: setExtract;
   SP: setParams;
   stepInfo: any;
+  extracts: any;
+  asserts: any;
   apiStepsDetail?: API.IInterfaceStep[];
   isDetail?: boolean;
   run?: Function;

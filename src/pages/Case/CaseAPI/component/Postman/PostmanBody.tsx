@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Input, Row, Select, Tabs, Radio, Card } from 'antd';
+import React, { FC, useEffect, useState } from 'react';
+import { Col, Form, Input, Row, Select, Tabs, Radio, Card } from 'antd';
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
 import CodeEditor from '@/components/CodeEditor';
-import { runApiDemo } from '@/api/interface';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
 import {
   setBody,
@@ -12,6 +11,7 @@ import {
   setParams,
 } from '@/pages/Case/CaseAPI/func';
 import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
+import { runApiDemo } from '@/api/interface';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -24,6 +24,8 @@ interface SelfProps {
   step: number;
   setResponse: any;
   apiStepDetail?: any;
+  extracts: any;
+  asserts: any;
 }
 
 interface KV {
@@ -34,7 +36,7 @@ interface KV {
 }
 
 const PostmanBody: FC<SelfProps> = (props) => {
-  const { apiStepDetail, step } = props;
+  const { apiStepDetail, step, extracts, asserts } = props;
   const { setFormInstance, setResponse } = props;
   const [form] = Form.useForm();
   const [method, setMethod] = useState('GET');
@@ -184,13 +186,18 @@ const PostmanBody: FC<SelfProps> = (props) => {
   };
 
   const sendReq = async (HostID: string) => {
-    const req = form.getFieldsValue();
-    req.headers = headers;
-    if (body) {
-      req.body = body;
-    }
-    req.HostID = HostID;
-    const res = await runApiDemo(req);
+    const data: any = {};
+    data.HostID = HostID;
+    const dataStep = {
+      ...form.getFieldsValue(),
+      headers: headers,
+      step: step,
+      body: body ? body : null,
+      extracts: extracts.current[step],
+      asserts: asserts.current[step],
+    };
+    data.steps = [dataStep];
+    const res = await runApiDemo(data);
     if (res.code === 0) {
       setResponse(res.data);
     }

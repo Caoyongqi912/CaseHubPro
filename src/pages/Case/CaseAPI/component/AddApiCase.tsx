@@ -32,7 +32,6 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const setFormInstance: SetFormInstance = (form: FormInstance) => {
     stepsFormList.current.push(form);
   };
-
   const setH: setHeaders = (step, header, del) => {
     if (del) {
       headers.current.splice(step, 1);
@@ -41,7 +40,11 @@ const AddApiCase: FC<SelfProps> = (props) => {
     }
   };
   const setP: setParams = (step, param, del) => {
-    params.current[step] = param!;
+    if (del) {
+      params.current.splice(step, 1);
+    } else {
+      params.current[step] = param!;
+    }
   };
   const setB: setBody = (step, b, del) => {
     if (del) {
@@ -124,6 +127,8 @@ const AddApiCase: FC<SelfProps> = (props) => {
           SB={setB}
           SE={setE}
           SP={setP}
+          asserts={assertList}
+          extracts={extractList}
           stepInfo={stepsFormList}
         />
       </Drawer>

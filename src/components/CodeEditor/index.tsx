@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 
 interface SelfProps extends EditorProps {

@@ -4,15 +4,25 @@ import { API } from '@/api';
 import PostmanBody from '@/pages/Case/CaseAPI/component/Postman/PostmanBody';
 import CaseAssertTable from '@/pages/Case/CaseAPI/component/Postman/CaseAssertTable';
 import CaseVariableTable from '@/pages/Case/CaseAPI/component/Postman/CaseExtractTable';
+import {
+  setAsserts,
+  setBody,
+  setExtract,
+  SetFormInstance,
+  setHeaders,
+  setParams,
+} from '@/pages/Case/CaseAPI/func';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
-  setFormInstance: any;
-  SH: Function;
-  SB: Function;
-  SA: Function;
-  SE: Function;
-  SP: Function;
+  setFormInstance: SetFormInstance;
+  SH: setHeaders;
+  SB: setBody;
+  SA: setAsserts;
+  SE: setExtract;
+  SP: setParams;
+  extracts: any;
+  asserts: any;
   setResponse: any;
   step: number;
   apiStepDetail?: any;
@@ -20,7 +30,7 @@ interface SelfProps {
 
 const { TabPane } = Tabs;
 
-const Postman: FC<SelfProps> = (props, context) => {
+const Postman: FC<SelfProps> = (props) => {
   const [activeKey, setActiveKey] = useState('3');
   return (
     <Tabs

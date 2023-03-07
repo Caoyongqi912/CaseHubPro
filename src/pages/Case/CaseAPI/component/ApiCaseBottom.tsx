@@ -27,6 +27,8 @@ interface SelfProps {
   SA: setAsserts;
   SE: setExtract;
   SP: setParams;
+  extracts: any;
+  asserts: any;
   stepInfo: any;
   apiStepsDetail?: API.IInterfaceStep[];
 }
