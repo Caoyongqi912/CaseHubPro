@@ -156,6 +156,8 @@ const ApiDetail: FC = () => {
           SA={setA}
           SE={setE}
           SP={setP}
+          asserts={assertList}
+          extracts={extractList}
           stepInfo={stepsFormList}
           apiStepsDetail={apiStepsDetail}
           isDetail={true}

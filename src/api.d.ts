@@ -1,5 +1,6 @@
 import React from 'react';
 
+declare const CurrentEnv: 'dev' | 'prd';
 declare namespace API {
   interface IObjGet {
     [key: string | number]: any;

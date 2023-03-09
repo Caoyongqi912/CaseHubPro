@@ -4,7 +4,7 @@ import {
   Col,
   Select,
   Modal,
-  Result,
+  Result as R,
   Tooltip,
   Menu as AMenu,
   message,
@@ -33,6 +33,8 @@ import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
 import { API, ResponseAPI } from '@/api';
 import SearchTree from '@/components/Tree/SearchTree';
 import NoRecord from '@/pages/Case/CaseAPI/component/NoRecord';
+import Result from '@/pages/Case/CaseAPI/component/Result/Result';
+
 import {
   addCasePart,
   casePartTree,
@@ -41,9 +43,11 @@ import {
   pageApiCase,
   putCasePart,
   queryApiCaseByCasePartID,
+  runApi,
 } from '@/api/interface';
 import { CONFIG } from '@/utils/config';
 import { history } from 'umi';
+import HostDropdown from './component/HostDropdown';
 
 const CaseApi: FC = () => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
@@ -64,7 +68,8 @@ const CaseApi: FC = () => {
   const [projectsOpt, setProjectOpt] = useState([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
   const ref = useRef<ProFormInstance>();
-
+  const [resultModal, setResultModal] = useState(false);
+  const [responseUid, setResponseUid] = useState<string>();
   useEffect(() => {
     queryProjects();
   }, []);
@@ -148,6 +153,14 @@ const CaseApi: FC = () => {
     }
   };
 
+  const run = async (uid: string, HostID: string) => {
+    const { code, data } = await runApi({ uid: uid, HostID: HostID });
+    if (code === 0) {
+      setResultModal(true);
+      setResponseUid(data);
+    }
+  };
+
   // 删除用例
   const delCase = async (uid: string) => {
     const res = await delApiCase({ uid: uid });
@@ -228,9 +241,12 @@ const CaseApi: FC = () => {
               详情
             </a>
             <Divider type={'vertical'} />
-            {/*<Dropdown>*/}
-            <a>执行</a>
-            {/*</Dropdown>*/}
+            <HostDropdown
+              run={run!}
+              buttonName={'执行'}
+              a={true}
+              uid={record.uid}
+            />
             <Divider type={'vertical'} />
             <a
               onClick={() => {
@@ -369,10 +385,14 @@ const CaseApi: FC = () => {
 
   return (
     <PageContainer title={false}>
-      {/*<TestResult flag={true} width={1000} caseName={name} />*/}
-      {/*<FormForModal title={'移动用例'} fields={moveFields} />*/}
+      <Result
+        uid={responseUid}
+        modal={resultModal}
+        setModal={setResultModal}
+        single={false}
+      />
       {projects.length === 0 ? (
-        <Result status="404" subTitle={<span>你还没有添加任何项目</span>} />
+        <R status="404" subTitle={<span>你还没有添加任何项目</span>} />
       ) : (
         <Row gutter={2}>
           <FormForModal

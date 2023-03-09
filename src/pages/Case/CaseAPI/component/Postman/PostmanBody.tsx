@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Col, Form, Input, Row, Select, Tabs, Radio, Card } from 'antd';
+import { Card, Col, Form, Input, Radio, Row, Select, Tabs } from 'antd';
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
 import CodeEditor from '@/components/CodeEditor';
@@ -188,15 +188,15 @@ const PostmanBody: FC<SelfProps> = (props) => {
   const sendReq = async (HostID: string) => {
     const data: any = {};
     data.HostID = HostID;
-    const dataStep = {
+    data.step = {
       ...form.getFieldsValue(),
       headers: headers,
       step: step,
       body: body ? body : null,
-      extracts: extracts.current[step],
-      asserts: asserts.current[step],
+      extracts: extracts.current[step] || apiStepDetail.extracts,
+      asserts: asserts.current[step] || apiStepDetail.asserts,
     };
-    data.steps = [dataStep];
+    debugger;
     const res = await runApiDemo(data);
     if (res.code === 0) {
       setResponse(res.data);

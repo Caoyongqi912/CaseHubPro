@@ -26,14 +26,14 @@ const proxy: ITarget = {
     },
   },
   test: {
-    '/api/': {
+    '/api': {
       target: 'http://127.0.0.1:5001',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
   },
   pre: {
-    '/api/': {
+    '/api': {
       target: 'http://127.0.0.1:5002',
       changeOrigin: true,
       pathRewrite: { '^': '' },

@@ -2,10 +2,8 @@ import React, { useRef, useState } from 'react';
 import type {
   ActionType,
   EditableFormInstance,
-  ProFieldRequestData,
 } from '@ant-design/pro-components';
 import {
-  EditableProTable,
   ProColumns,
   ProTable,
   RequestOptionsType,

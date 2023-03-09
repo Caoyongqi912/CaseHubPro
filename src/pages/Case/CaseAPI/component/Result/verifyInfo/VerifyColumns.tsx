@@ -3,7 +3,7 @@ import { ResponseAPI } from '@/api';
 import React from 'react';
 import { Tag } from 'antd';
 
-const columns: ColumnsType<ResponseAPI.IVerify> = [
+const VerifyColumns: ColumnsType<ResponseAPI.IVerify> = [
   {
     title: '预计结果',
     dataIndex: 'expect',
@@ -38,4 +38,4 @@ const columns: ColumnsType<ResponseAPI.IVerify> = [
   },
 ];
 
-export default columns;
+export default VerifyColumns;

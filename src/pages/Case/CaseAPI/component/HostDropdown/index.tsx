@@ -6,10 +6,12 @@ import { queryHost } from '@/api/host';
 interface SelfProps {
   run: Function;
   buttonName: string;
+  a?: boolean;
+  uid?: string;
 }
 
 const Index: FC<SelfProps> = (props) => {
-  const { run } = props;
+  const { run, a } = props;
   const [items, setItems] = useState<MenuProps['items']>([]);
 
   const SetItems = async () => {
@@ -33,15 +35,19 @@ const Index: FC<SelfProps> = (props) => {
       menu={{
         items,
         onClick: ({ key }) => {
-          run(key);
+          run(props.uid, key);
         },
       }}
       placement="bottomRight"
       arrow
     >
-      <Button type={'primary'} style={{ marginRight: 5 }}>
-        {props.buttonName}
-      </Button>
+      {!a ? (
+        <Button type={'primary'} style={{ marginRight: 5 }}>
+          {props.buttonName}
+        </Button>
+      ) : (
+        <a>{props.buttonName}</a>
+      )}
     </Dropdown>
   );
 };

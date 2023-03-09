@@ -18,6 +18,7 @@ import {
   setHeaders,
   setParams,
 } from '@/pages/Case/CaseAPI/func';
+import TestResult from '@/pages/Case/CaseAPI/component/Result/TestResult';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
@@ -42,41 +43,6 @@ interface ResponseProps extends API.IObjGet {
   status?: string;
   status_code?: number;
 }
-
-const { TabPane } = Tabs;
-
-const STATUS: API.IObjGet = {
-  200: { color: '#67C23A', text: 'OK' },
-  401: { color: '#F56C6C', text: 'unauthorized' },
-  400: { color: '#F56C6C', text: 'Bad Request' },
-};
-
-const tabExtra = (response: ResponseProps) => {
-  return response && response.response ? (
-    <div style={{ marginRight: 16 }}>
-      <span>
-        StatusCode:
-        <span
-          style={{
-            color: STATUS[response.status_code!]
-              ? STATUS[response.status_code!].color
-              : '#F56C6C',
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        >
-          {response.status_code}
-          {STATUS[response.status_code!]
-            ? STATUS[response.status_code!].text
-            : ''}
-        </span>
-        <span style={{ marginLeft: 8, marginRight: 8 }}>
-          Time: <span style={{ color: '#67C23A' }}>{response.cost}</span>
-        </span>
-      </span>
-    </div>
-  ) : null;
-};
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
   const { stepInfo, SH, SB, SP, SE, SA, apiStepsDetail } = props;
@@ -127,7 +93,6 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
    */
   const addStep = () => {
     const nextCurrent = current + 1;
-    // const stepStr = nextCurrent + 1;
     setCurrent(nextCurrent);
     arrRef.current.push({
       content: (
@@ -163,28 +128,6 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     setCurrent(current + 1);
   };
 
-  const responseColumns = [
-    {
-      title: 'KEY',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: 'VALUE',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
-  const toTable = (field: string) => {
-    if (!response[field]) {
-      return [];
-    }
-    const data = response[field];
-    return Object.keys(data).map((key) => ({
-      key,
-      value: data[key],
-    }));
-  };
   return (
     <>
       <Row gutter={[8, 8]} style={{ marginTop: 10, minHeight: 500 }}>
@@ -234,40 +177,7 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
           </Row>
         </Col>
       </Row>
-      <Row gutter={[8, 8]}>
-        {Object.keys(response).length === 0 ? null : (
-          <Card style={{ marginTop: 3, width: '100%' }}>
-            <Tabs
-              style={{ width: '100%' }}
-              tabBarExtraContent={tabExtra(response)}
-            >
-              <TabPane tab="Response-Body" key="1">
-                <CodeEditor
-                  value={response.response}
-                  language={'json'}
-                  height={'30vh'}
-                />
-              </TabPane>
-              <TabPane tab="Response-Cookie" key="2">
-                <Table
-                  columns={responseColumns}
-                  dataSource={toTable('cookies')}
-                  size="small"
-                  pagination={false}
-                />
-              </TabPane>
-              <TabPane tab="Response-Headers" key="3">
-                <Table
-                  columns={responseColumns}
-                  dataSource={toTable('headers')}
-                  size="small"
-                  pagination={false}
-                />
-              </TabPane>
-            </Tabs>
-          </Card>
-        )}
-      </Row>
+      <TestResult response={response} />
     </>
   );
 };

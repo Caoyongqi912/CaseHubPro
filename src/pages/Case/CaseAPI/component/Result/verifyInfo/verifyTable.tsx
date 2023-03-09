@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import CodeEditor from '@/components/CodeEditor';
 import { Card, Table } from 'antd';
-import columns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/tableColums';
 import { ResponseAPI } from '@/api';
+import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
 
 interface SelfProps {
   response: any;
@@ -23,7 +23,7 @@ const VerifyTable: FC<SelfProps> = (props) => {
         <CodeEditor height={'10vh'} read={true} value={response} />
       </Card>
       <Card style={{ width: '100%', marginTop: 2 }}>
-        <Table columns={columns} dataSource={verifyData} />
+        <Table columns={VerifyColumns} dataSource={verifyData} />
       </Card>
     </>
   );

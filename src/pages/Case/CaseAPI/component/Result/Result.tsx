@@ -9,12 +9,6 @@ import VerifyInfo from './verifyInfo/verifyInfo';
 const TabPane = Tabs.TabPane;
 const DescriptionsItem = Descriptions.Item;
 
-const STATUS: API.IObjGet = {
-  200: { color: '#67C23A', text: 'OK' },
-  401: { color: '#F56C6C', text: 'unauthorized' },
-  400: { color: '#F56C6C', text: 'Bad Request' },
-};
-
 interface SelfProps {
   uid: string | undefined;
   modal: any;
@@ -23,7 +17,7 @@ interface SelfProps {
 }
 
 const Result: FC<SelfProps> = (props) => {
-  const { modal, setModal, single, uid } = props;
+  const { modal, setModal, uid } = props;
   const [response, setResponse] = useState<ResponseAPI.IApiResponse>();
 
   const getResponse = async () => {

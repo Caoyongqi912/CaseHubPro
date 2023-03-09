@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './baseStyle.less';
 import { useModel } from '@@/plugin-model/useModel';
 import { Button, message, Upload } from 'antd';
@@ -6,7 +6,6 @@ import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { uploadAvatar } from '@/api/user';
 import { Card, Descriptions } from 'antd';
-
 const { Meta } = Card;
 
 const Avatar = () => {
@@ -30,7 +29,6 @@ const Avatar = () => {
       const res = await uploadAvatar(form);
       if (res.code === 0) {
         message.success(res.msg);
-
         return;
       }
     },

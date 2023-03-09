@@ -4,7 +4,6 @@ import proxy from './proxy';
 import defaultSetting from './defaultSetting';
 
 const { REACT_APP_ENV } = process.env;
-
 export default defineConfig({
   hash: true,
   antd: {
