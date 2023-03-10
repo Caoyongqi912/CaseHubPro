@@ -3,7 +3,7 @@ import routes from './routes';
 import proxy from './proxy';
 import defaultSetting from './defaultSetting';
 
-const { REACT_APP_ENV } = process.env;
+const { APP_ENV = 'dev' } = process.env;
 export default defineConfig({
   hash: true,
   antd: {
@@ -13,7 +13,7 @@ export default defineConfig({
     hmr: true,
   },
   fastRefresh: {},
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  proxy: proxy[APP_ENV as keyof typeof proxy],
   layout: {
     ...defaultSetting,
   },
