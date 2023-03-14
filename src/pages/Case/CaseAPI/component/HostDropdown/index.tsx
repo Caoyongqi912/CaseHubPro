@@ -17,7 +17,7 @@ const Index: FC<SelfProps> = (props) => {
   const SetItems = async () => {
     const resp = await queryHost();
     let hosts: MenuProps['items'] = [];
-    resp.data.map((value) => {
+    resp.data.map((value: any) => {
       let _ = {
         key: value.uid,
         label: value.name,
@@ -35,6 +35,7 @@ const Index: FC<SelfProps> = (props) => {
       menu={{
         items,
         onClick: ({ key }) => {
+          console.log('==', key);
           run(props.uid, key);
         },
       }}

@@ -129,8 +129,8 @@ const ApiDetail: FC = () => {
     }
   };
 
-  const run = async (HostID: string) => {
-    const { code, data } = await runApi({ uid: uid, HostID: HostID });
+  const run = async (u?: string, HostID?: string) => {
+    const { code, data } = await runApi({ uid: u || uid, HostID: HostID });
     if (code === 0) {
       setResultModal(true);
       setResponseUid(data);
