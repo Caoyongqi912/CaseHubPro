@@ -185,7 +185,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
     }
   };
 
-  const sendReq = async (HostID: string) => {
+  const sendReq = async (uid?: string, HostID?: string) => {
     const data: any = {};
     data.HostID = HostID;
     data.step = {
@@ -196,7 +196,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
       extracts: extracts.current[step] || apiStepDetail.extracts,
       asserts: asserts.current[step] || apiStepDetail.asserts,
     };
-    debugger;
     const res = await runApiDemo(data);
     if (res.code === 0) {
       setResponse(res.data);
