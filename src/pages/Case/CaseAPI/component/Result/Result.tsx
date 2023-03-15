@@ -1,13 +1,15 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Badge, Descriptions, Drawer, Row, Tabs } from 'antd';
-import { API, ResponseAPI } from '@/api';
+import { Drawer, Row, Tabs } from 'antd';
+import { ResponseAPI } from '@/api';
 import { getApiResponse } from '@/api/interface';
 import { IconFont } from '@/utils/IconFont';
 import CodeEditor from '@/components/CodeEditor';
 import VerifyInfo from './verifyInfo/verifyInfo';
+import ResultInfo from '@/pages/Case/CaseAPI/component/Result/ResultInfo';
+import HeaderInfo from '@/pages/Case/CaseAPI/component/Result/HeaderInfo';
+import CookieInfo from '@/pages/Case/CaseAPI/component/Result/CookieInfo';
 
 const TabPane = Tabs.TabPane;
-const DescriptionsItem = Descriptions.Item;
 
 interface SelfProps {
   uid: string | undefined;
@@ -23,7 +25,6 @@ const Result: FC<SelfProps> = (props) => {
   const getResponse = async () => {
     if (uid) {
       const res = await getApiResponse({ uid: uid });
-      console.log(res);
       if (res.code === 0) {
         setResponse(res.data);
       }
@@ -55,30 +56,7 @@ const Result: FC<SelfProps> = (props) => {
             }
             key={'1'}
           >
-            <Descriptions column={2} bordered size={'default'}>
-              <DescriptionsItem label="用例名称">
-                {response?.interfaceName}
-              </DescriptionsItem>
-              <DescriptionsItem label="测试结果">
-                <Badge
-                  status={response?.status === 'SUCCESS' ? 'success' : 'error'}
-                  text={response?.status}
-                />
-              </DescriptionsItem>
-              <DescriptionsItem label="用例描述">
-                {response?.interfaceName}
-              </DescriptionsItem>
-
-              <DescriptionsItem label="测试人">
-                {response?.starterName}
-              </DescriptionsItem>
-              <DescriptionsItem label="测试时间">
-                {response?.create_time}
-              </DescriptionsItem>
-              <DescriptionsItem label="运行时间">
-                {response?.useTime}
-              </DescriptionsItem>
-            </Descriptions>
+            <ResultInfo response={response!} />
           </TabPane>
           <TabPane
             tab={
@@ -115,7 +93,9 @@ const Result: FC<SelfProps> = (props) => {
               </span>
             }
             key="4"
-          ></TabPane>
+          >
+            <HeaderInfo resultInfo={response?.resultInfo!} />
+          </TabPane>
           <TabPane
             tab={
               <span>
@@ -124,7 +104,9 @@ const Result: FC<SelfProps> = (props) => {
               </span>
             }
             key="5"
-          ></TabPane>
+          >
+            <CookieInfo resultInfo={response?.resultInfo!} />
+          </TabPane>
         </Tabs>
       </Row>
     </Drawer>

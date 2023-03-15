@@ -3,12 +3,11 @@ import { Card, Table } from 'antd';
 import { ResponseAPI } from '@/api';
 
 interface SelfProps {
-  requestHeaders: [key: string | any][];
-  responseHeaders: [key: string | any][];
+  responseCookie: [key: string | any][];
 }
 
 const HeaderTable: FC<SelfProps> = (props) => {
-  const { requestHeaders, responseHeaders } = props;
+  const { responseCookie } = props;
 
   const Columns = [
     {
@@ -25,25 +24,13 @@ const HeaderTable: FC<SelfProps> = (props) => {
 
   return (
     <>
-      <Card>
-        <Table
-          title={() => 'request.header'}
-          columns={Columns}
-          dataSource={Object.keys(requestHeaders).map((key: any) => ({
-            key,
-            value: requestHeaders[key],
-          }))}
-          size="small"
-          pagination={false}
-        />
-      </Card>
       <Card style={{ marginTop: 4 }}>
         <Table
-          title={() => 'response.header'}
+          title={() => 'response.cookie'}
           columns={Columns}
-          dataSource={Object.keys(responseHeaders).map((key: any) => ({
+          dataSource={Object.keys(responseCookie).map((key: any) => ({
             key,
-            value: responseHeaders[key],
+            value: responseCookie[key],
           }))}
           size="small"
           pagination={false}
