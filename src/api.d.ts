@@ -192,11 +192,29 @@ declare namespace API {
 }
 
 declare namespace ResponseAPI {
+  interface IDepartmentResponse {
+    id: number;
+    uid: string;
+    adminID: number;
+    adminName: string;
+    name: string;
+    desc: string | null;
+    create_time: string;
+    update_time: string | null;
+  }
+
+  interface IDepartmentPage {
+    items: IDepartmentResponse[];
+    pageInfo: IPageInfo;
+  }
+
   interface IPageInfo {
+    code: number;
     limit: number;
     page: number;
     pages: number;
     total: number;
+    msg: string;
   }
 
   interface IHostResponse {

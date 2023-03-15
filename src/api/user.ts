@@ -1,11 +1,13 @@
-import { API } from '@/api';
+import { API, IDepartmentPage, ResponseAPI } from '@/api';
 import { request } from '@@/plugin-request/request';
 
 const UserURL: string = '/api/user/opt';
 const UserPwdURL: string = '/api/user/setpassword';
 const UserAvatarURL: string = '/api/file/avatar';
 const DepartmentTagsURl: string = '/api/user/department/tags';
-const DepartmentURL: string = '/api/user/department/opt';
+const DepartmentURL: string = '/api/user/department/page';
+const DepartmentOptURL: string = '/api/user/department/opt';
+
 const QueryUser: string = '/api/user/query';
 const SearchUser: string = '/api/user/search';
 const CurrentUser: string = '/api/user/current';
@@ -88,13 +90,17 @@ export async function SetPwdServer(
 }
 
 /**
- * 部门query
+ * 部门查询
+ * @param params
  * @param options
- * @constructor
  */
-export async function departmentQuery(options?: { [key: string]: any }) {
-  return request<API.IResponse<any>>(DepartmentURL, {
+export async function departmentQuery(
+  params?: API.ISearch,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<ResponseAPI.IDepartmentPage>>(DepartmentURL, {
     method: 'GET',
+    params,
     ...(options || {}),
   });
 }
@@ -103,7 +109,7 @@ export async function addDepartmentInfo(
   body: API.IDepartment,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse<any>>(DepartmentURL, {
+  return request<API.IResponse<any>>(DepartmentOptURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

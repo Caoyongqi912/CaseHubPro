@@ -235,7 +235,7 @@ const Index: React.FC = () => {
               tagName: record.tagName,
               gender: record.gender,
             };
-            const res = await UserOpt(form, 'PUT');
+            await UserOpt(form, 'PUT');
             return;
           },
           onDelete: async (key) => {
@@ -246,7 +246,6 @@ const Index: React.FC = () => {
           onChange: () => {
             actionRef.current?.reload();
             setTags([]);
-
             return Promise.resolve();
           },
         }}
@@ -270,10 +269,7 @@ const Index: React.FC = () => {
         }}
         dateFormatter="string"
         headerTitle="User List"
-        toolBarRender={() => [
-          <AddUser reload={isReload} />,
-          <AddDepartment reload={isReload} />,
-        ]}
+        toolBarRender={() => [<AddUser reload={isReload} />]}
       />
     </PageContainer>
   );

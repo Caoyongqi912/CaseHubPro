@@ -8,6 +8,7 @@ import {
 import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { departmentQuery, UserOpt, userTagQuery } from '@/api/user';
+import { API } from '../../api';
 
 interface selfProps {
   reload: Function | undefined;
