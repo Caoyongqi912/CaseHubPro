@@ -1,11 +1,11 @@
-import { API, IDepartmentPage, ResponseAPI } from '@/api';
+import { API, ResponseAPI } from '@/api';
 import { request } from '@@/plugin-request/request';
 
 const UserURL: string = '/api/user/opt';
 const UserPwdURL: string = '/api/user/setpassword';
 const UserAvatarURL: string = '/api/file/avatar';
 const DepartmentTagsURl: string = '/api/user/department/tags';
-const DepartmentURL: string = '/api/user/department/page';
+const PageDepartmentURL: string = '/api/user/department/page';
 const DepartmentOptURL: string = '/api/user/department/opt';
 
 const QueryUser: string = '/api/user/query';
@@ -67,8 +67,8 @@ export async function pageUser(
  * @constructor
  */
 export async function UserOpt(
-  data: API.IUser,
   method: string,
+  data?: API.IUser,
   options?: { [key: string]: any },
 ) {
   return request<API.IResponse<any>>(UserURL, {
@@ -94,29 +94,46 @@ export async function SetPwdServer(
  * @param params
  * @param options
  */
-export async function departmentQuery(
+export async function departmentPage(
   params?: API.ISearch,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse<ResponseAPI.IDepartmentPage>>(DepartmentURL, {
-    method: 'GET',
-    params,
-    ...(options || {}),
-  });
+  return request<API.IResponse<ResponseAPI.IDepartmentPage>>(
+    PageDepartmentURL,
+    {
+      method: 'GET',
+      params,
+      ...(options || {}),
+    },
+  );
 }
 
-export async function addDepartmentInfo(
-  body: API.IDepartment,
+export async function departmentQuery(
+  method: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse<any>>(DepartmentOptURL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  return request<API.IResponse<ResponseAPI.IDepartmentResponse[]>>(
+    DepartmentOptURL,
+    {
+      method: method,
+      ...(options || {}),
     },
-    data: body,
-    ...(options || {}),
-  });
+  );
+}
+
+export async function departmentOpt(
+  form: API.IDepartment,
+  method: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<ResponseAPI.IDepartmentResponse[]>>(
+    DepartmentOptURL,
+    {
+      method: method,
+      data: form,
+      ...(options || {}),
+    },
+  );
 }
 
 /**

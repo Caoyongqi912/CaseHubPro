@@ -11,7 +11,6 @@ import {
 import { departmentQuery, pageUser, UserOpt, userTagQuery } from '@/api/user';
 import { message } from 'antd';
 import AddUser from '@/components/UserOpt/AddUser';
-import AddDepartment from '@/components/UserOpt/AddDepartment';
 import { PageContainer } from '@ant-design/pro-layout';
 import { API } from '@/api';
 
@@ -27,7 +26,7 @@ const Index: React.FC = () => {
 
   const queryDepartments = async () => {
     let data: any;
-    ({ data } = await departmentQuery());
+    ({ data } = await departmentQuery('GET'));
     const res: RequestOptionsType[] = [];
     data.forEach((item: API.IDepartment) => {
       res.push({
@@ -125,7 +124,7 @@ const Index: React.FC = () => {
     },
     {
       title: 'department',
-      dataIndex: 'departmentID',
+      dataIndex: 'departmentName',
       valueType: 'select',
       ellipsis: true, //是否自动缩略
       width: '10%',
@@ -235,11 +234,11 @@ const Index: React.FC = () => {
               tagName: record.tagName,
               gender: record.gender,
             };
-            await UserOpt(form, 'PUT');
+            await UserOpt('PUT', form);
             return;
           },
           onDelete: async (key) => {
-            const res = await UserOpt({ uid: key } as API.IUser, 'DELETE');
+            const res = await UserOpt('DELETE', { uid: key } as API.IUser);
             message.success(res.msg);
             return;
           },

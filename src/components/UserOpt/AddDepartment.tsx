@@ -6,7 +6,7 @@ import {
 } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { addDepartmentInfo } from '@/api/user';
+import { departmentOpt } from '@/api/user';
 import MohuSearch from '@/components/UserOpt/MohuSearch';
 import { API } from '@/api';
 
@@ -33,7 +33,7 @@ const AddDepartment: React.FC<selfProps> = (props) => {
       }
       autoFocusFirstInput
       onFinish={async (values: API.IDepartment) => {
-        const res = await addDepartmentInfo(values);
+        const res = await departmentOpt(values, 'POST');
         message.success(res.msg);
         reload!(true);
         return true;
@@ -56,7 +56,7 @@ const AddDepartment: React.FC<selfProps> = (props) => {
         name="adminID"
         label="项目负责人"
         placeholder="input your admin name to search"
-        rules={[{ required: true, message: 'Please select !' }]}
+        rules={[{ required: false, message: 'Please select !' }]}
         debounceTime={2000}
         request={async (values) => {
           return await MohuSearch(values);
@@ -67,7 +67,7 @@ const AddDepartment: React.FC<selfProps> = (props) => {
         label="标签"
         placeholder="input tags"
         mode="tags"
-        required={true}
+        required={false}
       />
     </ModalForm>
   );

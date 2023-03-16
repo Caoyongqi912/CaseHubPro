@@ -1,17 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  ActionType,
-  ProColumns,
-  ProTable,
-  RequestOptionsType,
-} from '@ant-design/pro-components';
-import AddUser from '@/components/UserOpt/AddUser';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import AddDepartment from '@/components/UserOpt/AddDepartment';
-import { departmentQuery } from '@/api/user';
+import { departmentOpt, departmentPage, UserOpt } from '@/api/user';
+import { API } from '@/api';
+import { message } from 'antd';
 
 const DepartmentOpt = () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
+
   const isReload = (value: boolean) => {
     if (value) {
       actionRef.current?.reload();
@@ -40,7 +37,7 @@ const DepartmentOpt = () => {
     {
       title: '部门负责人',
       dataIndex: 'adminName',
-      ellipsis: true, //是否自动缩略
+      ellipsis: true,
     },
     {
       title: '创建时间',
@@ -68,9 +65,6 @@ const DepartmentOpt = () => {
         <a
           key="editable"
           onClick={() => {
-            // if (record.departmentID) {
-            //   queryTagByDepartId(record.departmentID);
-            // }
             action?.startEditable?.(record.uid);
           }}
         >
@@ -85,7 +79,7 @@ const DepartmentOpt = () => {
         columns={columns}
         actionRef={actionRef}
         request={async (params) => {
-          const res = await departmentQuery(params as API.ISearch);
+          const res = await departmentPage(params as API.ISearch);
           return {
             data: res.data.items,
             total: res.data.pageInfo.total,
@@ -93,6 +87,31 @@ const DepartmentOpt = () => {
             pageSize: res.data.pageInfo.page,
             current: res.data.pageInfo.limit,
           };
+        }}
+        editable={{
+          type: 'single',
+          onSave: async (key, record: API.IDepartment) => {
+            const form = {
+              uid: record.uid,
+              name: record.name,
+              desc: record.desc,
+              adminID: record.adminID,
+            };
+            await departmentOpt(form, 'PUT');
+            return;
+          },
+          onDelete: async (key) => {
+            const res = await departmentOpt(
+              { uid: key } as API.IDepartment,
+              'DELETE',
+            );
+            message.success(res.msg);
+            return;
+          },
+          onChange: () => {
+            actionRef.current?.reload();
+            return Promise.resolve();
+          },
         }}
         cardBordered
         rowKey="uid"

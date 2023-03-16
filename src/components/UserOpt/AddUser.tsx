@@ -8,7 +8,7 @@ import {
 import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { departmentQuery, UserOpt, userTagQuery } from '@/api/user';
-import { API } from '../../api';
+import { API } from '@/api';
 
 interface selfProps {
   reload: Function | undefined;
@@ -40,7 +40,7 @@ const Index: React.FC<selfProps> = (props) => {
         },
       }}
       onFinish={async (values: API.IUser) => {
-        const res = await UserOpt(values, 'POST');
+        const res = await UserOpt('POST', values);
         message.success(res.msg);
         reload!(true);
         return true;
@@ -76,16 +76,14 @@ const Index: React.FC<selfProps> = (props) => {
         required={false}
         request={async () => {
           let data: any;
-          ({ data } = await departmentQuery());
+          ({ data } = await departmentQuery('GET'));
           const res: RequestOptionsType[] = [];
-          console.log(data);
           data.forEach((item: API.IDepartment) => {
             res.push({
               label: item.name,
               value: item.id,
             });
           });
-          console.log(res);
           return res;
         }}
       />
