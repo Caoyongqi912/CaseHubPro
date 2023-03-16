@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Card, Row, Table, Tabs, Tag } from 'antd';
 import CodeEditor from '@/components/CodeEditor';
 import { API, ResponseAPI } from '@/api';
-import { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
 import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
 
 const { TabPane } = Tabs;
@@ -56,7 +56,7 @@ const TestResult: FC<SelfProps> = (props) => {
       </div>
     ) : null;
   };
-  const ResponseColumns = [
+  const ResponseColumns: ProColumns[] = [
     {
       title: 'KEY',
       dataIndex: 'key',
@@ -76,6 +76,7 @@ const TestResult: FC<SelfProps> = (props) => {
     {
       title: '提取值',
       dataIndex: 'val',
+      valueType: 'code',
     },
   ];
 
@@ -91,7 +92,7 @@ const TestResult: FC<SelfProps> = (props) => {
         Object.keys(item).map((key) => {
           res.push({
             key: key,
-            val: item[key],
+            val: item[key].toString(),
           });
         });
       });

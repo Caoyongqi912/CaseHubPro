@@ -86,7 +86,7 @@ const CaseApi: FC = () => {
    */
   const queryProjects = async () => {
     const { data } = await queryProject();
-    if (data) {
+    if (data.length > 0) {
       setProject(data);
       setProjectID(data[0].id!);
       let temp: any = [];

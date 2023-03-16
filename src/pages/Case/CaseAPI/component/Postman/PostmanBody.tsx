@@ -193,9 +193,13 @@ const PostmanBody: FC<SelfProps> = (props) => {
       headers: headers,
       step: step,
       body: body ? body : null,
-      extracts: extracts.current[step] || apiStepDetail.extracts,
-      asserts: asserts.current[step] || apiStepDetail.asserts,
     };
+    if (extracts.current.length > 0) {
+      data.step.extracts = extracts.current[step] || apiStepDetail.extracts;
+    }
+    if (asserts.current.length > 0) {
+      data.step.asserts.current[step] || apiStepDetail.asserts;
+    }
     const res = await runApiDemo(data);
     if (res.code === 0) {
       setResponse(res.data);
