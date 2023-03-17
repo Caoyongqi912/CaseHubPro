@@ -9,7 +9,7 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { departmentQuery, pageUser, UserOpt, userTagQuery } from '@/api/user';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 import AddUser from '@/components/UserOpt/AddUser';
 import { PageContainer } from '@ant-design/pro-layout';
 import { API } from '@/api';
@@ -31,14 +31,14 @@ const Index: React.FC = () => {
     data.forEach((item: API.IDepartment) => {
       res.push({
         label: item.name,
-        value: item.id,
+        value: item.uid,
       });
     });
     return res;
   };
-  const queryTagByDepartId = async (id: API.IQueryDepartmentTags) => {
+  const queryTagByDepartId = async (uid: API.IQueryDepartmentTags) => {
     let data: any;
-    ({ data } = await userTagQuery({ id: id }));
+    ({ data } = await userTagQuery({ uid: uid }));
     if (data === null) {
       message.error('err');
       return;
@@ -129,19 +129,13 @@ const Index: React.FC = () => {
       ellipsis: true, //是否自动缩略
       width: '10%',
       request: queryDepartments,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
-      },
       fieldProps: (_, { rowIndex }) => {
         return {
           onChange: (value: API.IQueryDepartmentTags) => {
             editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
-            queryTagByDepartId(value);
+            if (value) {
+              queryTagByDepartId(value);
+            }
           },
           onSelect: (value: API.IQueryDepartmentTags) => {
             editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
@@ -159,13 +153,8 @@ const Index: React.FC = () => {
         options: tags,
       },
       width: '10%',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
+      render: (text) => {
+        return <Tag color={'blue'}>{text}</Tag>;
       },
     },
     {

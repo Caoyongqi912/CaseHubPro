@@ -1,5 +1,5 @@
-import React from 'react';
 import { searchUser } from '@/api/user';
+import { API } from '@/api';
 
 interface SearchUser {
   value: number | undefined;

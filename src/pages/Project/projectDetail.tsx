@@ -50,7 +50,7 @@ const ProjectDetail = () => {
       title={project.name}
     >
       <Card bodyStyle={{ padding: '8px 18px' }}>
-        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
       </Card>
     </PageContainer>
   );

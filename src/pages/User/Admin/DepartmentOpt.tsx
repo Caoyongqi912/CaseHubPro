@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import AddDepartment from '@/components/UserOpt/AddDepartment';
 import { departmentOpt, departmentPage, UserOpt } from '@/api/user';
 import { API } from '@/api';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 
 const DepartmentOpt = () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
@@ -38,6 +38,9 @@ const DepartmentOpt = () => {
       title: '部门负责人',
       dataIndex: 'adminName',
       ellipsis: true,
+      render: (text) => {
+        return <Tag color={'blue'}>{text}</Tag>;
+      },
     },
     {
       title: '创建时间',
@@ -83,7 +86,7 @@ const DepartmentOpt = () => {
           return {
             data: res.data.items,
             total: res.data.pageInfo.total,
-            success: res.msg,
+            success: true,
             pageSize: res.data.pageInfo.page,
             current: res.data.pageInfo.limit,
           };
