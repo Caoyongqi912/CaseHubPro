@@ -4,6 +4,7 @@ import { request } from '@@/plugin-request/request';
 const ProjectURL: string = '/api/project/opt';
 const QueryProjectURL: string = '/api/project/queryProjects';
 const AddUser2ProjectURL: string = '/api/project/addUser';
+const DelUserFromProjectURl: string = '/api/project/user/del';
 const ProjectInfoURL: string = '/api/project/info';
 const ProjectUsersURL: string = '/api/project/users';
 
@@ -72,10 +73,21 @@ export async function queryProjectUsers(
 }
 
 export async function addUser2Project(
-  data: any,
+  data: { uid: string; userIds: number[] },
   options?: { [key: string]: any },
 ) {
   return request<API.IResponse<any>>(AddUser2ProjectURL, {
+    method: 'POST',
+    data,
+    ...(options || {}),
+  });
+}
+
+export async function delUserFromProjectFetch(
+  data: { uid: string; projectID: string },
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<any>>(DelUserFromProjectURl, {
     method: 'POST',
     data,
     ...(options || {}),

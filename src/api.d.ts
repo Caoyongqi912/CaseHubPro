@@ -78,11 +78,6 @@ declare namespace API {
     casePartID?: number;
   }
 
-  interface IQueryDepartmentTags {
-    id?: number;
-    name?: string;
-  }
-
   interface IHost {
     id?: number;
     uid?: string;

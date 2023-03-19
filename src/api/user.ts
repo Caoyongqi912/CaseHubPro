@@ -142,8 +142,9 @@ export async function departmentOpt(
  * @param options
  * @constructor
  */
+
 export async function userTagQuery(
-  params: any,
+  params: { id: number },
   options?: { [key: string]: any },
 ) {
   return request<API.IResponse<any>>(DepartmentTagsURl, {

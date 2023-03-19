@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-import { Card, Row, Table, Tabs, Tag } from 'antd';
+import { Card, Row, Table, Tabs } from 'antd';
 import CodeEditor from '@/components/CodeEditor';
 import { API, ResponseAPI } from '@/api';
-import type { ProColumns } from '@ant-design/pro-components';
 import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
 
 const { TabPane } = Tabs;
@@ -56,7 +55,7 @@ const TestResult: FC<SelfProps> = (props) => {
       </div>
     ) : null;
   };
-  const ResponseColumns: ProColumns[] = [
+  const ResponseColumns = [
     {
       title: 'KEY',
       dataIndex: 'key',

@@ -3,9 +3,10 @@ import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from 'umi';
 import styles from './index.less';
-import { Alert, message } from 'antd';
+import { message } from 'antd';
 import { login } from '@/api/user';
 import { getToken, setToken } from '@/utils/token';
+import { API } from '@/api';
 
 const Index: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');

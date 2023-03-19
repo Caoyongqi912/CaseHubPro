@@ -8,27 +8,20 @@ import ProjectRoles from '@/pages/Project/projectRoles';
 import { API } from '@/api';
 
 const ProjectDetail = () => {
-  const projectID = useParams();
+  const projectUID = useParams<{ uid: string }>();
+  const { uid } = projectUID;
+  console.log('=====', uid);
   const [project, setProject] = useState<API.IProject>({});
-  const [users, setUsers] = useState<API.IUser[]>([]);
 
   const ProjectInfo = async () => {
-    const res = await projectDetailInfo(projectID as API.IProject);
+    const res = await projectDetailInfo({ uid: uid });
     if (res.code === 0) {
       setProject(res.data);
     }
   };
 
-  const ProjectUsers = async () => {
-    const res = await queryProjectUsers(projectID as API.IProject);
-    if (res.code === 0) {
-      setUsers(res.data);
-    }
-  };
-
   useEffect(() => {
     ProjectInfo();
-    ProjectUsers();
   }, []);
 
   const onChange = (key: string) => {
@@ -39,7 +32,7 @@ const ProjectDetail = () => {
     {
       key: '1',
       label: `用户列表`,
-      children: <ProjectRoles detail={project} users={users} />,
+      children: <ProjectRoles projectUID={uid} />,
     },
   ];
   return (

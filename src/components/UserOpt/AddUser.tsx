@@ -90,13 +90,13 @@ const Index: React.FC<selfProps> = (props) => {
       <ProFormSelect
         name="tagName"
         label="标签"
-        placeholder="input tag"
+        placeholder="select tag"
         required={false}
         dependencies={['departmentID']}
         request={async (params) => {
           const res: RequestOptionsType[] = [];
           if (params.departmentID) {
-            const form: API.IQueryDepartmentTags = {
+            const form = {
               id: params.departmentID,
             };
             let { data } = await userTagQuery(form);

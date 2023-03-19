@@ -31,14 +31,15 @@ const Index: React.FC = () => {
     data.forEach((item: API.IDepartment) => {
       res.push({
         label: item.name,
-        value: item.uid,
+        value: item.id,
+        id: item.id,
       });
     });
     return res;
   };
-  const queryTagByDepartId = async (uid: API.IQueryDepartmentTags) => {
+  const queryTagByDepartId = async (id: number) => {
     let data: any;
-    ({ data } = await userTagQuery({ uid: uid }));
+    ({ data } = await userTagQuery({ id: id }));
     if (data === null) {
       message.error('err');
       return;
@@ -50,12 +51,12 @@ const Index: React.FC = () => {
     setTags(res);
     return;
   };
-
   const isReload = (value: boolean) => {
     if (value) {
       actionRef.current?.reload();
     }
   };
+
   const columns: ProColumns[] = [
     {
       title: 'username',
@@ -122,6 +123,7 @@ const Index: React.FC = () => {
         ],
       },
     },
+
     {
       title: 'department',
       dataIndex: 'departmentName',
@@ -131,18 +133,23 @@ const Index: React.FC = () => {
       request: queryDepartments,
       fieldProps: (_, { rowIndex }) => {
         return {
-          onChange: (value: API.IQueryDepartmentTags) => {
+          onChange: async (value: number) => {
+            console.log('onChange == ', value);
             editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
             if (value) {
-              queryTagByDepartId(value);
+              editableFormRef.current?.setRowData?.(rowIndex, {
+                departmentID: value,
+              });
+              await queryTagByDepartId(value);
             }
-          },
-          onSelect: (value: API.IQueryDepartmentTags) => {
-            editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
-            queryTagByDepartId(value);
           },
         };
       },
+    },
+    {
+      title: 'departmentID',
+      dataIndex: 'departmentID',
+      hideInTable: true,
     },
     {
       title: 'tag',
@@ -214,6 +221,7 @@ const Index: React.FC = () => {
         editable={{
           type: 'single',
           onSave: async (key, record: API.IUser) => {
+            console.log('editable == ', record);
             const form = {
               uid: record.uid,
               username: record.username,
