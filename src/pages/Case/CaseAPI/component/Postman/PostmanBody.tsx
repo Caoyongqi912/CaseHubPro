@@ -194,12 +194,8 @@ const PostmanBody: FC<SelfProps> = (props) => {
       step: step,
       body: body ? body : null,
     };
-    if (extracts.current.length > 0) {
-      data.step.extracts = extracts.current[step] || apiStepDetail.extracts;
-    }
-    if (asserts.current.length > 0) {
-      data.step.asserts.current[step] || apiStepDetail.asserts;
-    }
+    data.step.extracts = extracts.current[step] || apiStepDetail.extracts || [];
+    data.step.asserts = asserts.current[step] || apiStepDetail.asserts || [];
     const res = await runApiDemo(data);
     if (res.code === 0) {
       setResponse(res.data);
@@ -281,9 +277,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
           </Col>
           <Col span={4}>
             <div style={{ float: 'right' }}>
-              {/*<Button onClick={sendReq} type={'primary'}>*/}
-              {/*  Send*/}
-              {/*</Button>*/}
               <HostDropdown run={sendReq!} buttonName={'Send'} />
             </div>
           </Col>

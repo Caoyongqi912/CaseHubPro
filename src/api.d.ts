@@ -140,6 +140,7 @@ declare namespace API {
   interface IExtract {
     id?: number;
     key?: string;
+    target?: string;
     val?: string;
   }
 

@@ -46,7 +46,11 @@ const Result: FC<SelfProps> = (props) => {
       placement={'right'}
     >
       <Row gutter={[8, 8]}>
-        <Tabs style={{ width: '100%', minHeight: 460 }} tabPosition={'left'}>
+        <Tabs
+          style={{ width: '100%', minHeight: 460 }}
+          tabPosition={'left'}
+          size={'large'}
+        >
           <TabPane
             tab={
               <span>

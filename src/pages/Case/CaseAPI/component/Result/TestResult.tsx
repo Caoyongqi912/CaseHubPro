@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
-import { Card, Row, Table, Tabs } from 'antd';
+import { Card, Row, Table, Tabs, Tag } from 'antd';
 import CodeEditor from '@/components/CodeEditor';
 import { API, ResponseAPI } from '@/api';
 import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
+import { CONFIG } from '@/utils/config';
 
 const { TabPane } = Tabs;
 
@@ -71,11 +72,26 @@ const TestResult: FC<SelfProps> = (props) => {
     {
       title: '变量名',
       dataIndex: 'key',
+      render: (text: string) => {
+        return <Tag color={'green'}>{text}</Tag>;
+      },
+    },
+    {
+      title: '提取目标',
+      dataIndex: 'target',
+      render: (text: string) => {
+        return (
+          <Tag color={'blue'}>{CONFIG.EXTRACT_TARGET_ENUM[text].text}</Tag>
+        );
+      },
     },
     {
       title: '提取值',
       dataIndex: 'val',
       valueType: 'code',
+      render: (text: string) => {
+        return <Tag color={'green'}>{text}</Tag>;
+      },
     },
   ];
 
@@ -84,19 +100,7 @@ const TestResult: FC<SelfProps> = (props) => {
       return [];
     }
     const data = response[field];
-
-    if (field === 'extracts') {
-      let res: any = [];
-      data.forEach((item: any) => {
-        Object.keys(item).map((key) => {
-          res.push({
-            key: key,
-            val: item[key].toString(),
-          });
-        });
-      });
-      return res;
-    } else if (field === 'asserts') {
+    if (field === 'extracts' || field === 'asserts') {
       return data;
     } else {
       return Object.keys(data).map((key) => ({

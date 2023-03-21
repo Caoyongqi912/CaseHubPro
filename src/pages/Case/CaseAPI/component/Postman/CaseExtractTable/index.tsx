@@ -21,6 +21,8 @@ const Index: FC<SelfProps> = (props) => {
   }, [apiStepDetail]);
 
   useEffect(() => {
+    console.log('=========', step);
+    console.log('========', extractData);
     props.SE(step, extractData);
   }, [extractData, apiStepDetail]);
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type {
   ActionType,
   EditableFormInstance,
@@ -21,9 +21,9 @@ interface Tags {
 
 const Index: React.FC = () => {
   const [tags, setTags] = useState<RequestOptionsType[]>([]);
-  const editableFormRef = useRef<EditableFormInstance>();
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
-
+  const [departmentsOpt, setDepartmentOpt] = useState<RequestOptionsType[]>([]);
+  const [departmentsID, setDepartmentID] = useState();
   const queryDepartments = async () => {
     let data: any;
     ({ data } = await departmentQuery('GET'));
@@ -32,11 +32,14 @@ const Index: React.FC = () => {
       res.push({
         label: item.name,
         value: item.id,
-        id: item.id,
       });
     });
-    return res;
+    setDepartmentOpt(res);
   };
+
+  useEffect(() => {
+    queryDepartments();
+  }, []);
   const queryTagByDepartId = async (id: number) => {
     let data: any;
     ({ data } = await userTagQuery({ id: id }));
@@ -123,23 +126,20 @@ const Index: React.FC = () => {
         ],
       },
     },
-
     {
       title: 'department',
       dataIndex: 'departmentName',
       valueType: 'select',
       ellipsis: true, //是否自动缩略
       width: '10%',
-      request: queryDepartments,
       fieldProps: (_, { rowIndex }) => {
         return {
-          onChange: async (value: number) => {
-            console.log('onChange == ', value);
-            editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
+          options: departmentsOpt,
+          onSelect: async (value: number) => {
+            console.log('onSelect == ', value);
+            // editableFormRef.current?.setRowData?.(rowIndex, { tagName: [] });
             if (value) {
-              editableFormRef.current?.setRowData?.(rowIndex, {
-                departmentID: value,
-              });
+              setDepartmentID(value);
               await queryTagByDepartId(value);
             }
           },
@@ -149,6 +149,7 @@ const Index: React.FC = () => {
     {
       title: 'departmentID',
       dataIndex: 'departmentID',
+      valueType: 'text',
       hideInTable: true,
     },
     {
@@ -227,7 +228,7 @@ const Index: React.FC = () => {
               username: record.username,
               email: record.email,
               phone: record.phone,
-              departmentID: record.departmentID,
+              departmentID: departmentsID,
               tagName: record.tagName,
               gender: record.gender,
             };
@@ -247,7 +248,8 @@ const Index: React.FC = () => {
         }}
         columnsState={{
           persistenceKey: 'pro-table-singe-demos',
-          persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
+          persistenceType: 'localStorage',
+          //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
         }}
         rowKey="uid"
         search={{

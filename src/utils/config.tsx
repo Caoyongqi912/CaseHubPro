@@ -5,6 +5,10 @@ import TextIcon from '@/utils/TextIcon';
 import { API } from '@/api';
 
 export const CONFIG: API.IObjGet = {
+  EXTRACT_TARGET_ENUM: {
+    '1': { text: 'Response.json' },
+    '2': { text: 'Response.header' },
+  },
   CASE_LEVEL: ['P1', 'P2', 'P3', 'P4'],
   CASE_LEVEL_ENUM: {
     1: {
