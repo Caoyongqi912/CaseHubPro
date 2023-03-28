@@ -3,7 +3,6 @@ import { Drawer, Row, Tabs } from 'antd';
 import { ResponseAPI } from '@/api';
 import { getApiResponse } from '@/api/interface';
 import { IconFont } from '@/utils/IconFont';
-import CodeEditor from '@/components/CodeEditor';
 import VerifyInfo from './verifyInfo/verifyInfo';
 import ResultInfo from '@/pages/Case/CaseAPI/component/Result/ResultInfo';
 import HeaderInfo from '@/pages/Case/CaseAPI/component/Result/HeaderInfo';
@@ -27,12 +26,12 @@ const Result: FC<SelfProps> = (props) => {
     if (uid) {
       const res = await getApiResponse({ uid: uid });
       if (res.code === 0) {
-        setResponse(res.data);
+        return res.data;
       }
     }
   };
   useEffect(() => {
-    getResponse();
+    getResponse().then((data) => setResponse(data));
   }, [uid]);
 
   return (

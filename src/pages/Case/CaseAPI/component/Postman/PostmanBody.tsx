@@ -13,6 +13,7 @@ import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
 import { runApiDemo } from '@/api/interface';
 import { queryHost } from '@/api/host';
 import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
+import { API } from '@/api';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -65,25 +66,49 @@ const PostmanBody: FC<SelfProps> = (props) => {
     setFormInstance(form);
   }, [apiStepDetail]);
   useEffect(() => {
-    props.SH(step, headers);
-  }, [headers]);
-  useEffect(() => {
+    if (headers) {
+      props.SH(step, headers);
+    }
     if (body) {
       props.SB(step, body);
     }
-  }, [body]);
-  useEffect(() => {
     if (paramsData) {
       props.SP(step, paramsData);
     }
-  }, [paramsData]);
+  }, [headers, body, paramsData]);
 
+  const HeaderEnum: API.IObjGet = {
+    Host: { text: 'Host' },
+    Accept: { text: 'Accept' },
+    Authorization: { text: 'Authorization' },
+    Cookie: { text: 'Cookie' },
+  };
+  const matchEnumValue = (value: string) => {
+    for (const key in HeaderEnum) {
+      if (HeaderEnum[key].text === value) {
+        return key;
+      }
+    }
+    return '';
+  };
   const columns = (columnType: string): ProColumns[] => {
     return [
       {
         title: 'key',
         key: 'key',
         dataIndex: 'key',
+        valueType: 'text',
+        valueEnum: HeaderEnum,
+        renderFormItem: (item, { onChange }, form) => {
+          return (
+            <Input
+              onChange={(e) => {
+                const newVal = matchEnumValue(e.target.value);
+                onChange(newVal);
+              }}
+            />
+          );
+        },
       },
       {
         title: 'value',
@@ -153,7 +178,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
     form.setFieldsValue({ url: tempUrl });
   };
   const bodyChange = (value: any) => {
-    console.log('====', value);
     setBody(JSON.parse(value));
   };
 
@@ -194,8 +218,9 @@ const PostmanBody: FC<SelfProps> = (props) => {
       step: step,
       body: body ? body : null,
     };
-    data.step.extracts = extracts.current[step] || apiStepDetail.extracts || [];
-    data.step.asserts = asserts.current[step] || apiStepDetail.asserts || [];
+    data.step.extracts =
+      extracts?.current[step] || apiStepDetail?.extracts || [];
+    data.step.asserts = asserts?.current[step] || apiStepDetail?.asserts || [];
     const res = await runApiDemo(data);
     if (res.code === 0) {
       setResponse(res.data);

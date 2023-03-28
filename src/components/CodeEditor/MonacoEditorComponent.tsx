@@ -47,6 +47,7 @@ const MonacoEditorComponent: React.FC<Props> = ({
         wordWrap: 'on',
         scrollBeyondLastLine: true,
         automaticLayout: true,
+        readOnly: read || false,
       }}
     />
   );

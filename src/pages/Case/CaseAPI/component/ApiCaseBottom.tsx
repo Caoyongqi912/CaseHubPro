@@ -132,6 +132,10 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     <>
       <Row gutter={[8, 8]} style={{ marginTop: 10, minHeight: 500 }}>
         <Col span={24}>
+          <Button type={'primary'}>脚本</Button>
+          <br />
+          <br />
+
           {/*// @ts-ignore*/}
           <Steps current={current} items={items} size={'small'} />
           <br />
