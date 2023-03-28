@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { ActionType, ProTable } from '@ant-design/pro-components';
-import columns from '@/pages/Setting/Host/columns';
+import columns from '@/pages/Project/Host/columns';
 import { hostOpt, pageHost } from '@/api/host';
-import AddHost from '@/pages/Setting/Host/components/AddHost';
+import AddHost from '@/pages/Project/Host/components/AddHost';
 import { API } from '@/api';
 
 const Index = () => {

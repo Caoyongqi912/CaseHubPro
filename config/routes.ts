@@ -49,7 +49,7 @@ export default [
     routes: [
       {
         path: '/project/List',
-        name: 'projectOpt',
+        name: '项目列表',
         component: '@/pages/Project',
       },
       {
@@ -57,6 +57,11 @@ export default [
         name: 'projectDetail',
         component: '@/pages/Project/projectDetail',
         hideInMenu: true,
+      },
+      {
+        name: '项目环境',
+        path: '/project/host',
+        component: '@/pages/Project/Host',
       },
       {
         component: '@/pages/404',
@@ -114,20 +119,19 @@ export default [
     path: '/report',
     name: 'Reports',
     icon: 'BookFilled',
+    routes: [
+      {
+        path: '/report/history',
+        name: '构建历史',
+        component: '@/pages/Report/History',
+      },
+    ],
   },
 
   {
     name: 'Setting',
     path: '/setting',
     icon: 'SettingFilled',
-    routes: [
-      {
-        name: 'host',
-        path: '/setting/host',
-
-        component: '@/pages/Setting/Host',
-      },
-    ],
   },
   {
     component: '@/pages/404',

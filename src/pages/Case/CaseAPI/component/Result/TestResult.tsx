@@ -1,9 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Card, Row, Table, Tabs, Tag } from 'antd';
 import CodeEditor from '@/components/CodeEditor';
 import { API, ResponseAPI } from '@/api';
 import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
 import { CONFIG } from '@/utils/config';
+import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
 
 const { TabPane } = Tabs;
 
@@ -95,6 +96,16 @@ const TestResult: FC<SelfProps> = (props) => {
     },
   ];
 
+  const getResponseType = (response: any) => {
+    let T: string = typeof response;
+    if (response.indexOf('<html')) {
+      T = 'HTML';
+    }
+    const res = T.toString();
+    console.log('===', res);
+    return res;
+  };
+
   const toTable = (field: string) => {
     if (!response[field]) {
       return [];
@@ -126,10 +137,9 @@ const TestResult: FC<SelfProps> = (props) => {
               />
             </TabPane>
             <TabPane tab="响应体" key="1">
-              <CodeEditor
-                value={response.response}
-                language={'json'}
-                height={'30vh'}
+              <MonacoEditorComponent
+                defaultValue={response.response}
+                read={true}
               />
             </TabPane>
             <TabPane tab="Cookie" key="2">

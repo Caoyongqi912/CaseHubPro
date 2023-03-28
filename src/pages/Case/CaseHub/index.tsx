@@ -3,11 +3,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Col, Row } from 'antd';
 
 const Index = () => {
-  return (
-    <PageContainer title={false}>
-      <Row gutter={16}></Row>
-    </PageContainer>
-  );
+  return <PageContainer title={false}></PageContainer>;
 };
 
 export default Index;

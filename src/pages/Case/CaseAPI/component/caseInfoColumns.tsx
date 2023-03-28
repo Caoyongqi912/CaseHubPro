@@ -59,7 +59,7 @@ const caseInfo: API.IAPICaseInfoForm[] = [
     component: (props: any) => (
       <Select placeholder="请选择请求协议类型" {...props}>
         {Object.keys(CONFIG.REQUEST_TYPE).map((key) => (
-          <Option key={key} value={key} disabled={key !== '1'}>
+          <Option key={key} value={key}>
             {CONFIG.REQUEST_TYPE[key]}
           </Option>
         ))}

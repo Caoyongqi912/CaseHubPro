@@ -26,7 +26,7 @@ const Index: FC<SelfProps> = (props) => {
         let _ = {
           title: `step${i + 1}`,
           content: (
-            <CookieTable responseCookie={resultInfo[i].response.cookie} />
+            <CookieTable responseCookie={resultInfo[i]?.response?.cookie} />
           ),
           key: getK(),
         };

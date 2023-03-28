@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Card, Table } from 'antd';
-import { ResponseAPI } from '@/api';
+import { Card, Descriptions, Table } from 'antd';
 
 interface SelfProps {
   responseCookie: [key: string | any][];
@@ -25,16 +24,15 @@ const HeaderTable: FC<SelfProps> = (props) => {
   return (
     <>
       <Card style={{ marginTop: 4 }}>
-        <Table
-          title={() => 'response.cookie'}
-          columns={Columns}
-          dataSource={Object.keys(responseCookie).map((key: any) => ({
-            key,
-            value: responseCookie[key],
-          }))}
-          size="small"
-          pagination={false}
-        />
+        <Descriptions column={1} title={'Response.Cookie'}>
+          {responseCookie
+            ? Object.keys(responseCookie).map((key: any) => (
+                <Descriptions.Item label={key}>
+                  {responseCookie[key]}
+                </Descriptions.Item>
+              ))
+            : null}
+        </Descriptions>
       </Card>
     </>
   );

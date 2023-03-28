@@ -1,6 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Card, Descriptions, Table } from 'antd';
-import { ResponseAPI } from '@/api';
+import React, { FC } from 'react';
+import { Card, Descriptions } from 'antd';
 
 interface SelfProps {
   requestHeaders: [key: string | any][];
@@ -9,38 +8,28 @@ interface SelfProps {
 
 const HeaderTable: FC<SelfProps> = (props) => {
   const { requestHeaders, responseHeaders } = props;
-
-  const Columns = [
-    {
-      title: 'KEY',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: 'VALUE',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
-
   return (
     <>
       <Card>
         <Descriptions column={1} title={'Request.Header'}>
-          {Object.keys(requestHeaders).map((key: any) => (
-            <Descriptions.Item label={key}>
-              {requestHeaders[key]}
-            </Descriptions.Item>
-          ))}
+          {requestHeaders
+            ? Object.keys(requestHeaders).map((key: any) => (
+                <Descriptions.Item label={key}>
+                  {requestHeaders[key]}
+                </Descriptions.Item>
+              ))
+            : null}
         </Descriptions>
       </Card>
       <Card style={{ marginTop: 4 }}>
         <Descriptions column={1} title={'Response.Header'}>
-          {Object.keys(responseHeaders).map((key: any) => (
-            <Descriptions.Item label={key}>
-              {responseHeaders[key]}
-            </Descriptions.Item>
-          ))}
+          {responseHeaders
+            ? Object.keys(responseHeaders).map((key: any) => (
+                <Descriptions.Item label={key}>
+                  {responseHeaders[key]}
+                </Descriptions.Item>
+              ))
+            : null}
         </Descriptions>
       </Card>
     </>

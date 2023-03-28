@@ -4,7 +4,7 @@ import { EditableProTable } from '@ant-design/pro-components';
 interface SelfProps {
   columns: any;
   dataSource: any;
-  title: string;
+  title?: string;
   setDataSource: any;
   editableKeys: any;
   setEditableRowKeys: any;

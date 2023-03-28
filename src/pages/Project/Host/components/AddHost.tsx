@@ -51,7 +51,7 @@ const AddHost: React.FC<selfProps> = (props) => {
         name="port"
         label="port"
         placeholder="input your port"
-        required={true}
+        required={false}
       />
       <ProFormText
         name="desc"

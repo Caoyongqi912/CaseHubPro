@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import type {
-  ActionType,
-  EditableFormInstance,
-} from '@ant-design/pro-components';
+import type { ActionType } from '@ant-design/pro-components';
 import {
   ProColumns,
   ProTable,
@@ -23,7 +20,7 @@ const Index: React.FC = () => {
   const [tags, setTags] = useState<RequestOptionsType[]>([]);
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
   const [departmentsOpt, setDepartmentOpt] = useState<RequestOptionsType[]>([]);
-  const [departmentsID, setDepartmentID] = useState();
+  const [departmentsID, setDepartmentID] = useState<number>();
   const queryDepartments = async () => {
     let data: any;
     ({ data } = await departmentQuery('GET'));
@@ -132,7 +129,7 @@ const Index: React.FC = () => {
       valueType: 'select',
       ellipsis: true, //是否自动缩略
       width: '10%',
-      fieldProps: (_, { rowIndex }) => {
+      fieldProps: (_) => {
         return {
           options: departmentsOpt,
           onSelect: async (value: number) => {

@@ -21,14 +21,15 @@ const Index: FC<SelfProps> = (props) => {
   const [items, setItems] = useState<any>([]);
 
   const writeSteps = () => {
+    console.log('=====', resultInfo);
     if (resultInfo && resultInfo.length > 0) {
       for (let i = 0; i < resultInfo?.length; i++) {
         let _ = {
           title: `step${i + 1}`,
           content: (
             <HeaderTable
-              requestHeaders={resultInfo[i].request.headers}
-              responseHeaders={resultInfo[i].response.headers}
+              requestHeaders={resultInfo[i]?.request?.headers}
+              responseHeaders={resultInfo[i]?.response?.headers}
             />
           ),
           key: getK(),

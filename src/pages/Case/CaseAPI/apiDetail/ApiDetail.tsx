@@ -36,7 +36,6 @@ const ApiDetail: FC = () => {
   const stepsFormList = useRef<FormInstance[]>([]);
   // 每步请求头
   const headers = useRef<API.IHeaders[][]>([]);
-
   // 每步请求参数
   const params = useRef<API.IParams[][]>([]);
   // 每步请求体
@@ -51,7 +50,6 @@ const ApiDetail: FC = () => {
   const setFormInstance: SetFormInstance = (form: FormInstance) => {
     stepsFormList.current.push(form);
   };
-
   const setH: setHeaders = (step, header, del) => {
     if (del) {
       headers.current.splice(step, 1);

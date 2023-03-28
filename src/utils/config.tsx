@@ -118,6 +118,11 @@ export const CONFIG: API.IObjGet = {
         <Send theme="outline" size="14" fill="#7ed321" /> HTTP
       </span>
     ),
+    HTTPS: (
+      <span>
+        <Send theme="outline" size="14" fill="#7ed321" /> HTTPS
+      </span>
+    ),
     GRPC: <TextIcon font={14} icon="icon-GRPC" text="GRPC" />,
     Dubbo: <TextIcon font={14} icon="icon-a-dubbo1" text="Dubbo" />,
   },

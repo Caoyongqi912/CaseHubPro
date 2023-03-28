@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { Card, Col, Form, Input, Radio, Row, Select, Tabs } from 'antd';
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import EditableTable from '@/components/Table/EditableTable';
-import CodeEditor from '@/components/CodeEditor';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
 import {
   setBody,
@@ -12,6 +11,8 @@ import {
 } from '@/pages/Case/CaseAPI/func';
 import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
 import { runApiDemo } from '@/api/interface';
+import { queryHost } from '@/api/host';
+import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -63,13 +64,9 @@ const PostmanBody: FC<SelfProps> = (props) => {
     }
     setFormInstance(form);
   }, [apiStepDetail]);
-
   useEffect(() => {
-    if (headers && headers.length > 0) {
-      props.SH(step, headers);
-    }
+    props.SH(step, headers);
   }, [headers]);
-
   useEffect(() => {
     if (body) {
       props.SB(step, body);
@@ -123,7 +120,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
       },
     ];
   };
-
   const onDelete = (columnType: string, key: number) => {
     if (columnType === 'params') {
       const data = paramsData.filter((item: any) => item.id !== key);
@@ -156,6 +152,10 @@ const PostmanBody: FC<SelfProps> = (props) => {
     });
     form.setFieldsValue({ url: tempUrl });
   };
+  const bodyChange = (value: any) => {
+    console.log('====', value);
+    setBody(JSON.parse(value));
+  };
 
   // 返回body 类型 component
   const getBody = (bd: number) => {
@@ -172,11 +172,10 @@ const PostmanBody: FC<SelfProps> = (props) => {
         <Row style={{ marginTop: 12 }}>
           <Col span={24}>
             <Card bodyStyle={{ padding: 0 }}>
-              <CodeEditor
-                value={JSON.stringify(body)}
-                onChange={(e) => {
-                  setBody(JSON.parse(e!));
-                }}
+              <MonacoEditorComponent
+                defaultValue={JSON.stringify(body)}
+                language={'json'}
+                onChange={bodyChange}
               />
             </Card>
           </Col>
@@ -185,6 +184,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
     }
   };
 
+  // 单步骤调试
   const sendReq = async (uid?: string, HostID?: string) => {
     const data: any = {};
     data.HostID = HostID;
@@ -217,6 +217,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
       </Option>
     </>
   );
+
   return (
     <Form form={form}>
       <Card style={{ width: '100%' }}>
@@ -224,7 +225,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
           <Col span={20}>
             <Form layout="inline" form={form}>
               <Row gutter={[8, 8]}>
-                <Col span={16}>
+                <Col span={8}>
                   <Form.Item
                     name={'name'}
                     label={'步骤名称'}
@@ -243,7 +244,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
                     <Input allowClear autoComplete={'off'} />
                   </Form.Item>
                 </Col>
-                <Col span={16}>
+                <Col span={8}>
                   <Form.Item
                     name="method"
                     label="请求方式"
@@ -266,6 +267,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
                     rules={[{ required: true, message: '请输入请求url' }]}
                   >
                     <Input
+                      // addonBefore={selectBefore}
                       placeholder="请输入要请求的url"
                       allowClear
                       autoComplete={'off'}
@@ -288,7 +290,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
             <TabPane tab="Params" key={'1'}>
               <EditableTable
                 columns={columns('params')}
-                title="Query Params"
                 dataSource={paramsData}
                 setDataSource={setParamsData}
                 extra={joinUrl}
@@ -299,7 +300,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
             <TabPane tab="Headers" key={'2'}>
               <EditableTable
                 columns={columns('headers')}
-                title="Headers"
                 dataSource={headers}
                 setDataSource={setHeaders}
                 editableKeys={headersKeys}

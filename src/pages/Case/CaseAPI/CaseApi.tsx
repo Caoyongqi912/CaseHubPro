@@ -12,6 +12,7 @@ import {
   Empty,
   Tag,
   Divider,
+  Button,
 } from 'antd';
 import {
   PlusOutlined,
@@ -48,6 +49,7 @@ import {
 import { CONFIG } from '@/utils/config';
 import { history } from 'umi';
 import HostDropdown from './component/HostDropdown';
+import RunGroup from '@/pages/Case/CaseAPI/component/RunGroup';
 
 const CaseApi: FC = () => {
   const [addCaseVisible, setAddCaseVisible] = useState(false);
@@ -70,6 +72,9 @@ const CaseApi: FC = () => {
   const ref = useRef<ProFormInstance>();
   const [resultModal, setResultModal] = useState(false);
   const [responseUid, setResponseUid] = useState<string>();
+
+  const [selectKeys, setSelectKeys] = useState<string[]>([]);
+
   useEffect(() => {
     queryProjects();
   }, []);
@@ -534,7 +539,12 @@ const CaseApi: FC = () => {
                         setCurrentCaseAPI(res.data.items);
                       }}
                       dataSource={currentCaseAPI}
-                      rowSelection={{}}
+                      rowSelection={{
+                        onChange: (keys) => {
+                          console.log('==', keys);
+                          setSelectKeys(keys as string[]);
+                        },
+                      }}
                       pagination={{
                         pageSize: 10,
                       }}
@@ -556,6 +566,7 @@ const CaseApi: FC = () => {
                       bordered
                       columns={columns}
                       toolBarRender={() => [
+                        <RunGroup selectedKeys={selectKeys} />,
                         <AddApiCase
                           queryCaseApis={queryCaseApis}
                           casePartID={currentCasePartID}

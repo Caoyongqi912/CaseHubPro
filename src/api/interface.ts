@@ -8,6 +8,7 @@ const QueryCaseAPIByCasePartID: string = '/api/case/part/interfaces';
 const PageCaseAPI = '/api/case/interface/page';
 const RunApiDemoURL = '/api/case/interface/demo';
 const RunApiURL = '/api/case/interface/run';
+const RunApiGroupURL = '/api/case/interface/group/run';
 const GetApiResponseURL = '/api/case/interface/response';
 
 interface ICasePartTree {
@@ -168,6 +169,23 @@ export async function getApiResponse(
   return request<API.IResponse<ResponseAPI.IApiResponse>>(GetApiResponseURL, {
     method: 'GET',
     params,
+    ...(options || {}),
+  });
+}
+
+interface runInterfaceGroupData {
+  hostID?: string;
+  partID?: string;
+  interfaceIDs: string[];
+}
+
+export async function runInterfaceGroup(
+  data: runInterfaceGroupData,
+  options?: { [key: string]: any },
+) {
+  return request<API.IResponse<any>>(RunApiGroupURL, {
+    method: 'POST',
+    data,
     ...(options || {}),
   });
 }
