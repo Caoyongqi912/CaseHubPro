@@ -1,8 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Card, Col, Form, Input, Radio, Row, Select, Tabs } from 'antd';
-import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
-import EditableTable from '@/components/Table/EditableTable';
-import { ProColumns } from '@ant-design/pro-table/lib/typing';
 import {
   setBody,
   SetFormInstance,
@@ -11,9 +8,9 @@ import {
 } from '@/pages/Case/CaseAPI/func';
 import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
 import { runApiDemo } from '@/api/interface';
-import { queryHost } from '@/api/host';
 import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
-import { API } from '@/api';
+import HeaderTable from '@/pages/Case/CaseAPI/component/Postman/HeaderTable';
+import ParamsTable from '@/pages/Case/CaseAPI/component/Postman/ParamsTable';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -28,13 +25,6 @@ interface SelfProps {
   apiStepDetail?: any;
   extracts: any;
   asserts: any;
-}
-
-interface KV {
-  id: number;
-  key: any;
-  value: any;
-  desc: string;
 }
 
 const PostmanBody: FC<SelfProps> = (props) => {
@@ -65,6 +55,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
     }
     setFormInstance(form);
   }, [apiStepDetail]);
+
   useEffect(() => {
     if (headers) {
       props.SH(step, headers);
@@ -77,106 +68,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
     }
   }, [headers, body, paramsData]);
 
-  const HeaderEnum: API.IObjGet = {
-    Host: { text: 'Host' },
-    Accept: { text: 'Accept' },
-    Authorization: { text: 'Authorization' },
-    Cookie: { text: 'Cookie' },
-  };
-  const matchEnumValue = (value: string) => {
-    for (const key in HeaderEnum) {
-      if (HeaderEnum[key].text === value) {
-        return key;
-      }
-    }
-    return '';
-  };
-  const columns = (columnType: string): ProColumns[] => {
-    return [
-      {
-        title: 'key',
-        key: 'key',
-        dataIndex: 'key',
-        valueType: 'text',
-        valueEnum: HeaderEnum,
-        renderFormItem: (item, { onChange }, form) => {
-          return (
-            <Input
-              onChange={(e) => {
-                const newVal = matchEnumValue(e.target.value);
-                onChange(newVal);
-              }}
-            />
-          );
-        },
-      },
-      {
-        title: 'value',
-        key: 'value',
-        dataIndex: 'value',
-      },
-      {
-        title: 'desc',
-        key: 'desc',
-        dataIndex: 'desc',
-      },
-      {
-        title: 'opt',
-        valueType: 'option',
-        render: (_: any, record: any) => {
-          return (
-            <>
-              <EditTwoTone
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  setEditableRowKeys([record.id]);
-                }}
-              />
-              <DeleteTwoTone
-                style={{ cursor: 'pointer', marginLeft: 8 }}
-                onClick={() => {
-                  onDelete(columnType, record.id);
-                }}
-                twoToneColor="#eb2f96"
-              />
-            </>
-          );
-        },
-      },
-    ];
-  };
-  const onDelete = (columnType: string, key: number) => {
-    if (columnType === 'params') {
-      const data = paramsData.filter((item: any) => item.id !== key);
-      setParamsData(data);
-      joinUrl(data);
-    } else {
-      const data = headers.filter((item: any) => item.id !== key);
-      setHeaders(data);
-    }
-  };
-
-  // 根据paramsData拼接url
-  const joinUrl = (data: KV[]) => {
-    const url = form.getFieldValue('url');
-    let tempUrl: string;
-    if (url === undefined) {
-      tempUrl = '';
-    } else {
-      tempUrl = url.split('?')[0];
-    }
-    data.forEach((item, idx) => {
-      if (item.key) {
-        // 如果item.key有效
-        if (idx === 0) {
-          tempUrl = `${tempUrl}?${item.key}=${item.value || ''}`;
-        } else {
-          tempUrl = `${tempUrl}&${item.key}=${item.value || ''}`;
-        }
-      }
-    });
-    form.setFieldsValue({ url: tempUrl });
-  };
   const bodyChange = (value: any) => {
     setBody(JSON.parse(value));
   };
@@ -313,29 +204,27 @@ const PostmanBody: FC<SelfProps> = (props) => {
         <Row style={{ marginTop: 8 }}>
           <Tabs defaultActiveKey="1" style={{ width: '100%' }}>
             <TabPane tab="Params" key={'1'}>
-              <EditableTable
-                columns={columns('params')}
-                dataSource={paramsData}
-                setDataSource={setParamsData}
-                extra={joinUrl}
+              <ParamsTable
+                paramsData={paramsData}
+                setParamsData={setParamsData}
                 editableKeys={editableKeys}
                 setEditableRowKeys={setEditableRowKeys}
+                form={form}
               />
             </TabPane>
             <TabPane tab="Headers" key={'2'}>
-              <EditableTable
-                columns={columns('headers')}
-                dataSource={headers}
-                setDataSource={setHeaders}
-                editableKeys={headersKeys}
-                setEditableRowKeys={setHeadersKeys}
+              <HeaderTable
+                headers={headers}
+                setHeaders={setHeaders}
+                headersKeys={headersKeys}
+                setHeadersKeys={setHeadersKeys}
               />
             </TabPane>
             <TabPane tab="Body" key={'3'}>
               <Row>
                 <Radio.Group
                   defaultValue={bodyType}
-                  value={bodyType}
+                  value={body}
                   onChange={(e) => {
                     setBodyType(e.target.value);
                   }}
