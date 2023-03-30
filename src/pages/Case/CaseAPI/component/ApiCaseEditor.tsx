@@ -10,7 +10,6 @@ import {
   setHeaders,
   setParams,
 } from '@/pages/Case/CaseAPI/func';
-import HostDropdown from '@/pages/Case/CaseAPI/component/HostDropdown';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -48,7 +47,7 @@ interface SelfProps {
   asserts: any;
   apiStepsDetail?: API.IInterfaceStep[];
   isDetail?: boolean;
-  run?: Function;
+  run?: any;
 }
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
@@ -64,7 +63,9 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
     <>
       {detail ? (
         <>
-          <HostDropdown run={run!} buttonName={'RUN'} />
+          <Button type={'primary'} style={{ marginRight: 5 }} onClick={run!}>
+            RUN
+          </Button>
           <Button
             type="primary"
             onClick={() => {

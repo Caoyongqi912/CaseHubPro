@@ -75,8 +75,8 @@ export default [
     routes: [
       {
         path: '/cases/table',
-        name: 'caseOpt',
-        component: '@/pages/Case/CaseHub',
+        name: '测试用例',
+        component: '@/pages/CaseHub',
       },
     ],
   },
@@ -95,6 +95,11 @@ export default [
         name: '接口详情',
         hideInMenu: true,
         component: '@/pages/Case/CaseAPI/apiDetail/ApiDetail',
+      },
+      {
+        path: '/interface/scriptList',
+        name: '接口脚本',
+        component: '@/pages/Case/APIScript',
       },
       {
         path: '/interface/test',
@@ -127,7 +132,6 @@ export default [
       },
     ],
   },
-
   {
     name: 'Setting',
     path: '/setting',

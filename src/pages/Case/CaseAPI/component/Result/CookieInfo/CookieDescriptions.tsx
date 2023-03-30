@@ -5,21 +5,8 @@ interface SelfProps {
   responseCookie: [key: string | any][];
 }
 
-const HeaderTable: FC<SelfProps> = (props) => {
+const CookieDescriptions: FC<SelfProps> = (props) => {
   const { responseCookie } = props;
-
-  const Columns = [
-    {
-      title: 'KEY',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: 'VALUE',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
 
   return (
     <>
@@ -38,4 +25,4 @@ const HeaderTable: FC<SelfProps> = (props) => {
   );
 };
 
-export default HeaderTable;
+export default CookieDescriptions;

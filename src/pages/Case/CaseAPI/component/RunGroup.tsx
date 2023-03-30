@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { runInterfaceGroup } from '@/api/interface';
 
 interface SelfProps {
@@ -11,12 +11,12 @@ const RunGroup: FC<SelfProps> = (props) => {
 
   const run = async () => {
     let reqbody = {
-      hostID: null,
-      partID: null,
       interfaceIDs: selectedKeys,
     };
-    const res = await runInterfaceGroup(reqbody);
-    console.log(res.msg);
+    const { code, data, msg } = await runInterfaceGroup(reqbody);
+    if (code === 0) {
+      message.success(msg);
+    }
   };
 
   return (

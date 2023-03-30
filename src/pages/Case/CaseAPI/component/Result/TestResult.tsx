@@ -29,34 +29,37 @@ const STATUS: API.IObjGet = {
   401: { color: '#F56C6C', text: 'unauthorized' },
   400: { color: '#F56C6C', text: 'Bad Request' },
 };
+
 const TestResult: FC<SelfProps> = (props) => {
   const { response } = props;
+  const [responseBody, setResponseBody] = useState<any>(response?.response);
+  useEffect(() => {
+    setResponseBody(response);
+  }, [response]);
+
   const tabExtra = (response: ResponseProps) => {
-    return response && response.response ? (
-      <div style={{ marginRight: 16 }}>
+    if (!response || !response.response) return null;
+    const { status_code, cost } = response;
+    const { color, text = '' } = STATUS[status_code!] || {
+      color: '#F56C6C',
+      text: '',
+    };
+    return (
+      <div className="tab-extra">
         <span>
           StatusCode:
-          <span
-            style={{
-              color: STATUS[response.status_code!]
-                ? STATUS[response.status_code!].color
-                : '#F56C6C',
-              marginLeft: 8,
-              marginRight: 8,
-            }}
-          >
-            {response.status_code}
-            {STATUS[response.status_code!]
-              ? STATUS[response.status_code!].text
-              : ''}
+          <span className="status" style={{ color }}>
+            {status_code}
+            {text}
           </span>
           <span style={{ marginLeft: 8, marginRight: 8 }}>
-            Time: <span style={{ color: '#67C23A' }}>{response.cost}</span>
+            Time: <span style={{ color: '#67C23A' }}>{cost}</span>
           </span>
         </span>
       </div>
-    ) : null;
+    );
   };
+
   const ResponseColumns = [
     {
       title: 'KEY',
@@ -96,32 +99,17 @@ const TestResult: FC<SelfProps> = (props) => {
     },
   ];
 
-  const getResponseType = (response: any) => {
-    let T: string = typeof response;
-    if (response.indexOf('<html')) {
-      T = 'HTML';
-    }
-    const res = T.toString();
-    console.log('===', res);
-    return res;
-  };
-
   const toTable = (field: string) => {
-    if (!response[field]) {
-      return [];
-    }
-    const data = response[field];
-    if (field === 'extracts' || field === 'asserts') {
-      return data;
-    } else {
-      return Object.keys(data).map((key) => ({
-        key,
-        value: data[key],
-      }));
-    }
+    const data = response[field] || [];
+    return field === 'extracts' || field === 'asserts'
+      ? data
+      : Object.keys(data).map((key) => ({
+          key,
+          value: data[key],
+        }));
   };
   return (
-    <Row gutter={[8, 8]}>
+    <Row gutter={[8, 8]} style={{ marginTop: 10 }}>
       {Object.keys(response).length === 0 ? null : (
         <Card style={{ marginTop: 3, width: '100%' }}>
           <Tabs
@@ -137,10 +125,7 @@ const TestResult: FC<SelfProps> = (props) => {
               />
             </TabPane>
             <TabPane tab="响应体" key="1">
-              <MonacoEditorComponent
-                defaultValue={response.response}
-                read={true}
-              />
+              <MonacoEditorComponent value={response.response} read={true} />
             </TabPane>
             <TabPane tab="Cookie" key="2">
               <Table

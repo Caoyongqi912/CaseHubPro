@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row, Steps } from 'antd';
-import HeaderTable from '@/pages/Case/CaseAPI/component/Result/HeaderInfo/headerTable';
+import HeaderDescriptions from '@/pages/Case/CaseAPI/component/Result/HeaderInfo/HeaderDescriptions';
 import { ResponseAPI } from '@/api';
 
 interface SelfProps {
@@ -21,13 +21,12 @@ const Index: FC<SelfProps> = (props) => {
   const [items, setItems] = useState<any>([]);
 
   const writeSteps = () => {
-    console.log('=====', resultInfo);
-    if (resultInfo && resultInfo.length > 0) {
+    if (resultInfo?.length) {
       for (let i = 0; i < resultInfo?.length; i++) {
         let _ = {
           title: `step${i + 1}`,
           content: (
-            <HeaderTable
+            <HeaderDescriptions
               requestHeaders={resultInfo[i]?.request?.headers}
               responseHeaders={resultInfo[i]?.response?.headers}
             />
@@ -39,6 +38,7 @@ const Index: FC<SelfProps> = (props) => {
     }
     setSteps(stepRef.current);
   };
+
   useEffect(() => {
     const items = steps.map((item) => ({ key: item.title, title: item.title }));
     setItems(items);

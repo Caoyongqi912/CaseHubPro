@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 // @ts-ignore
 import MonacoEditor, { EditorDidMount, useMonaco } from '@monaco-editor/react';
 import type { languages } from 'monaco-editor';
 
 type Props = {
   defaultValue?: string;
+  value?: string;
   language?: keyof typeof languages;
   onChange?: (value: string) => void;
   read?: boolean;
@@ -17,13 +18,20 @@ const MonacoEditorComponent: React.FC<Props> = ({
   language = 'json',
   onChange,
   read = false,
+  value,
 }) => {
   const [editorValue, setEditorValue] = useState<string>(defaultValue);
+
+  useEffect(() => {
+    if (value !== undefined && value !== editorValue) {
+      setEditorValue(value);
+    }
+  }, [value]);
 
   const handleEditorDidMount: EditorDidMount = useCallback(
     (editor: any, monacoInstance: any) => {
       // 设置语言类型，并开启自动格式化
-      // editor.getModel()?.updateOptions({ tabSize: 2 });
+      editor.getModel()?.updateOptions({ tabSize: 2 });
 
       editor.onDidChangeModelContent(() => {
         const value = editor.getValue();

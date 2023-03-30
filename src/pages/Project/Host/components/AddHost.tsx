@@ -6,7 +6,7 @@ import { hostOpt } from '@/api/host';
 import { API } from '@/api';
 
 interface selfProps {
-  reload: Function | undefined;
+  reload?: Function | undefined;
 }
 
 const AddHost: React.FC<selfProps> = (props) => {

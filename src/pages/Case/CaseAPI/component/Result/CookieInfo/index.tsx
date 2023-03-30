@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row, Steps } from 'antd';
 import { ResponseAPI } from '@/api';
-import CookieTable from '@/pages/Case/CaseAPI/component/Result/CookieInfo/cookieTable';
+import CookieDescriptions from '@/pages/Case/CaseAPI/component/Result/CookieInfo/CookieDescriptions';
 
 interface SelfProps {
   resultInfo: ResponseAPI.IApiResponseResultInfo[];
@@ -26,7 +26,9 @@ const Index: FC<SelfProps> = (props) => {
         let _ = {
           title: `step${i + 1}`,
           content: (
-            <CookieTable responseCookie={resultInfo[i]?.response?.cookie} />
+            <CookieDescriptions
+              responseCookie={resultInfo[i]?.response?.cookie}
+            />
           ),
           key: getK(),
         };

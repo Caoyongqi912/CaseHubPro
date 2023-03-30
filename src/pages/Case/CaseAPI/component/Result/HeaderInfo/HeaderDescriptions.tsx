@@ -6,7 +6,7 @@ interface SelfProps {
   responseHeaders: [key: string | any][];
 }
 
-const HeaderTable: FC<SelfProps> = (props) => {
+const HeaderDescriptions: FC<SelfProps> = (props) => {
   const { requestHeaders, responseHeaders } = props;
   return (
     <>
@@ -36,4 +36,4 @@ const HeaderTable: FC<SelfProps> = (props) => {
   );
 };
 
-export default HeaderTable;
+export default HeaderDescriptions;

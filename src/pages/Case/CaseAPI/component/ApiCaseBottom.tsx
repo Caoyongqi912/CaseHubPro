@@ -118,7 +118,6 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     setSteps(arrRef.current);
     setCurrent(current - 1);
   };
-
   //上一步
   const prev = () => {
     setCurrent(current - 1);

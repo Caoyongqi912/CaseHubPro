@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Button, Card, Col, Row, Tabs } from 'antd';
+import { Card, Col, Row, Tabs } from 'antd';
 import { API } from '@/api';
 import PostmanBody from '@/pages/Case/CaseAPI/component/Postman/PostmanBody';
 import CaseAssertTable from '@/pages/Case/CaseAPI/component/Postman/CaseAssertTable';

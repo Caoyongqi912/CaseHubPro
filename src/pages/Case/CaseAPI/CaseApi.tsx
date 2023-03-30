@@ -12,7 +12,6 @@ import {
   Empty,
   Tag,
   Divider,
-  Button,
 } from 'antd';
 import {
   PlusOutlined,
@@ -48,7 +47,6 @@ import {
 } from '@/api/interface';
 import { CONFIG } from '@/utils/config';
 import { history } from 'umi';
-import HostDropdown from './component/HostDropdown';
 import RunGroup from '@/pages/Case/CaseAPI/component/RunGroup';
 
 const CaseApi: FC = () => {
@@ -72,11 +70,21 @@ const CaseApi: FC = () => {
   const ref = useRef<ProFormInstance>();
   const [resultModal, setResultModal] = useState(false);
   const [responseUid, setResponseUid] = useState<string>();
-
   const [selectKeys, setSelectKeys] = useState<string[]>([]);
 
   useEffect(() => {
-    queryProjects();
+    queryProject().then(({ data }) => {
+      if (data.length > 0) {
+        setProject(data);
+        setProjectID(data[0].id!);
+        let temp: any = [];
+        data.map((i: API.IProject) => {
+          const _ = { value: i.id, label: i.name };
+          temp.push(_);
+        });
+        setProjectOpt(temp);
+      }
+    });
   }, []);
   useEffect(() => {
     listTestcaseTree();
@@ -84,24 +92,6 @@ const CaseApi: FC = () => {
   useEffect(() => {
     queryCaseApis();
   }, [currentCasePartID, currentCasePart]);
-
-  /**
-   * 查询所有项目
-   * 存储第一个项目id与name
-   */
-  const queryProjects = async () => {
-    const { data } = await queryProject();
-    if (data.length > 0) {
-      setProject(data);
-      setProjectID(data[0].id!);
-      let temp: any = [];
-      data.map((i: API.IProject) => {
-        const _ = { value: i.id, label: i.name };
-        temp.push(_);
-      });
-      setProjectOpt(temp);
-    }
-  };
 
   const getProject: any = () => {
     if (projects.length === 0) {
@@ -158,10 +148,10 @@ const CaseApi: FC = () => {
     }
   };
 
-  const run = async (uid: string, HostID: string) => {
-    const { code, data } = await runApi({ uid: uid, HostID: HostID });
+  const run = async (uid: string) => {
+    setResultModal(true);
+    const { code, data } = await runApi({ uid: uid });
     if (code === 0) {
-      setResultModal(true);
       setResponseUid(data);
     }
   };
@@ -246,12 +236,13 @@ const CaseApi: FC = () => {
               详情
             </a>
             <Divider type={'vertical'} />
-            <HostDropdown
-              run={run!}
-              buttonName={'执行'}
-              a={true}
-              uid={record.uid}
-            />
+            <a
+              onClick={async () => {
+                await run(record.uid);
+              }}
+            >
+              执行
+            </a>
             <Divider type={'vertical'} />
             <a
               onClick={() => {
