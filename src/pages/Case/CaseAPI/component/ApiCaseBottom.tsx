@@ -108,7 +108,6 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
    */
   const delStep = () => {
     steps.splice(current, 1);
-    // console.log(steps);
     stepInfo.current.splice(current, 1);
     SH(current, null, true);
     SB(current, null, true);
@@ -131,9 +130,9 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
     <>
       <Row gutter={[8, 8]} style={{ marginTop: 10, minHeight: 500 }}>
         <Col span={24}>
-          <Button type={'primary'}>脚本</Button>
-          <br />
-          <br />
+          {/*<Button type={'primary'}>脚本</Button>*/}
+          {/*<br />*/}
+          {/*<br />*/}
 
           {/*// @ts-ignore*/}
           <Steps current={current} items={items} size={'small'} />
