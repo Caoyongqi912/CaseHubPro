@@ -138,6 +138,18 @@ export default [
     icon: 'SettingFilled',
   },
   {
+    name: 'CBS',
+    path: '/CBS',
+    // icon: "CloudTwoTone",
+    routes: [
+      {
+        path: '/CBS/perf/maintSetting',
+        name: '维护人业绩配置',
+        component: '@/pages/CBS/PerfMaintSetting',
+      },
+    ],
+  },
+  {
     component: '@/pages/404',
   },
 ];

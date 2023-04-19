@@ -1,11 +1,12 @@
 import React, { FC, useEffect } from 'react';
 import { Form, Modal, Input, Switch, Col } from 'antd';
+import { API } from '@/api';
 
 const { Item: FormItem } = Form;
 
 interface SelfProps {
   title: string;
-  fields: any;
+  fields: any[];
   offset?: 0;
   loading?: boolean;
   record?: any;
@@ -23,21 +24,21 @@ interface SelfProps {
 
 const { TextArea } = Input;
 
-const getComponent = (type, placeholder, component = undefined) => {
-  if (component) {
-    return component;
-  }
-  if (type === 'input') {
-    return <Input placeholder={placeholder} />;
-  }
-  if (type === 'textarea') {
-    return <TextArea placeholder={placeholder} />;
-  }
-  if (type === 'switch') {
-    return <Switch />;
-  }
-  return null;
+const componentMap: API.IObjGet = {
+  input: <Input />,
+  textarea: <TextArea />,
+  switch: <Switch />,
 };
+
+const getComponent = (
+  type: string,
+  placeholder: string,
+  component?: React.ReactNode,
+) => {
+  const defaultComponent = componentMap[type];
+  return component ?? React.cloneElement(defaultComponent, { placeholder });
+};
+
 const FormForModal: FC<SelfProps> = (props) => {
   const [form] = Form.useForm();
   const {
@@ -50,7 +51,6 @@ const FormForModal: FC<SelfProps> = (props) => {
     record,
     left,
     right,
-    children,
     Footer,
     onFinish,
     onCancel,
