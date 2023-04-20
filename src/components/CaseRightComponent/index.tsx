@@ -210,7 +210,6 @@ const Index: FC<SelfProps> = (props) => {
           />
           <Card
             style={{
-              height: '100%',
               padding: 24,
               overflowX: 'hidden',
               overflow: 'auto',

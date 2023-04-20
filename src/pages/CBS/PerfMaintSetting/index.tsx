@@ -31,6 +31,7 @@ const Index = () => {
         }));
         SET_DEPTID_OPT(SET_INFO_ID_OPT);
         setCurrentSetInfoID(0);
+        // @ts-ignore
         SetPerfSetting(data[0]);
         setLoading(false);
       }
@@ -42,7 +43,7 @@ const Index = () => {
   }
   const currentIdChange = (value: any) => {
     const targetItem = respData!.find(
-      ({ DEPTID }) => DEPTID == value.target.value,
+      ({ DEPTID }: { DEPTID: number }) => DEPTID == value.target.value,
     );
     form.setFieldsValue(targetItem);
   };

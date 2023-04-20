@@ -1,10 +1,13 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Col, Row } from 'antd';
+import { Card } from 'antd';
 import CaseRightComponent from '@/components/CaseRightComponent';
 import CaseApiLeft from '@/pages/Case/CaseAPI/component/CaseApiLeft';
+import SplitterLayout from 'react-splitter-layout';
 
 const CaseApi: FC = () => {
+  const splitPaneRef = useRef<SplitterLayout>(null);
+
   const [currentCasePartID, setCurrentCasePartID] = useState<
     number | undefined
   >();
@@ -19,21 +22,23 @@ const CaseApi: FC = () => {
         bodyStyle={{ padding: 0 }}
         bordered={false}
       >
-        <Row gutter={2}>
-          <Col span={6}>
-            <CaseRightComponent
-              selectedProject={selectedProject}
-              setSelectedProject={setSelectedProject}
-              setCurrentCasePartID={setCurrentCasePartID}
-            />
-          </Col>
-          <Col span={18}>
-            <CaseApiLeft
-              currentCasePartID={currentCasePartID}
-              projectID={selectedProject}
-            />
-          </Col>
-        </Row>
+        <SplitterLayout
+          ref={splitPaneRef}
+          percentage={true}
+          secondaryInitialSize={70}
+          primaryMinSize={20}
+          secondaryMinSize={60}
+        >
+          <CaseRightComponent
+            selectedProject={selectedProject}
+            setSelectedProject={setSelectedProject}
+            setCurrentCasePartID={setCurrentCasePartID}
+          />
+          <CaseApiLeft
+            currentCasePartID={currentCasePartID}
+            projectID={selectedProject}
+          />
+        </SplitterLayout>
       </Card>
     </PageContainer>
   );

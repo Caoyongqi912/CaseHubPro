@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import SplitPane from 'react-split-pane-v2';
-import './index.less';
-import { Card, Col, Row } from 'antd';
-import { API } from '@/api';
-import { queryProject } from '@/api/project';
+import React, { useEffect, useRef, useState } from 'react';
+import SplitterLayout from 'react-splitter-layout';
+import 'react-splitter-layout/lib/index.css';
+import { Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import CaseRightComponent from '@/components/CaseRightComponent';
 
 const Index = () => {
+  const splitPaneRef = useRef<SplitterLayout>(null);
   const [currentCasePartID, setCurrentCasePartID] = useState<
     number | undefined
   >();
@@ -22,22 +21,23 @@ const Index = () => {
         bodyStyle={{ padding: 0 }}
         bordered={false}
       >
-        {/*// @ts-ignore*/}
-        <SplitPane
-          split="vertical"
-          minSize={260}
-          defaultSize={300}
-          maxSize={800}
+        <SplitterLayout
+          ref={splitPaneRef}
+          percentage={true}
+          secondaryInitialSize={70}
+          primaryMinSize={20}
+          secondaryMinSize={60}
         >
           <CaseRightComponent
             selectedProject={selectedProject}
             setSelectedProject={setSelectedProject}
             setCurrentCasePartID={setCurrentCasePartID}
           />
+
           <Card>
             <div style={{ backgroundColor: 'green' }}>右侧面板</div>
           </Card>
-        </SplitPane>
+        </SplitterLayout>
       </Card>
     </PageContainer>
   );
