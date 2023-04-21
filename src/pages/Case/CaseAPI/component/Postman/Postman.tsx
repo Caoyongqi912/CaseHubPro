@@ -3,26 +3,27 @@ import { Card, Col, Row, Tabs } from 'antd';
 import { API } from '@/api';
 import PostmanBody from '@/pages/Case/CaseAPI/component/Postman/PostmanBody';
 import CaseAssertTable from '@/pages/Case/CaseAPI/component/Postman/CaseAssertTable';
-import CaseVariableTable from '@/pages/Case/CaseAPI/component/Postman/CaseExtractTable';
 import {
-  setAsserts,
-  setBody,
-  setExtract,
+  SetAsserts,
+  SetBody,
+  SetExtract,
   SetFormInstance,
-  setHeaders,
-  setParams,
-} from '@/pages/Case/CaseAPI/func';
+  SetHeaders,
+  SetParams,
+} from '@/pages/Case/CaseAPI/MyHook/func';
+import CaseExtractTable from '@/pages/Case/CaseAPI/component/Postman/CaseExtractTable';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
   setFormInstance: SetFormInstance;
-  SH: setHeaders;
-  SB: setBody;
-  SA: setAsserts;
-  SE: setExtract;
-  SP: setParams;
-  extracts: any;
-  asserts: any;
+  SetHeaders: SetHeaders;
+  SetBody: SetBody;
+  SetAsserts: SetAsserts;
+  SetExtracts: SetExtract;
+  SetParams: SetParams;
+  stepInfo: any;
+  ExtractsRef: any;
+  AssertsRef: any;
   setResponse: any;
   step: number;
   apiStepDetail?: any;
@@ -31,6 +32,7 @@ interface SelfProps {
 const { TabPane } = Tabs;
 
 const Postman: FC<SelfProps> = (props) => {
+  const { SetAsserts, SetExtracts } = props;
   const [activeKey, setActiveKey] = useState('3');
   return (
     <>
@@ -53,10 +55,10 @@ const Postman: FC<SelfProps> = (props) => {
           </Row>
         </TabPane>
         <TabPane key="4" tab={<span>出参提取</span>}>
-          <CaseVariableTable {...props} SE={props.SE} />
+          <CaseExtractTable {...props} SetExtracts={SetExtracts} />
         </TabPane>
         <TabPane key="5" tab={<span>断言</span>}>
-          <CaseAssertTable {...props} SA={props.SA} />
+          <CaseAssertTable {...props} SetAsserts={SetAsserts} />
         </TabPane>
       </Tabs>
     </>

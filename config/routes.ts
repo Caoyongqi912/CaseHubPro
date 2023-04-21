@@ -88,13 +88,13 @@ export default [
       {
         path: '/interface/caseApi',
         name: '接口用例',
-        component: '@/pages/Case/CaseAPI/CaseApi',
+        component: '@/pages/Case/CaseAPI',
       },
       {
         path: '/interface/caseApi/detail/projectID=:projectID&casePartID=:casePartID&uid=:uid',
         name: '接口详情',
         hideInMenu: true,
-        component: '@/pages/Case/CaseAPI/apiDetail/ApiDetail',
+        component: '@/pages/Case/CaseAPI/ApiDetail',
       },
       {
         path: '/interface/scriptList',

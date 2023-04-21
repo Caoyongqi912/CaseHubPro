@@ -9,27 +9,26 @@ import React, {
 import { Steps, Col, Row, Table, Tabs, Button, Card, FormInstance } from 'antd';
 import { API } from '@/api';
 import Postman from '@/pages/Case/CaseAPI/component/Postman/Postman';
-import CodeEditor from '@/components/CodeEditor';
 import {
-  setAsserts,
-  setBody,
-  setExtract,
+  SetAsserts,
+  SetBody,
+  SetExtract,
   SetFormInstance,
-  setHeaders,
-  setParams,
-} from '@/pages/Case/CaseAPI/func';
+  SetHeaders,
+  SetParams,
+} from '@/pages/Case/CaseAPI/MyHook/func';
 import TestResult from '@/pages/Case/CaseAPI/component/Result/TestResult';
 
 interface SelfProps {
   caseInfo: API.IAPICaseInfoForm[];
   setFormInstance: SetFormInstance;
-  SH: setHeaders;
-  SB: setBody;
-  SA: setAsserts;
-  SE: setExtract;
-  SP: setParams;
-  extracts: any;
-  asserts: any;
+  SetHeaders: SetHeaders;
+  SetBody: SetBody;
+  SetAsserts: SetAsserts;
+  SetExtracts: SetExtract;
+  SetParams: SetParams;
+  ExtractsRef: any;
+  AssertsRef: any;
   stepInfo: any;
   apiStepsDetail?: API.IInterfaceStep[];
 }
@@ -45,7 +44,15 @@ interface ResponseProps extends API.IObjGet {
 }
 
 const ApiCaseBottom: FC<SelfProps> = (props) => {
-  const { stepInfo, SH, SB, SP, SE, SA, apiStepsDetail } = props;
+  const {
+    stepInfo,
+    SetAsserts,
+    SetBody,
+    SetParams,
+    SetExtracts,
+    SetHeaders,
+    apiStepsDetail,
+  } = props;
   const [current, setCurrent] = useState(0);
   let uniqueKey = useRef(0);
   const [response, setResponse] = useState<ResponseProps>({});
@@ -109,11 +116,11 @@ const ApiCaseBottom: FC<SelfProps> = (props) => {
   const delStep = () => {
     steps.splice(current, 1);
     stepInfo.current.splice(current, 1);
-    SH(current, null, true);
-    SB(current, null, true);
-    SA(current, null, true);
-    SP(current, null, true);
-    SE(current, null, true);
+    SetHeaders(current, null, true);
+    SetBody(current, null, true);
+    SetAsserts(current, null, true);
+    SetParams(current, null, true);
+    SetExtracts(current, null, true);
     setSteps(arrRef.current);
     setCurrent(current - 1);
   };

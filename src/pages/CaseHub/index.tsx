@@ -4,6 +4,7 @@ import 'react-splitter-layout/lib/index.css';
 import { Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import CaseRightComponent from '@/components/CaseRightComponent';
+import CaseHubTable from '@/pages/CaseHub/component/CaseHubTable';
 
 const Index = () => {
   const splitPaneRef = useRef<SplitterLayout>(null);
@@ -34,9 +35,10 @@ const Index = () => {
             setCurrentCasePartID={setCurrentCasePartID}
           />
 
-          <Card>
-            <div style={{ backgroundColor: 'green' }}>右侧面板</div>
-          </Card>
+          <CaseHubTable
+            projectID={selectedProject}
+            currentCasePartID={currentCasePartID}
+          />
         </SplitterLayout>
       </Card>
     </PageContainer>

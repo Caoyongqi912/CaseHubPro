@@ -4,14 +4,12 @@ import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import { API } from '@/api';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
 import { addApiCase } from '@/api/interface';
-import {
-  setAsserts,
-  setBody,
-  setExtract,
-  SetFormInstance,
-  setHeaders,
-  setParams,
-} from '@/pages/Case/CaseAPI/func';
+import { SetFormInstance } from '@/pages/Case/CaseAPI/MyHook/func';
+import useHeaders from '@/pages/Case/CaseAPI/MyHook/useHeaders';
+import useParams from '@/pages/Case/CaseAPI/MyHook/useParams';
+import useBody from '@/pages/Case/CaseAPI/MyHook/useBody';
+import useExtract from '@/pages/Case/CaseAPI/MyHook/useExtract';
+import useAssert from '@/pages/Case/CaseAPI/MyHook/useAssert';
 
 interface SelfProps {
   casePartID: number;
@@ -23,63 +21,18 @@ const AddApiCase: FC<SelfProps> = (props) => {
   const [addCaseVisible, setAddCaseVisible] = useState<boolean>(false);
   const [infoForm] = Form.useForm<API.IInterface>();
   const stepsFormList = useRef<FormInstance[]>([]);
-  const headers = useRef<API.IHeaders[][]>([]);
-  const body = useRef<any>([]);
-  const params = useRef<API.IParams[][]>([]);
-  const extractList = useRef<API.IExtract[][]>([]);
-  const assertList = useRef<API.IAssertList[][]>([]);
+  const [HeadersRef, SetHeaders] = useHeaders();
+  const [ParamsRef, SetParams] = useParams();
+  const [BodyRef, SetBody] = useBody();
+  const [ExtractsRef, SetExtracts] = useExtract();
+  const [AssertsRef, SetAsserts] = useAssert();
 
   const setFormInstance: SetFormInstance = (form: FormInstance) => {
     stepsFormList.current.push(form);
   };
-  const setH: setHeaders = (step, header, del) => {
-    if (del) {
-      headers.current.splice(step, 1);
-    } else {
-      headers.current[step] = header!;
-    }
-  };
-  const setP: setParams = (step, param, del) => {
-    if (del) {
-      params.current.splice(step, 1);
-    } else {
-      params.current[step] = param!;
-    }
-  };
-  const setB: setBody = (step, b, del) => {
-    if (del) {
-      body.current.splice(step, 1);
-    } else {
-      body.current[step] = b!;
-    }
-  };
-  const setA: setAsserts = (step, asserts, del) => {
-    if (del) {
-      assertList.current.splice(step, 1);
-    } else {
-      assertList.current[step] = asserts!;
-    }
-  };
-  const setE: setExtract = (step, extract, del) => {
-    if (del) {
-      assertList.current.splice(step, 1);
-    }
-    {
-      extractList.current[step] = extract!;
-    }
-  };
 
   /**
    * 提交新增用例
-   * { title:str,level:str,status:str,http:str,desc:str
-   *   steps:{step:1,name:str,desc:str,url:str,method:str,
-   *          headers:{key:str,val:str,desc:str}[],
-   *          params:{key:str,val:str,desc:str}[],
-   *          body:{},
-   *          auth:{},
-   *          asserts:[ IAssertList[]]
-   *          extracts:[IExtract{}]
-   *        }[]
    */
   const onSubmit = async () => {
     const data = await infoForm.validateFields();
@@ -87,11 +40,11 @@ const AddApiCase: FC<SelfProps> = (props) => {
     stepsFormList.current.forEach((form: FormInstance, index) => {
       const info = {
         ...form.getFieldsValue(),
-        params: params.current[index],
-        headers: headers.current[index],
-        body: body.current[index],
-        asserts: assertList.current[index],
-        extracts: extractList.current[index],
+        params: ParamsRef.current[index],
+        headers: HeadersRef.current[index],
+        body: BodyRef.current[index],
+        asserts: AssertsRef.current[index],
+        extracts: ExtractsRef.current[index],
         step: index,
       };
       steps.push(info);
@@ -122,13 +75,13 @@ const AddApiCase: FC<SelfProps> = (props) => {
           setFormInstance={setFormInstance}
           onSubmit={onSubmit}
           caseInfo={caseInfo}
-          SH={setH}
-          SA={setA}
-          SB={setB}
-          SE={setE}
-          SP={setP}
-          asserts={assertList}
-          extracts={extractList}
+          SetHeaders={SetHeaders}
+          SetAsserts={SetAsserts}
+          SetBody={SetBody}
+          SetExtracts={SetExtracts}
+          SetParams={SetParams}
+          AssertsRef={AssertsRef}
+          ExtractsRef={ExtractsRef}
           stepInfo={stepsFormList}
         />
       </Drawer>

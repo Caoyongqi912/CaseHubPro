@@ -1,46 +1,42 @@
 import React, { FC, useEffect, useState } from 'react';
+import { Button, Card, Col, Form, Input, Radio, Row, Select, Tabs } from 'antd';
 import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  message,
-  Radio,
-  Row,
-  Select,
-  Tabs,
-} from 'antd';
-import {
-  setBody,
+  SetBody,
   SetFormInstance,
-  setHeaders,
-  setParams,
-} from '@/pages/Case/CaseAPI/func';
+  SetHeaders,
+  SetParams,
+} from '@/pages/Case/CaseAPI/MyHook/func';
 import { runApiDemo } from '@/api/interface';
 import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
 import HeaderTable from '@/pages/Case/CaseAPI/component/Postman/HeaderTable';
 import ParamsTable from '@/pages/Case/CaseAPI/component/Postman/ParamsTable';
 import { queryHost } from '@/api/host';
-import AddHost from '@/pages/Project/Host/components/AddHost';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 interface SelfProps {
   setFormInstance: SetFormInstance;
-  SH: setHeaders;
-  SB: setBody;
-  SP: setParams;
+  SetHeaders: SetHeaders;
+  SetBody: SetBody;
+  SetParams: SetParams;
   step: number;
   setResponse: any;
   apiStepDetail?: any;
-  extracts: any;
-  asserts: any;
+  ExtractsRef: any;
+  AssertsRef: any;
 }
 
 const PostmanBody: FC<SelfProps> = (props) => {
-  const { apiStepDetail, step, extracts, asserts } = props;
+  const {
+    apiStepDetail,
+    step,
+    ExtractsRef,
+    AssertsRef,
+    SetParams,
+    SetHeaders,
+    SetBody,
+  } = props;
   const { setFormInstance, setResponse } = props;
   const [form] = Form.useForm();
   const [method, setMethod] = useState('GET');
@@ -55,20 +51,52 @@ const PostmanBody: FC<SelfProps> = (props) => {
     headers.map((item: any) => item.id),
   );
   const [hosts, setHosts] = useState<{ value: string; label: string }[]>([]);
+
+  /**
+   * 请求hosts setHosts
+   */
   useEffect(() => {
-    let _host: { value: string; label: string }[] = [];
     queryHost().then(({ code, data }) => {
       if (code === 0) {
-        data.forEach((v, index) => {
-          _host.push({
-            value: v.host + (v.port ? ':' + v.port : ''),
-            label: v.name,
-          });
-        });
+        const _host = data.map((v) => ({
+          value: `${v.host}${v.port ? `:${v.port}` : ''}`,
+          label: v.name,
+        }));
         setHosts(_host);
       }
     });
   }, []);
+
+  /**
+   * apiStepDetail 存在 则渲染表单
+   */
+  useEffect(() => {
+    if (apiStepDetail) {
+      form.setFieldsValue(apiStepDetail);
+      setHeaders(apiStepDetail.headers);
+      setParamsData(apiStepDetail.params);
+      if (apiStepDetail.body) {
+        setBody(apiStepDetail.body);
+        setBodyType(1);
+      }
+    }
+    setFormInstance(form);
+  }, [apiStepDetail]);
+
+  /**
+   * header body params 更改
+   */
+  useEffect(() => {
+    if (headers) {
+      SetHeaders(step, headers);
+    }
+    if (body) {
+      SetBody(step, body);
+    }
+    if (paramsData) {
+      SetParams(step, paramsData);
+    }
+  }, [headers, body, paramsData]);
 
   const selectBefore = (
     <Form.Item name="host" noStyle>
@@ -101,31 +129,6 @@ const PostmanBody: FC<SelfProps> = (props) => {
       ) : null}
     </Form.Item>
   );
-  useEffect(() => {
-    if (apiStepDetail) {
-      form.setFieldsValue(props.apiStepDetail);
-      setHeaders(apiStepDetail.headers);
-      setParamsData(apiStepDetail.params);
-      if (apiStepDetail.body) {
-        setBody(apiStepDetail.body);
-        setBodyType(1);
-      }
-    }
-    setFormInstance(form);
-  }, [apiStepDetail]);
-
-  useEffect(() => {
-    if (headers) {
-      props.SH(step, headers);
-    }
-    if (body) {
-      props.SB(step, body);
-    }
-    if (paramsData) {
-      props.SP(step, paramsData);
-    }
-  }, [headers, body, paramsData]);
-
   const bodyChange = (value: any) => {
     setBody(JSON.parse(value));
   };
@@ -168,13 +171,18 @@ const PostmanBody: FC<SelfProps> = (props) => {
       body: body ? body : null,
     };
     info.step.extracts =
-      extracts?.current[step] || apiStepDetail?.extracts || [];
-    info.step.asserts = asserts?.current[step] || apiStepDetail?.asserts || [];
+      ExtractsRef?.current[step] ?? apiStepDetail?.extracts ?? [];
+    info.step.asserts =
+      AssertsRef?.current[step] ?? apiStepDetail?.asserts ?? [];
     const { code, data } = await runApiDemo(info);
     if (code === 0) {
       setResponse(data);
     }
   };
+
+  /**
+   * 请求方法枚举
+   */
   const reqMethod = (
     <>
       <Option key="GET" value="GET">

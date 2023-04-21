@@ -1,13 +1,13 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card } from 'antd';
 import CaseRightComponent from '@/components/CaseRightComponent';
 import CaseApiLeft from '@/pages/Case/CaseAPI/component/CaseApiLeft';
 import SplitterLayout from 'react-splitter-layout';
+import 'react-splitter-layout/lib/index.css';
 
-const CaseApi: FC = () => {
+const Index: FC = () => {
   const splitPaneRef = useRef<SplitterLayout>(null);
-
   const [currentCasePartID, setCurrentCasePartID] = useState<
     number | undefined
   >();
@@ -34,6 +34,7 @@ const CaseApi: FC = () => {
             setSelectedProject={setSelectedProject}
             setCurrentCasePartID={setCurrentCasePartID}
           />
+
           <CaseApiLeft
             currentCasePartID={currentCasePartID}
             projectID={selectedProject}
@@ -44,4 +45,4 @@ const CaseApi: FC = () => {
   );
 };
 
-export default CaseApi;
+export default Index;

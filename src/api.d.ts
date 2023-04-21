@@ -185,6 +185,25 @@ declare namespace API {
     id: number;
     uid: string;
   }
+
+  interface ICaseInfo {
+    id: number;
+    uid: string;
+    projectID: number;
+    casePartID: number;
+    title: string;
+    creatorID: number;
+    creatorName: string;
+    updaterID: number;
+    updaterName: string;
+    desc: string;
+    status: string;
+    info: IObjGet;
+    tag: string;
+    mark?: string;
+    case_type: string;
+    case_level: string;
+  }
 }
 
 declare namespace ResponseAPI {

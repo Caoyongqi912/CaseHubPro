@@ -1,15 +1,16 @@
 import React, { FC, useEffect, useState } from 'react';
 import { assertColumns } from '@/pages/Case/CaseAPI/component/Postman/CaseAssertTable/columns';
 import EditableTable from '@/components/Table/EditableTable';
+import { SetAsserts } from '@/pages/Case/CaseAPI/MyHook/func';
 
 interface SelfProps {
-  SA: any;
+  SetAsserts: SetAsserts;
   apiStepDetail?: any;
   step: number;
 }
 
 const Index: FC<SelfProps> = (props) => {
-  const { apiStepDetail, step } = props;
+  const { apiStepDetail, step, SetAsserts } = props;
   const [assertData, setAssertData] = useState([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     assertData.map((item: any) => item.id),
@@ -22,7 +23,7 @@ const Index: FC<SelfProps> = (props) => {
 
   useEffect(() => {
     if (assertData && assertData.length > 0) {
-      props.SA(step, assertData);
+      SetAsserts(step, assertData);
     }
   }, [assertData]);
 

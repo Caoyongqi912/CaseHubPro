@@ -1,23 +1,26 @@
 import { API } from '@/api';
 import { FormInstance } from 'antd';
 
-export type setHeaders = (
+export type SetHeaders = (
   step: number,
   header: API.IHeaders[] | null,
   del?: boolean,
 ) => void;
-export type setParams = (
+
+export type SetParams = (
   step: number,
   params: API.IParams[] | null,
   del?: boolean,
 ) => void;
-export type setBody = (step: number, body: any | null, del?: boolean) => void;
-export type setAsserts = (
+
+export type SetBody = (step: number, body: any, del?: boolean) => void;
+export type SetAsserts = (
   step: number,
   asserts: API.IAssertList[] | null,
   del?: boolean,
 ) => void;
-export type setExtract = (
+
+export type SetExtract = (
   step: number,
   extract: API.IExtract[] | null,
   del?: boolean,

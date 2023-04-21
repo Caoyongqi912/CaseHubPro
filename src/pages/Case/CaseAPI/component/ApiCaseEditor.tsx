@@ -3,52 +3,55 @@ import { Button, Card, Col, Row, Form, Input, FormInstance } from 'antd';
 import { API } from '@/api';
 import ApiCaseBottom from '@/pages/Case/CaseAPI/component/ApiCaseBottom';
 import {
-  setAsserts,
-  setBody,
-  setExtract,
+  SetExtract,
+  SetBody,
+  SetAsserts,
   SetFormInstance,
-  setHeaders,
-  setParams,
-} from '@/pages/Case/CaseAPI/func';
+  SetHeaders,
+  SetParams,
+} from '@/pages/Case/CaseAPI/MyHook/func';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
-
-const getComponent = (
-  type: string,
-  placeholder: string,
-  component: any,
-  read: boolean,
-) => {
-  if (component) {
-    return component({ disabled: read });
-  }
-  if (type === 'input') {
-    return <Input placeholder={placeholder} disabled={read} />;
-  }
-  if (type === 'textarea') {
-    return <TextArea placeholder={placeholder} disabled={read} />;
-  }
-  return null;
-};
 
 interface SelfProps {
   onSubmit: Function;
   form: FormInstance<API.IInterface>;
   caseInfo: API.IAPICaseInfoForm[];
   setFormInstance: SetFormInstance;
-  SH: setHeaders;
-  SB: setBody;
-  SA: setAsserts;
-  SE: setExtract;
-  SP: setParams;
+  SetHeaders: SetHeaders;
+  SetBody: SetBody;
+  SetAsserts: SetAsserts;
+  SetExtracts: SetExtract;
+  SetParams: SetParams;
   stepInfo: any;
-  extracts: any;
-  asserts: any;
+  ExtractsRef: any;
+  AssertsRef: any;
   apiStepsDetail?: API.IInterfaceStep[];
   isDetail?: boolean;
   run?: any;
 }
+
+/**
+ * 通过类型 返回component
+ * @param type 类型
+ * @param placeholder 默认
+ * @param component 组件
+ * @param read 可读
+ */
+const getComponent = (
+  type: string,
+  component: any,
+  read: boolean,
+  placeholder?: string,
+) => {
+  const baseProps = { placeholder, disabled: read };
+  const components: API.IObjGet = {
+    input: <Input {...baseProps} />,
+    textarea: <TextArea {...baseProps} />,
+  };
+  return component ? component(baseProps) : components[type] || null;
+};
 
 const ApiCaseEditor: FC<SelfProps> = (props) => {
   const { onSubmit, form, caseInfo, run, isDetail } = props;
@@ -59,63 +62,55 @@ const ApiCaseEditor: FC<SelfProps> = (props) => {
   const setD = (d: boolean) => {
     setDetail(d);
   };
-  const cardExtra = (
+
+  const cardExtra = detail ? (
     <>
-      {detail ? (
-        <>
-          <Button type={'primary'} style={{ marginRight: 5 }} onClick={run!}>
-            RUN
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              setD(false);
-            }}
-          >
-            修改
-          </Button>
-        </>
-      ) : (
-        <Button
-          type="primary"
-          onClick={async () => {
-            setD(true);
-            await onSubmit();
-          }}
-        >
-          提交
-        </Button>
-      )}
+      <Button type={'primary'} style={{ marginRight: 5 }} onClick={run!}>
+        RUN
+      </Button>
+      <Button
+        type="primary"
+        onClick={() => {
+          setD(false);
+        }}
+      >
+        修改
+      </Button>
     </>
+  ) : (
+    <Button
+      type="primary"
+      onClick={async () => {
+        setD(true);
+        await onSubmit();
+      }}
+    >
+      提交
+    </Button>
   );
+
+  const fields = caseInfo.map((field) => (
+    <Col span={field.span || 16}>
+      <FormItem
+        label={field.label}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        initialValue={field.default}
+        rules={[{ required: field.required, message: field.message }]}
+        name={field.name}
+        valuePropName="value"
+      >
+        {getComponent(field.type, field.component, detail!, field.placeholder)}
+      </FormItem>
+    </Col>
+  ));
 
   return (
     <Form form={form}>
       <Card title={cardTitle} extra={cardExtra} style={{ marginTop: 5 }}>
         {/*基本信息*/}
         <Card>
-          <Row gutter={24}>
-            {caseInfo.map((item) => (
-              <Col span={item.span || 16}>
-                <FormItem
-                  label={item.label}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                  initialValue={item.default}
-                  rules={[{ required: item.required, message: item.message }]}
-                  name={item.name}
-                  valuePropName={'value'}
-                >
-                  {getComponent(
-                    item.type,
-                    item.placeholder!,
-                    item.component,
-                    detail!,
-                  )}
-                </FormItem>
-              </Col>
-            ))}
-          </Row>
+          <Row gutter={24}>{fields}</Row>
         </Card>
         {/*详情信息*/}
         <Row style={{ marginTop: 10 }}>

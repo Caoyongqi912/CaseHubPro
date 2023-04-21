@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { useParams } from 'umi';
+import { useParams as umiUseParams } from 'umi';
 import { getApiDetail, putApi, runApi } from '@/api/interface';
 import { API } from '@/api';
 import { Form, FormInstance, message, Spin } from 'antd';
@@ -7,14 +7,12 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ApiCaseEditor from '@/pages/Case/CaseAPI/component/ApiCaseEditor';
 import caseInfo from '@/pages/Case/CaseAPI/component/caseInfoColumns';
 import Result from '@/pages/Case/CaseAPI/component/Result/Result';
-import {
-  setAsserts,
-  setBody,
-  setExtract,
-  SetFormInstance,
-  setHeaders,
-  setParams,
-} from '@/pages/Case/CaseAPI/func';
+import { SetFormInstance } from '@/pages/Case/CaseAPI/MyHook/func';
+import useHeaders from '@/pages/Case/CaseAPI/MyHook/useHeaders';
+import useBody from '@/pages/Case/CaseAPI/MyHook/useBody';
+import useExtract from '@/pages/Case/CaseAPI/MyHook/useExtract';
+import useAssert from '@/pages/Case/CaseAPI/MyHook/useAssert';
+import useParams from '@/pages/Case/CaseAPI/MyHook/useParams';
 
 interface DetailParams {
   uid: string;
@@ -22,8 +20,8 @@ interface DetailParams {
   casePartID: string;
 }
 
-const ApiDetail: FC = () => {
-  const Api = useParams<DetailParams>();
+const Index: FC = () => {
+  const Api = umiUseParams<DetailParams>();
   const { uid, projectID, casePartID } = Api;
   const [load, setLoad] = useState<boolean>(true);
   // 基本信息
@@ -34,59 +32,20 @@ const ApiDetail: FC = () => {
   );
   // 步骤基本信息
   const stepsFormList = useRef<FormInstance[]>([]);
-  // 每步请求头
-  const headers = useRef<API.IHeaders[][]>([]);
-  // 每步请求参数
-  const params = useRef<API.IParams[][]>([]);
-  // 每步请求体
-  const body = useRef<any>([]);
-  // 每步断言
-  const assertList = useRef<API.IAssertList[][]>([]);
-  // 每步提取
-  const extractList = useRef<API.IExtract[][]>([]);
   const [resultModal, setResultModal] = useState(false);
   const [responseUid, setResponseUid] = useState<string>();
+  const [HeadersRef, SetHeaders] = useHeaders();
+  const [ParamsRef, SetParams] = useParams();
+  const [BodyRef, SetBody] = useBody();
+  const [ExtractsRef, SetExtracts] = useExtract();
+  const [AssertsRef, SetAsserts] = useAssert();
 
   const setFormInstance: SetFormInstance = (form: FormInstance) => {
     stepsFormList.current.push(form);
   };
-  const setH: setHeaders = (step, header, del) => {
-    if (del) {
-      headers.current.splice(step, 1);
-    } else {
-      headers.current[step] = header!;
-    }
-  };
-  const setP: setParams = (step, param, del) => {
-    if (del) {
-      params.current.splice(step, 1);
-    } else {
-      params.current[step] = param!;
-    }
-  };
-  const setB: setBody = (step, b, del) => {
-    if (del) {
-      body.current.splice(step, 1);
-    } else {
-      body.current[step] = b!;
-    }
-  };
-  const setA: setAsserts = (step, asserts, del) => {
-    if (del) {
-      assertList.current.splice(step, 1);
-    } else {
-      assertList.current[step] = asserts!;
-    }
-  };
-  const setE: setExtract = (step, extract, del) => {
-    if (del) {
-      extractList.current.splice(step, 1);
-    } else {
-      extractList.current[step] = extract!;
-    }
-  };
+
   useEffect(() => {
-    fetchApiDetail();
+    fetchApiDetail().then();
   }, []);
 
   const fetchApiDetail = async () => {
@@ -106,13 +65,13 @@ const ApiDetail: FC = () => {
     stepsFormList.current.forEach((form: FormInstance, index: number) => {
       const info = {
         ...form.getFieldsValue(),
-        params: params.current[index],
-        headers: headers.current[index],
-        body: body.current[index],
+        params: ParamsRef.current[index],
+        headers: HeadersRef.current[index],
+        body: BodyRef.current[index],
         asserts:
-          assertList.current[index] || apiStepsDetail[index]?.asserts || [],
+          AssertsRef.current[index] || apiStepsDetail[index]?.asserts || [],
         extracts:
-          extractList.current[index] || apiStepsDetail[index]?.extracts || [],
+          ExtractsRef.current[index] || apiStepsDetail[index]?.extracts || [],
         step: index,
       };
       steps.push(info);
@@ -151,13 +110,13 @@ const ApiDetail: FC = () => {
           form={caseInfoFrom}
           caseInfo={caseInfo}
           setFormInstance={setFormInstance}
-          SH={setH}
-          SB={setB}
-          SA={setA}
-          SE={setE}
-          SP={setP}
-          asserts={assertList}
-          extracts={extractList}
+          SetHeaders={SetHeaders}
+          SetAsserts={SetAsserts}
+          SetBody={SetBody}
+          SetExtracts={SetExtracts}
+          SetParams={SetParams}
+          AssertsRef={AssertsRef}
+          ExtractsRef={ExtractsRef}
           stepInfo={stepsFormList}
           apiStepsDetail={apiStepsDetail}
           isDetail={true}
@@ -168,4 +127,4 @@ const ApiDetail: FC = () => {
   );
 };
 
-export default ApiDetail;
+export default Index;

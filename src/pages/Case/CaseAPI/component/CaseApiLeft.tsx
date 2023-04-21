@@ -183,11 +183,11 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
             request={async (param: API.ISearch) => {
               param.casePartID = currentCasePartID;
               const { code, data, msg } = await pageApiCase(param);
-              if (code === 0) setCurrentCaseAPIs(data.data.items);
+              if (code === 0) setCurrentCaseAPIs(data.items);
               return {
                 data: data.items,
                 total: data.pageInfo.total,
-                success: msg,
+                success: code === 0,
                 pageSize: data.pageInfo.page,
                 current: data.pageInfo.limit,
               };
@@ -208,7 +208,7 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
             cardBordered
             search={{
               labelWidth: 'auto',
-              span: 6,
+              span: 4,
             }}
             options={{
               setting: {
