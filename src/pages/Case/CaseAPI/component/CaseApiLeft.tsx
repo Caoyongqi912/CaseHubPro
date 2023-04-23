@@ -1,4 +1,4 @@
-import React, { useRef, FC, useState, useEffect } from 'react';
+import React, { useRef, FC, useState, useEffect, useCallback } from 'react';
 import { Col, Divider, message, Modal, Row, Tag } from 'antd';
 import {
   ActionType,
@@ -35,13 +35,34 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
   const [resultModal, setResultModal] = useState<boolean>(false);
   const [selectKeys, setSelectKeys] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (projectID) setCurrentCaseAPIs([]);
-  }, [projectID]);
+  // useEffect(() => {
+  //   if (projectID) setCurrentCaseAPIs([]);
+  // }, [projectID]);
+
+  const fetchApisData = useCallback(
+    async (params: API.ISearch) => {
+      if (!currentCasePartID) return {};
+      pageApiCase({ casePartID: currentCasePartID, ...params }).then(
+        ({ code, data }) => {
+          if (code === 0) {
+            return {
+              data: data.items,
+              total: data.pageInfo.total,
+              success: true,
+              pageSize: data.pageInfo.page,
+              current: data.pageInfo.limit,
+            };
+          }
+          return {};
+        },
+      );
+    },
+    [currentCasePartID],
+  );
 
   useEffect(() => {
-    if (currentCasePartID) queryCaseApis().then();
-  }, [currentCasePartID]);
+    actionRef.current?.reload();
+  }, [currentCasePartID, fetchApisData]);
 
   // 根据 所选partID 查询 apiCase列
   const queryCaseApis = async () => {
@@ -180,18 +201,8 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
             formRef={ref}
             rowKey={(record) => record.uid}
             actionRef={actionRef}
-            request={async (param: API.ISearch) => {
-              param.casePartID = currentCasePartID;
-              const { code, data, msg } = await pageApiCase(param);
-              if (code === 0) setCurrentCaseAPIs(data.items);
-              return {
-                data: data.items,
-                total: data.pageInfo.total,
-                success: code === 0,
-                pageSize: data.pageInfo.page,
-                current: data.pageInfo.limit,
-              };
-            }}
+            // @ts-ignore
+            request={fetchApisData}
             dataSource={currentCaseAPIs}
             rowSelection={{
               onChange: (keys) => {

@@ -34,10 +34,9 @@ const Index = () => {
             setSelectedProject={setSelectedProject}
             setCurrentCasePartID={setCurrentCasePartID}
           />
-
           <CaseHubTable
             projectID={selectedProject}
-            currentCasePartID={currentCasePartID}
+            currentCasePartID={currentCasePartID!}
           />
         </SplitterLayout>
       </Card>

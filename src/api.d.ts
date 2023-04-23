@@ -191,18 +191,16 @@ declare namespace API {
     uid: string;
     projectID: number;
     casePartID: number;
-    title: string;
-    creatorID: number;
+    case_title: string;
+    case_desc: string;
+    case_info: IObjGet;
+    case_mark?: string;
+    case_type: 'COMMENT' | 'SMOKE';
+    case_level: 'P1' | 'P2' | 'P3' | 'P4';
+    creator: number;
     creatorName: string;
-    updaterID: number;
-    updaterName: string;
-    desc: string;
-    status: string;
-    info: IObjGet;
-    tag: string;
-    mark?: string;
-    case_type: string;
-    case_level: string;
+    updaterID?: number;
+    updaterName?: string;
   }
 }
 
