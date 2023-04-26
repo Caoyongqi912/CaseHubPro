@@ -14,7 +14,7 @@ import useAssert from '@/pages/Case/CaseAPI/MyHook/useAssert';
 interface SelfProps {
   casePartID: number;
   projectID: number;
-  queryCaseApis: Function;
+  actionRef: any;
 }
 
 const AddApiCase: FC<SelfProps> = (props) => {
@@ -56,7 +56,7 @@ const AddApiCase: FC<SelfProps> = (props) => {
     if (res.code === 0) {
       message.success(res.msg);
       setAddCaseVisible(false);
-      await props.queryCaseApis();
+      props.actionRef.current?.reload();
     }
   };
 

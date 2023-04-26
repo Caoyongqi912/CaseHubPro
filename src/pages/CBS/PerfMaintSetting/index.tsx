@@ -25,7 +25,7 @@ const Index = () => {
     getPerfSetting({ city: city }).then(({ code, data }) => {
       if (code === 0) {
         setRespData(data);
-        const SET_INFO_ID_OPT = data.map(({ DEPTID }) => ({
+        const SET_INFO_ID_OPT = data.map(({ DEPTID }: any) => ({
           label: DEPTID,
           value: DEPTID,
         }));

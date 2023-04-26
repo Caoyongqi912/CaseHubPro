@@ -58,7 +58,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
   useEffect(() => {
     queryHost().then(({ code, data }) => {
       if (code === 0) {
-        const _host = data.map((v) => ({
+        const _host = data.map((v: any) => ({
           value: `${v.host}${v.port ? `:${v.port}` : ''}`,
           label: v.name,
         }));

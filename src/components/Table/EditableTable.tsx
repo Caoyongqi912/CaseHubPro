@@ -33,15 +33,6 @@ const EditableTable: FC<SelfProps> = ({
       rowKey="id"
       value={dataSource}
       onChange={setDataSource}
-      // form={{
-      //   onValuesChange:(_,allValue) => {
-      //     const { dataList, onChange } = allValue;
-      //     console.log(dataList);
-      //     console.log(onChange);
-      //     setDataSource(dataList);
-      //     onChange && onChange(dataList); // 调用 onChange 函数更新表格数据
-      //   }
-      // }}
       recordCreatorProps={{
         newRecordType: 'dataSource',
         record: () => ({

@@ -18,7 +18,7 @@ const Index: FC = () => {
   return (
     <PageContainer title={false}>
       <Card
-        style={{ height: '100%', minHeight: 600 }}
+        style={{ height: '100%', minHeight: 800 }}
         bodyStyle={{ padding: 0 }}
         bordered={false}
       >
@@ -36,7 +36,7 @@ const Index: FC = () => {
           />
 
           <CaseApiLeft
-            currentCasePartID={currentCasePartID}
+            currentCasePartID={currentCasePartID!}
             projectID={selectedProject}
           />
         </SplitterLayout>

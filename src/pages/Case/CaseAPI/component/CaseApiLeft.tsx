@@ -22,40 +22,40 @@ import Result from '@/pages/Case/CaseAPI/component/Result/Result';
 
 interface SelfProps {
   projectID?: number;
-  currentCasePartID?: number;
+  currentCasePartID: number;
 }
 
-const CaseApiLeft: FC<SelfProps> = (props) => {
-  const { projectID, currentCasePartID } = props;
-
-  const ref = useRef<ProFormInstance>();
+const CaseApiLeft: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
-  const [currentCaseAPIs, setCurrentCaseAPIs] = useState([]);
+  const [currentAPIs, setCurrentAPIs] = useState([]);
   const [responseUid, setResponseUid] = useState<string>();
   const [resultModal, setResultModal] = useState<boolean>(false);
   const [selectKeys, setSelectKeys] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   if (projectID) setCurrentCaseAPIs([]);
-  // }, [projectID]);
+  useEffect(() => {
+    if (projectID) setCurrentAPIs([]);
+  }, [projectID]);
 
   const fetchApisData = useCallback(
     async (params: API.ISearch) => {
-      if (!currentCasePartID) return {};
-      pageApiCase({ casePartID: currentCasePartID, ...params }).then(
-        ({ code, data }) => {
-          if (code === 0) {
-            return {
-              data: data.items,
-              total: data.pageInfo.total,
-              success: true,
-              pageSize: data.pageInfo.page,
-              current: data.pageInfo.limit,
-            };
-          }
-          return {};
-        },
-      );
+      if (!currentCasePartID) return undefined;
+      const { code, data } = await pageApiCase({
+        casePartID: currentCasePartID,
+        ...params,
+      });
+      if (code === 0) {
+        setCurrentAPIs(data.items);
+        return {
+          data: data.items,
+          total: data.pageInfo.total,
+          success: true,
+        };
+      }
+      return {
+        data: [],
+        success: false,
+        total: 0,
+      };
     },
     [currentCasePartID],
   );
@@ -64,19 +64,11 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
     actionRef.current?.reload();
   }, [currentCasePartID, fetchApisData]);
 
-  // 根据 所选partID 查询 apiCase列
-  const queryCaseApis = async () => {
-    const { code, data } = await queryApiCaseByCasePartID({
-      casePartID: currentCasePartID!,
-    });
-    if (code === 0) setCurrentCaseAPIs(data);
-  };
-
   // 删除用例
   const delCaseApi = async (uid: string) => {
     const res = await delApiCase({ uid: uid });
     if (res.code === 0) message.success(res.msg);
-    await queryCaseApis();
+    actionRef.current?.reload();
   };
 
   const run = async (uid: string) => {
@@ -106,11 +98,12 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
       dataIndex: 'level',
       valueType: 'select',
       valueEnum: CONFIG.CASE_LEVEL_ENUM,
-      render: (text) => {
-        return <Tag color={'blue'}>{text}</Tag>;
-        // return <Tag color={CONFIG.RENDER_CASE_STATUS[text].color}>{
-        //   CONFIG.RENDER_CASE_STATUS[text].text
-        // }</Tag>;
+      render: (text, record) => {
+        return (
+          <Tag color={CONFIG.RENDER_CASE_LEVEL[record.level].color}>
+            {CONFIG.RENDER_CASE_LEVEL[record.level].text}
+          </Tag>
+        );
       },
     },
     {
@@ -195,51 +188,46 @@ const CaseApiLeft: FC<SelfProps> = (props) => {
         setModal={setResultModal}
         single={false}
       />
-      <Row style={{ marginTop: 16 }}>
-        <Col span={24}>
-          <ProTable
-            formRef={ref}
-            rowKey={(record) => record.uid}
+      <ProTable
+        rowKey={(record) => record.uid}
+        columns={columns}
+        actionRef={actionRef}
+        // @ts-ignore
+        request={fetchApisData}
+        dataSource={currentAPIs}
+        rowSelection={{
+          onChange: (keys) => {
+            setSelectKeys(keys as string[]);
+          },
+        }}
+        pagination={{
+          pageSize: 10,
+        }}
+        columnsState={{
+          persistenceKey: 'pro-table-singe-demos',
+          persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
+        }}
+        cardBordered
+        search={{
+          labelWidth: 'auto',
+          span: 4,
+        }}
+        options={{
+          setting: {
+            listsHeight: 400,
+          },
+          reload: true,
+        }}
+        bordered
+        toolBarRender={() => [
+          <RunGroup selectedKeys={selectKeys} />,
+          <AddApiCase
             actionRef={actionRef}
-            // @ts-ignore
-            request={fetchApisData}
-            dataSource={currentCaseAPIs}
-            rowSelection={{
-              onChange: (keys) => {
-                setSelectKeys(keys as string[]);
-              },
-            }}
-            pagination={{
-              pageSize: 10,
-            }}
-            columnsState={{
-              persistenceKey: 'pro-table-singe-demos',
-              persistenceType: 'localStorage', //持久化列的类类型， localStorage 设置在关闭浏览器后也是存在的，sessionStorage 关闭浏览器后会丢失 sessionStorage
-            }}
-            cardBordered
-            search={{
-              labelWidth: 'auto',
-              span: 4,
-            }}
-            options={{
-              setting: {
-                listsHeight: 400,
-              },
-              reload: true,
-            }}
-            bordered
-            columns={columns}
-            toolBarRender={() => [
-              <RunGroup selectedKeys={selectKeys} />,
-              <AddApiCase
-                queryCaseApis={queryCaseApis}
-                casePartID={currentCasePartID!}
-                projectID={projectID!}
-              />,
-            ]}
-          ></ProTable>
-        </Col>
-      </Row>
+            casePartID={currentCasePartID!}
+            projectID={projectID!}
+          />,
+        ]}
+      ></ProTable>
     </>
   );
 };

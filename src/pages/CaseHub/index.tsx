@@ -5,6 +5,7 @@ import { Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import CaseRightComponent from '@/components/CaseRightComponent';
 import CaseHubTable from '@/pages/CaseHub/component/CaseHubTable';
+import { ProCard } from '@ant-design/pro-components';
 
 const Index = () => {
   const splitPaneRef = useRef<SplitterLayout>(null);
@@ -17,8 +18,8 @@ const Index = () => {
 
   return (
     <PageContainer title={false}>
-      <Card
-        style={{ height: '100%', minHeight: 600 }}
+      <ProCard
+        style={{ height: '100%', minHeight: '900px' }}
         bodyStyle={{ padding: 0 }}
         bordered={false}
       >
@@ -35,11 +36,11 @@ const Index = () => {
             setCurrentCasePartID={setCurrentCasePartID}
           />
           <CaseHubTable
-            projectID={selectedProject}
+            projectID={selectedProject!}
             currentCasePartID={currentCasePartID!}
           />
         </SplitterLayout>
-      </Card>
+      </ProCard>
     </PageContainer>
   );
 };

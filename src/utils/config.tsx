@@ -13,7 +13,7 @@ export const CONFIG: API.IObjGet = {
   CASE_LEVEL_ENUM: {
     1: {
       text: 'P1',
-      level: 'P1',
+      status: 'P1',
     },
     2: {
       text: 'P2',
@@ -24,8 +24,8 @@ export const CONFIG: API.IObjGet = {
       status: 'P3',
     },
     4: {
-      text: 'P4',
-      status: 'P4',
+      text: 'P0',
+      status: 'P0',
     },
   },
   CASE_STATUS_ENUM: {
@@ -49,11 +49,39 @@ export const CONFIG: API.IObjGet = {
     },
     CLOSE: {
       color: 'red',
-      text: '已完成',
+      text: '已关闭',
     },
     NORMAL: {
       color: 'green',
       text: '正常',
+    },
+  },
+  RENDER_CASE_LEVEL: {
+    P0: {
+      color: 'magenta',
+      text: 'P0',
+    },
+    P1: {
+      color: 'red',
+      text: 'P1',
+    },
+    P2: {
+      color: 'blue',
+      text: 'P2',
+    },
+    P3: {
+      color: 'green',
+      text: 'P3',
+    },
+  },
+  RENDER_CASE_TYPE: {
+    COMMENT: {
+      color: 'green',
+      text: '普通用例',
+    },
+    SMOKE: {
+      color: 'blue',
+      text: '冒烟用例',
     },
   },
   // 用例状态
