@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
   ProForm,
   ProFormText,
@@ -7,9 +7,6 @@ import {
   ProFormTextArea,
   EditableProTable,
 } from '@ant-design/pro-components';
-import type { ProColumns } from '@ant-design/pro-components';
-// @ts-ignore
-import { useModel } from '@@/plugin-model/useModel';
 import { Form, message } from 'antd';
 import CaseInfoStepTable from '@/pages/CaseHub/component/CaseInfoStepTable';
 import { addCases } from '@/api/case';
@@ -49,7 +46,6 @@ const CaseForm: FC<SelfProps> = ({
   actionRef,
 }) => {
   const [form] = Form.useForm();
-  const { initialState } = useModel('@@initialState');
   const [caseInfoSource, setCaseInfoSource] = useState<DataSourceType[]>([]);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     caseInfoSource.map((item: any) => item.id),
@@ -62,7 +58,10 @@ const CaseForm: FC<SelfProps> = ({
     }
     const info: any = {
       ...formValue,
-      case_info: caseInfoSource,
+      case_info: caseInfoSource.map((item, index) => ({
+        ...item,
+        step: index + 1,
+      })),
       projectID: projectID,
       casePartID: casePartID,
     };
@@ -110,14 +109,6 @@ const CaseForm: FC<SelfProps> = ({
             <ProForm.Group title={'用例描述'} size={'large'}>
               <ProFormTextArea name={'case_desc'} />
             </ProForm.Group>
-            {/*<ProForm.Group title={"用例所属人"} size={"large"}>*/}
-            {/*  <ProFormSelect required={true} name={"creator"} readonly={true}*/}
-            {/*                 initialValue={initialState?.currentUser!.username} />*/}
-            {/*</ProForm.Group>*/}
-            {/*<ProForm.Group title={"用例所属模块"} size={"large"}>*/}
-            {/*  <ProFormSelect required={true} name={"creator"} readonly={true}*/}
-            {/*                 initialValue={initialState?.currentUser!.username} />*/}
-            {/*</ProForm.Group>*/}
           </ProForm.Group>
         </ProCard>
         <ProCard>

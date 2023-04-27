@@ -27,9 +27,8 @@ const CaseInfoStepTable: FC<selfProps> = ({
       title: '步骤',
       dataIndex: 'step',
       width: '8%',
-
-      valueType: 'text',
-      // valueType: "index",
+      // valueType: 'text',
+      valueType: 'index',
     },
     {
       title: '操作步骤',

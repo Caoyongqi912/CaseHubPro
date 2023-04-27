@@ -24,3 +24,11 @@ export async function addCases(body: any, options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+export async function delCase(body: any, options?: { [key: string]: any }) {
+  return request<API.IResponse<any>>(AddCaseURl, {
+    method: 'DELETE',
+    data: body,
+    ...(options || {}),
+  });
+}

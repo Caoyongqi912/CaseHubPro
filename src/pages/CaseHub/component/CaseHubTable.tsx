@@ -5,12 +5,10 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
-import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import { API } from '@/api';
 import { ProCard } from '@ant-design/pro-components';
-import { queryApiCaseByCasePartID } from '@/api/interface';
-import { pageCases } from '@/api/case';
-import { Tag } from 'antd';
+import { delCase, pageCases } from '@/api/case';
+import { message, Tag, Popconfirm } from 'antd';
 import { CONFIG } from '@/utils/config';
 import AddCase from '@/pages/CaseHub/component/AddCase';
 
@@ -69,16 +67,24 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
       render: (_: any, record: any) => {
         return (
           <>
-            <EditTwoTone
-              style={{ cursor: 'pointer' }}
+            <a
               onClick={() => {
+                console.log(record);
                 // setEditableRowKeys([record.id]);
               }}
-            />
-            <DeleteTwoTone
-              style={{ cursor: 'pointer', marginLeft: 8 }}
-              twoToneColor="#eb2f96"
-            />
+            >
+              编辑
+            </a>
+            <Popconfirm
+              title="确定要删除吗？"
+              onConfirm={async () => {
+                await fetchDeleteDate(record.uid);
+              }}
+              okText="是"
+              cancelText="否"
+            >
+              <a style={{ marginLeft: 8 }}>删除</a>
+            </Popconfirm>
           </>
         );
       },
@@ -89,6 +95,15 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
   useEffect(() => {
     if (projectID) setCurrentCases([]);
   }, [projectID]);
+
+  const fetchDeleteDate = async (uid: string) => {
+    const { code, msg } = await delCase({ uid: uid });
+    if (code === 0) {
+      message.success(msg);
+      actionRef.current?.reload();
+      return;
+    }
+  };
 
   const fetchCaseData = useCallback(
     async (params: API.ISearch) => {

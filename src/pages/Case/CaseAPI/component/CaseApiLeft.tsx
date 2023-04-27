@@ -1,5 +1,5 @@
 import React, { useRef, FC, useState, useEffect, useCallback } from 'react';
-import { Col, Divider, message, Modal, Row, Tag } from 'antd';
+import { Col, Divider, message, Modal, Popconfirm, Row, Tag } from 'antd';
 import {
   ActionType,
   ProColumns,
@@ -157,23 +157,16 @@ const CaseApiLeft: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
               执行
             </a>
             <Divider type={'vertical'} />
-            <a
-              onClick={() => {
-                Modal.confirm({
-                  title: '确认删除？',
-                  icon: <ExclamationCircleOutlined />,
-                  content: '删除后不可恢复，请谨慎~',
-                  okText: '确定',
-                  okType: 'danger',
-                  cancelText: '点错了',
-                  onOk: async () => {
-                    await delCaseApi(record.uid);
-                  },
-                });
+            <Popconfirm
+              title={'确认删除？'}
+              okText={'确认'}
+              cancelText={'点错了'}
+              onConfirm={async () => {
+                await delCaseApi(record.uid);
               }}
             >
-              删除
-            </a>
+              <a style={{ marginLeft: 8 }}>删除</a>
+            </Popconfirm>
           </>
         );
       },
