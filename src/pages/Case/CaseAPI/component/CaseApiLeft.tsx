@@ -97,7 +97,7 @@ const CaseApiLeft: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
       title: '优先级',
       dataIndex: 'level',
       valueType: 'select',
-      valueEnum: CONFIG.CASE_LEVEL_ENUM,
+      valueEnum: CONFIG.API_LEVEL_ENUM,
       render: (text, record) => {
         return (
           <Tag color={CONFIG.RENDER_CASE_LEVEL[record.level].color}>

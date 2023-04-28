@@ -4,7 +4,7 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-twilight';
 
 const Index = () => {
-  const handleEditorChange = (value) => {
+  const handleEditorChange = (value: any) => {
     console.log(value);
   };
   return (

@@ -186,6 +186,12 @@ declare namespace API {
     uid: string;
   }
 
+  interface ICaseStepInfo {
+    step: number | undefined;
+    todo: string;
+    exp: string;
+  }
+
   interface ICaseInfo {
     id: number;
     uid: string;
@@ -193,7 +199,7 @@ declare namespace API {
     casePartID: number;
     case_title: string;
     case_desc: string;
-    case_info: IObjGet;
+    case_info: ICaseStepInfo[];
     case_mark?: string;
     case_type: 'COMMENT' | 'SMOKE';
     case_level: 'P1' | 'P2' | 'P3' | 'P4';

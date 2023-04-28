@@ -10,7 +10,7 @@ export const CONFIG: API.IObjGet = {
     '2': { text: 'Response.header' },
   },
   CASE_LEVEL: ['P1', 'P2', 'P3', 'P4'],
-  CASE_LEVEL_ENUM: {
+  API_LEVEL_ENUM: {
     1: {
       text: 'P1',
       status: 'P1',
@@ -28,6 +28,25 @@ export const CONFIG: API.IObjGet = {
       status: 'P0',
     },
   },
+  CASE_LEVEL_ENUM: {
+    P1: {
+      text: 'P1',
+      value: 'P1',
+    },
+    P2: {
+      text: 'P2',
+      value: 'P2',
+    },
+    P3: {
+      text: 'P3',
+      value: 'P3',
+    },
+    P0: {
+      text: 'P0',
+      value: 'P0',
+    },
+  },
+
   CASE_STATUS_ENUM: {
     1: {
       text: '待调试',

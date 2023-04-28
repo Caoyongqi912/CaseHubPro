@@ -25,9 +25,9 @@ const Index: FC = () => {
         <SplitterLayout
           ref={splitPaneRef}
           percentage={true}
-          secondaryInitialSize={70}
-          primaryMinSize={20}
-          secondaryMinSize={60}
+          secondaryInitialSize={80}
+          primaryMinSize={15}
+          secondaryMinSize={70}
         >
           <CaseRightComponent
             selectedProject={selectedProject}

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import EditableTable from '@/components/Table/EditableTable';
 import { ProColumns } from '@ant-design/pro-components';
+import { API } from '@/api';
 
 type DataSourceType = {
   id: React.Key;
@@ -10,15 +11,15 @@ type DataSourceType = {
 };
 
 interface selfProps {
-  caseInfo: DataSourceType[];
-  setCaseInfo: any;
+  caseStepInfo: API.ICaseStepInfo[];
+  setStepCaseInfo: any;
   editableKeys: any;
   setEditableRowKeys: any;
 }
 
 const CaseInfoStepTable: FC<selfProps> = ({
-  caseInfo,
-  setCaseInfo,
+  caseStepInfo,
+  setStepCaseInfo,
   editableKeys,
   setEditableRowKeys,
 }) => {
@@ -27,7 +28,6 @@ const CaseInfoStepTable: FC<selfProps> = ({
       title: '步骤',
       dataIndex: 'step',
       width: '8%',
-      // valueType: 'text',
       valueType: 'index',
     },
     {
@@ -52,8 +52,10 @@ const CaseInfoStepTable: FC<selfProps> = ({
           key="delete"
           type="primary"
           onClick={() => {
-            const data = caseInfo.filter((item: any) => item.id !== record.id);
-            setCaseInfo(data);
+            const data = caseStepInfo.filter(
+              (item: any) => item.id !== record.id,
+            );
+            setStepCaseInfo(data);
           }}
         >
           删除
@@ -66,8 +68,8 @@ const CaseInfoStepTable: FC<selfProps> = ({
     <EditableTable
       title={'执行步骤'}
       columns={caseInfoColumn}
-      dataSource={caseInfo}
-      setDataSource={setCaseInfo}
+      dataSource={caseStepInfo}
+      setDataSource={setStepCaseInfo}
       editableKeys={editableKeys}
       setEditableRowKeys={setEditableRowKeys}
     />

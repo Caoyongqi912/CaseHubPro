@@ -4,14 +4,6 @@ import PropTypes from 'prop-types';
 import 'ace-builds/src-noconflict/theme-twilight';
 import 'ace-builds/src-noconflict/mode-json';
 
-// 将 Python 字典序列化为 JSON 格式
-const serializePythonDict = (dict: any): string => {
-  if (typeof dict !== 'object' || dict === null || Array.isArray(dict)) {
-    throw new Error('传入的不是 Python 字典类型');
-  }
-  return JSON.stringify(dict, null, 2);
-};
-
 interface selfProps {
   value?: any;
   readonly?: boolean;
@@ -45,11 +37,10 @@ const AceCodeEditor: FC<selfProps> = (props) => {
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
         enableSnippets: true,
-        // useWorker: useWorker === undefined ? useWorker: true,
         useWorker: true,
       }}
     />
   );
 };
 
-export default AceCodeEditor;
+export default React.memo(AceCodeEditor);

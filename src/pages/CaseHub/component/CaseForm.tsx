@@ -1,15 +1,16 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   ProForm,
   ProFormText,
   ProCard,
   ProFormSelect,
   ProFormTextArea,
-  EditableProTable,
 } from '@ant-design/pro-components';
 import { Form, message } from 'antd';
 import CaseInfoStepTable from '@/pages/CaseHub/component/CaseInfoStepTable';
-import { addCases } from '@/api/case';
+import { addCases, putCase } from '@/api/case';
+import { API } from '@/api';
+import * as buffer from 'buffer';
 
 type CaseFormType = {};
 type DataSourceType = {
@@ -33,10 +34,12 @@ const CaseTypeOptions = [
 ];
 
 interface SelfProps {
-  casePartID: number;
-  projectID: number;
-  setDrawerVisible: any;
-  actionRef: any;
+  casePartID?: number;
+  projectID?: number;
+  setDrawerVisible?: any;
+  actionRef?: any;
+  caseInfo?: API.ICaseInfo;
+  update?: boolean;
 }
 
 const CaseForm: FC<SelfProps> = ({
@@ -44,35 +47,62 @@ const CaseForm: FC<SelfProps> = ({
   projectID,
   setDrawerVisible,
   actionRef,
+  caseInfo,
+  update = false,
 }) => {
   const [form] = Form.useForm();
-  const [caseInfoSource, setCaseInfoSource] = useState<DataSourceType[]>([]);
-  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
-    caseInfoSource.map((item: any) => item.id),
+  const [caseStepSource, setCaseStepInfoSource] = useState<API.ICaseStepInfo[]>(
+    [],
   );
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
+    caseStepSource.map((item: any) => item.id),
+  );
+  useEffect(() => {
+    if (caseInfo) {
+      form.setFieldsValue(caseInfo);
+      const newCaseInfo = caseInfo.case_info.map((caseStepInfo) => ({
+        ...caseStepInfo,
+        step: undefined,
+      }));
+      setCaseStepInfoSource(newCaseInfo);
+    }
+  }, [caseInfo]);
+
   const onFinish = async () => {
     const formValue = await form.validateFields();
-    if (caseInfoSource.length === 0) {
+    if (caseStepSource.length === 0) {
       message.error('执行步骤不能为空');
       return;
     }
-    const info: any = {
+    const info: API.ICaseInfo = {
       ...formValue,
-      case_info: caseInfoSource.map((item, index) => ({
+      case_info: caseStepSource.map((item, index) => ({
         ...item,
         step: index + 1,
       })),
       projectID: projectID,
       casePartID: casePartID,
     };
-    console.log(info);
-    await addCases(info).then(({ code, msg }) => {
-      if (code === 0) {
-        message.success(msg);
-        setDrawerVisible(false);
-        actionRef.current?.reload();
-      }
-    });
+    if (update) {
+      info.id = caseInfo!.id;
+      info.uid = caseInfo!.uid;
+      console.log(info);
+      await putCase(info).then(({ code, msg }) => {
+        if (code === 0) {
+          message.success(msg);
+          setDrawerVisible(false);
+          actionRef.current?.reload();
+        }
+      });
+    } else {
+      await addCases(info).then(({ code, msg }) => {
+        if (code === 0) {
+          message.success(msg);
+          setDrawerVisible(false);
+          actionRef.current?.reload();
+        }
+      });
+    }
   };
 
   return (
@@ -87,12 +117,20 @@ const CaseForm: FC<SelfProps> = ({
             tooltip={'最长20位'}
             rules={[{ required: true, message: '标题不能为空' }]}
           />
+          <ProFormTextArea
+            name={'case_desc'}
+            label={'用例描述'}
+            placeholder={'请输入用例描述'}
+            required={true}
+            rules={[{ required: true, message: '描述不能为空' }]}
+          />
         </ProCard>
         <ProCard>
           <ProForm.Group size={'large'}>
             <ProForm.Group title={'用例等级'} size={'large'}>
               <ProFormSelect
                 required={true}
+                width={'lg'}
                 name={'case_level'}
                 options={CaseLevelOptions}
                 initialValue={'P1'}
@@ -101,13 +139,11 @@ const CaseForm: FC<SelfProps> = ({
             <ProForm.Group title={'用例类型'} size={'large'}>
               <ProFormSelect
                 required={true}
+                width={'lg'}
                 name={'case_type'}
                 options={CaseTypeOptions}
                 initialValue={'COMMENT'}
               />
-            </ProForm.Group>
-            <ProForm.Group title={'用例描述'} size={'large'}>
-              <ProFormTextArea name={'case_desc'} />
             </ProForm.Group>
           </ProForm.Group>
         </ProCard>
@@ -121,8 +157,8 @@ const CaseForm: FC<SelfProps> = ({
           />
         </ProCard>
         <CaseInfoStepTable
-          caseInfo={caseInfoSource}
-          setCaseInfo={setCaseInfoSource}
+          caseStepInfo={caseStepSource}
+          setStepCaseInfo={setCaseStepInfoSource}
           editableKeys={editableKeys}
           setEditableRowKeys={setEditableRowKeys}
         />

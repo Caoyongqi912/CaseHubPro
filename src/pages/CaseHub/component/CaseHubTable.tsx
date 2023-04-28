@@ -11,6 +11,7 @@ import { delCase, pageCases } from '@/api/case';
 import { message, Tag, Popconfirm } from 'antd';
 import { CONFIG } from '@/utils/config';
 import AddCase from '@/pages/CaseHub/component/AddCase';
+import ShowCase from '@/pages/CaseHub/component/ShowCase';
 
 interface SelfProps {
   projectID: number;
@@ -20,6 +21,9 @@ interface SelfProps {
 const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
   const ref = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
+  const [caseInfo, setCaseInfo] = useState<API.ICaseInfo>();
+  const [showCaseDrawerVisibleProps, setShowCaseDrawerVisibleProps] =
+    useState<boolean>(false);
   const caseColumns: ProColumns[] = [
     {
       title: '用例标题',
@@ -36,6 +40,7 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
       title: '用例等级',
       key: 'case_level',
       dataIndex: 'case_level',
+      valueEnum: CONFIG.CASE_LEVEL_ENUM,
       render: (text, record) => {
         return (
           <Tag color={CONFIG.RENDER_CASE_LEVEL[record.case_level].color}>
@@ -69,11 +74,11 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
           <>
             <a
               onClick={() => {
-                console.log(record);
-                // setEditableRowKeys([record.id]);
+                setCaseInfo(record);
+                setShowCaseDrawerVisibleProps(true);
               }}
             >
-              编辑
+              详情
             </a>
             <Popconfirm
               title="确定要删除吗？"
@@ -90,7 +95,7 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
       },
     },
   ];
-  const [currentCases, setCurrentCases] = useState([]);
+  const [currentCases, setCurrentCases] = useState<API.ICaseInfo[]>([]);
 
   useEffect(() => {
     if (projectID) setCurrentCases([]);
@@ -135,11 +140,17 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
 
   return (
     <ProCard bordered={false} hoverable>
+      <ShowCase
+        caseInfo={caseInfo!}
+        drawerVisibleProps={showCaseDrawerVisibleProps}
+        setDrawerVisible={setShowCaseDrawerVisibleProps}
+        casePartID={currentCasePartID}
+        projectID={projectID!}
+      />
       <ProTable
         formRef={ref}
         actionRef={actionRef}
         dataSource={currentCases}
-        // @ts-ignore
         request={fetchCaseData}
         rowKey={(record) => record.uid}
         columns={caseColumns}
