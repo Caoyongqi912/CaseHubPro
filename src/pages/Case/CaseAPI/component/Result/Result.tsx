@@ -7,7 +7,7 @@ import VerifyInfo from './verifyInfo/verifyInfo';
 import ResultInfo from '@/pages/Case/CaseAPI/component/Result/ResultInfo';
 import HeaderInfo from '@/pages/Case/CaseAPI/component/Result/HeaderInfo';
 import CookieInfo from '@/pages/Case/CaseAPI/component/Result/CookieInfo';
-import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
+import AceCodeEditor from '@/components/CodeEditor/AceCodeEditor';
 
 const TabPane = Tabs.TabPane;
 
@@ -85,10 +85,10 @@ const Result: FC<SelfProps> = (props) => {
               }
               key="3"
             >
-              <MonacoEditorComponent
+              <AceCodeEditor
+                readonly={true}
+                value={response?.interfaceLog}
                 height={'100vh'}
-                read={true}
-                defaultValue={response?.interfaceLog}
               />
             </TabPane>
             <TabPane

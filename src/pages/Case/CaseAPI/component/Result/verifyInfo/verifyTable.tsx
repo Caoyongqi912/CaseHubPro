@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
-import CodeEditor from '@/components/CodeEditor';
 import { Card, Table } from 'antd';
 import { ResponseAPI } from '@/api';
 import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
-import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
+import AceCodeEditor from '@/components/CodeEditor/AceCodeEditor';
 
 interface SelfProps {
   response: any;
@@ -13,7 +12,6 @@ interface SelfProps {
 const VerifyTable: FC<SelfProps> = (props) => {
   const { response, verifyInfo } = props;
   const [verifyData, setVerifyData] = useState<ResponseAPI.IVerify[]>([]);
-
   useEffect(() => {
     setVerifyData(verifyInfo);
   }, [verifyInfo]);
@@ -21,7 +19,7 @@ const VerifyTable: FC<SelfProps> = (props) => {
   return (
     <>
       <Card style={{ width: '100%' }}>
-        <MonacoEditorComponent read={true} defaultValue={response} />
+        <AceCodeEditor readonly={true} value={response.response} />
       </Card>
       <Card style={{ width: '100%', marginTop: 2 }}>
         <Table columns={VerifyColumns} dataSource={verifyData} />

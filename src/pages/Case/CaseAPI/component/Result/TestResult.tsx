@@ -1,10 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Card, Row, Table, Tabs, Tag } from 'antd';
-import CodeEditor from '@/components/CodeEditor';
 import { API, ResponseAPI } from '@/api';
 import VerifyColumns from '@/pages/Case/CaseAPI/component/Result/verifyInfo/VerifyColumns';
 import { CONFIG } from '@/utils/config';
-import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
+import AceCodeEditor from '@/components/CodeEditor/AceCodeEditor';
 
 const { TabPane } = Tabs;
 
@@ -125,7 +124,7 @@ const TestResult: FC<SelfProps> = (props) => {
               />
             </TabPane>
             <TabPane tab="响应体" key="1">
-              <MonacoEditorComponent value={response.response} read={true} />
+              <AceCodeEditor value={response.response} readonly={true} />
             </TabPane>
             <TabPane tab="Cookie" key="2">
               <Table

@@ -27,7 +27,7 @@ const VerifyInfo: FC<SelfProps> = (props) => {
           title: `step${i + 1}`,
           content: (
             <VerifyTable
-              response={responseInfo[i].response.response}
+              response={responseInfo[i].response}
               verifyInfo={responseInfo[i].verify}
             />
           ),

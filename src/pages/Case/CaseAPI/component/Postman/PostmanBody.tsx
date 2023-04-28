@@ -7,10 +7,10 @@ import {
   SetParams,
 } from '@/pages/Case/CaseAPI/MyHook/func';
 import { runApiDemo } from '@/api/interface';
-import MonacoEditorComponent from '@/components/CodeEditor/MonacoEditorComponent';
 import HeaderTable from '@/pages/Case/CaseAPI/component/Postman/HeaderTable';
 import ParamsTable from '@/pages/Case/CaseAPI/component/Postman/ParamsTable';
 import { queryHost } from '@/api/host';
+import AceCodeEditor from '@/components/CodeEditor/AceCodeEditor';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -130,7 +130,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
     </Form.Item>
   );
   const bodyChange = (value: any) => {
-    setBody(JSON.parse(value));
+    setBody(value);
   };
 
   // 返回body 类型 component
@@ -148,11 +148,7 @@ const PostmanBody: FC<SelfProps> = (props) => {
         <Row style={{ marginTop: 12 }}>
           <Col span={24}>
             <Card bodyStyle={{ padding: 0 }}>
-              <MonacoEditorComponent
-                defaultValue={JSON.stringify(body)}
-                language={'json'}
-                onChange={bodyChange}
-              />
+              <AceCodeEditor value={body} onChange={bodyChange} />
             </Card>
           </Col>
         </Row>
