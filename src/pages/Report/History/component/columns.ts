@@ -8,7 +8,7 @@ const columns: ProColumns[] = [
   },
   {
     title: '执行人',
-    dataIndex: 'starter',
+    dataIndex: 'starterName',
   },
   {
     title: '执行时间',
@@ -17,7 +17,7 @@ const columns: ProColumns[] = [
   },
   {
     title: '状态',
-    dataIndex: 'result_status',
+    dataIndex: 'status',
   },
 ];
 

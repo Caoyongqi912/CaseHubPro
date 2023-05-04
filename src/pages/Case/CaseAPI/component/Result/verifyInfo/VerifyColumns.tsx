@@ -5,6 +5,12 @@ import { Tag } from 'antd';
 
 const VerifyColumns: ColumnsType<ResponseAPI.IVerify> = [
   {
+    title: '断言方法',
+    dataIndex: 'assertOpt',
+    key: 'assertOpt',
+    render: (text) => <Tag color={'blue'}>{text}</Tag>,
+  },
+  {
     title: '预计结果',
     dataIndex: 'expect',
     key: 'expect',

@@ -9,7 +9,8 @@ const PageCaseAPI = '/api/case/interface/page';
 const RunApiDemoURL = '/api/case/interface/demo';
 const RunApiURL = '/api/case/interface/run';
 const RunApiGroupURL = '/api/case/interface/group/run';
-const PageApiGroupURL = '/api/case/interface/group/page';
+const PageApisResultURL = '/api/case/interface/group/page';
+const PageApiResultURL = '/api/case/interface/result/page';
 const GetApiResponseURL = '/api/case/interface/response';
 
 interface ICasePartTree {
@@ -188,14 +189,48 @@ export async function runInterfaceGroup(
   });
 }
 
-export async function pageInterfaceGroupResult(
-  params: API.ISearch,
+/**
+ * 单个构建历史分页
+ * @param params
+ * @param options
+ */
+export async function pageInterfaceResult(
+  params: {
+    uid?: string;
+    starterName?: string;
+    create_time?: string;
+    status?: string;
+  },
   options?: {
     [key: string]: any;
   },
 ) {
-  return request<API.IResponse<any>>(PageApiGroupURL, {
+  return request<API.IResponse<any>>(PageApiResultURL, {
     method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+
+/**
+ * 多个构建历史分页
+ * @param params
+ * @param options
+ */
+export async function pageInterfacesResult(
+  params: {
+    uid?: string;
+    starterName?: string;
+    create_time?: string;
+    status?: string;
+  },
+  options?: {
+    [key: string]: any;
+  },
+) {
+  return request<API.IResponse<any>>(PageApisResultURL, {
+    method: 'GET',
+    params,
     ...(options || {}),
   });
 }
