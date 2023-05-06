@@ -1,17 +1,14 @@
 import React, { FC, useRef } from 'react';
-import { ActionType, ProTable } from '@ant-design/pro-components';
-import columns from '@/pages/Report/History/component/columns';
-import { pageInterfaceGroupResult } from '@/api/interface';
-import { API } from '@/api';
-import { message } from 'antd';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 
 interface SelfProps {
   request: any;
   title: string;
+  columns: ProColumns[];
 }
 
 const HistoryTable: FC<SelfProps> = (props) => {
-  const { request, title } = props;
+  const { request, title, columns } = props;
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
 
   return (

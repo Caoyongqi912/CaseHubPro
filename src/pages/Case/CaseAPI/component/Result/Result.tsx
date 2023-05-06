@@ -12,14 +12,15 @@ import AceCodeEditor from '@/components/CodeEditor/AceCodeEditor';
 const TabPane = Tabs.TabPane;
 
 interface SelfProps {
-  uid: string | undefined;
+  uid?: string;
   modal: any;
   setModal: any;
   single: boolean;
+  result?: ResponseAPI.IApiResponse;
 }
 
 const Result: FC<SelfProps> = (props) => {
-  const { modal, setModal, uid } = props;
+  const { modal, setModal, uid, result } = props;
   const [load, setLoad] = useState<boolean>(true);
   const [response, setResponse] = useState<ResponseAPI.IApiResponse>();
 
@@ -33,8 +34,13 @@ const Result: FC<SelfProps> = (props) => {
     }
   };
   useEffect(() => {
-    getResponse().then((data) => setResponse(data));
-  }, [uid]);
+    if (uid) {
+      getResponse().then((data) => setResponse(data));
+    } else if (result) {
+      setResponse(result);
+      setLoad(false);
+    }
+  }, [uid, result]);
 
   return (
     <Drawer

@@ -8,10 +8,11 @@ const QueryCaseAPIByCasePartID: string = '/api/case/part/interfaces';
 const PageCaseAPI = '/api/case/interface/page';
 const RunApiDemoURL = '/api/case/interface/demo';
 const RunApiURL = '/api/case/interface/run';
-const RunApiGroupURL = '/api/case/interface/group/run';
-const PageApisResultURL = '/api/case/interface/group/page';
+const RunApisURL = '/api/case/interfaces/run';
+const PageApisResultURL = '/api/case/interfaces/result/page';
 const PageApiResultURL = '/api/case/interface/result/page';
 const GetApiResponseURL = '/api/case/interface/response';
+const GetInterfacesResultInfoURL = '/api/case/interfaces/report/info';
 
 interface ICasePartTree {
   projectID: number;
@@ -182,7 +183,7 @@ export async function runInterfaceGroup(
   data: runInterfaceGroupData,
   options?: { [key: string]: any },
 ) {
-  return request<API.IResponse<any>>(RunApiGroupURL, {
+  return request<API.IResponse<any>>(RunApisURL, {
     method: 'POST',
     data,
     ...(options || {}),
@@ -229,6 +230,21 @@ export async function pageInterfacesResult(
   },
 ) {
   return request<API.IResponse<any>>(PageApisResultURL, {
+    method: 'GET',
+    params,
+    ...(options || {}),
+  });
+}
+
+export async function getInterfacesResultInfo(
+  params: {
+    uid: string;
+  },
+  options?: {
+    [key: string]: any;
+  },
+) {
+  return request<API.IResponse<any>>(GetInterfacesResultInfoURL, {
     method: 'GET',
     params,
     ...(options || {}),

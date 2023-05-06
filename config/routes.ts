@@ -130,6 +130,12 @@ export default [
         name: '构建历史',
         component: '@/pages/Report/History',
       },
+      {
+        path: '/report/history/detail/uid=:uid',
+        name: '构建详情',
+        hideInMenu: true,
+        component: '@/pages/Report/History/Multiple/Detail',
+      },
     ],
   },
   {

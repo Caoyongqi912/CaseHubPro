@@ -17,7 +17,6 @@ import RunGroup from '@/pages/Case/CaseAPI/component/RunGroup';
 import AddApiCase from '@/pages/Case/CaseAPI/component/AddApiCase';
 import { CONFIG } from '@/utils/config';
 import { history } from '@@/core/history';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Result from '@/pages/Case/CaseAPI/component/Result/Result';
 
 interface SelfProps {
@@ -126,7 +125,7 @@ const CaseApiLeft: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
     {
       title: '创建时间',
       dataIndex: 'create_time',
-      valueType: 'date',
+      valueType: 'dateTime',
       search: false,
     },
     {
@@ -220,7 +219,7 @@ const CaseApiLeft: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
             projectID={projectID!}
           />,
         ]}
-      ></ProTable>
+      />
     </>
   );
 };
