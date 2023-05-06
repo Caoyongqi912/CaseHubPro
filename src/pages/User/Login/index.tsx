@@ -42,49 +42,44 @@ const Index: React.FC = () => {
     }
   };
   return (
-    <div>
-      <div>
-        <LoginForm
-          title="CaseHUB"
-          initialValues={{ autoLogin: true }}
-          onFinish={async (values) => {
-            await handleSubmit(values as API.ILoginParams);
-          }}
-        >
-          <br />
-          <br />
-          <ProFormText
-            name="username"
-            initialValue="admin"
-            fieldProps={{
-              size: 'large',
-              prefix: <UserOutlined className={styles.prefixIcon} />,
-            }}
-            placeholder="admin"
-            rules={[
-              {
-                required: true,
-                message: 'username cant empty!',
-              },
-            ]}
-          />
-          <ProFormText.Password
-            name="password"
-            initialValue="admin"
-            fieldProps={{
-              size: 'large',
-              prefix: <LockOutlined className={styles.prefixIcon} />,
-            }}
-            rules={[
-              {
-                required: true,
-                message: 'username cant empty!',
-              },
-            ]}
-          />
-        </LoginForm>
-      </div>
-    </div>
+    <LoginForm
+      title="CaseHUB"
+      initialValues={{ autoLogin: true }}
+      onFinish={async (values) => {
+        await handleSubmit(values as API.ILoginParams);
+      }}
+      style={{ marginTop: 100 }}
+    >
+      <ProFormText
+        name="username"
+        initialValue="admin"
+        fieldProps={{
+          size: 'large',
+          prefix: <UserOutlined className={styles.prefixIcon} />,
+        }}
+        placeholder="admin"
+        rules={[
+          {
+            required: true,
+            message: 'username cant empty!',
+          },
+        ]}
+      />
+      <ProFormText.Password
+        name="password"
+        initialValue="admin"
+        fieldProps={{
+          size: 'large',
+          prefix: <LockOutlined className={styles.prefixIcon} />,
+        }}
+        rules={[
+          {
+            required: true,
+            message: 'username cant empty!',
+          },
+        ]}
+      />
+    </LoginForm>
   );
 };
 

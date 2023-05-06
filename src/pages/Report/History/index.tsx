@@ -3,17 +3,19 @@ import { ActionType, ProTable } from '@ant-design/pro-components';
 import { message, Tabs } from 'antd';
 import Single from '@/pages/Report/History/Single';
 import Multiple from '@/pages/Report/History/Multiple';
+import { PageContainer } from '@ant-design/pro-layout';
 
 const TabPane = Tabs.TabPane;
 const Index: FC = () => {
   const actionRef = useRef<ActionType>(); //Table action 的引用，便于自定义触发
 
   return (
-    <>
+    <PageContainer title={false}>
       <Tabs
         style={{ width: '100%', height: '100%' }}
-        tabPosition={'left'}
+        tabPosition={'top'}
         size={'large'}
+        defaultValue={'2'}
       >
         <TabPane tab={<span>单个构建历史</span>} key={'1'}>
           <Single />
@@ -22,7 +24,7 @@ const Index: FC = () => {
           <Multiple />
         </TabPane>
       </Tabs>
-    </>
+    </PageContainer>
   );
 };
 

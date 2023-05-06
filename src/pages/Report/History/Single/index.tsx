@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { pageInterfaceResult } from '@/api/interface';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 import HistoryTable from '@/pages/Report/History/component/HistoryTable';
-import { PageLoading, ProColumns } from '@ant-design/pro-components';
+import { ProColumns } from '@ant-design/pro-components';
 import Result from '@/pages/Case/CaseAPI/component/Result/Result';
-import { PageContainer } from '@ant-design/pro-layout';
 
 const Index = () => {
   const [resultModal, setResultModal] = useState<boolean>(false);
@@ -66,20 +65,31 @@ const Index = () => {
     {
       title: '执行人',
       dataIndex: 'starterName',
+      renderText: (text, record, index, action) => (
+        <Tag color={'blue'}>{record.starterName}</Tag>
+      ),
     },
     {
       title: '执行时间',
       dataIndex: 'create_time',
       valueType: 'dateTime',
+      renderText: (text, record, index, action) => (
+        <Tag color={'blue'}>{record.create_time}</Tag>
+      ),
     },
     {
       title: '状态',
       dataIndex: 'status',
+      renderText: (text, record, index, action) => (
+        <Tag color={record.status === 'SUCCESS' ? 'green' : 'red'}>
+          {record.status}
+        </Tag>
+      ),
     },
   ];
 
   return (
-    <PageContainer title={false}>
+    <>
       <Result
         modal={resultModal}
         setModal={setResultModal}
@@ -91,7 +101,7 @@ const Index = () => {
         title={'单个构建历史'}
         columns={columns}
       />
-    </PageContainer>
+    </>
   );
 };
 

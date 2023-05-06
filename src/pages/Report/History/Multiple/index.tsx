@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
 import HistoryTable from '@/pages/Report/History/component/HistoryTable';
 import { pageInterfacesResult } from '@/api/interface';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 import { ProColumns } from '@ant-design/pro-components';
-import { PageContainer } from '@ant-design/pro-layout';
-import { history } from '@@/core/history';
+import { history } from 'umi';
 
 const Index = () => {
   /**
@@ -47,26 +46,35 @@ const Index = () => {
     {
       title: '执行人',
       dataIndex: 'starterName',
+      renderText: (text, record, index, action) => (
+        <Tag color={'blue'}>{text}</Tag>
+      ),
     },
     {
       title: '执行时间',
       dataIndex: 'create_time',
       valueType: 'dateTime',
+      renderText: (text, record, index, action) => (
+        <Tag color={'blue'}>{text}</Tag>
+      ),
     },
     {
       title: '状态',
       dataIndex: 'status',
+      renderText: (text, record, index, action) => (
+        <Tag color={record.status === 'DONE' ? 'green' : 'blue'}>
+          {record.status}
+        </Tag>
+      ),
     },
   ];
 
   return (
-    <PageContainer title={false}>
-      <HistoryTable
-        request={fetchData}
-        title={'批量构建历史'}
-        columns={columns}
-      />
-    </PageContainer>
+    <HistoryTable
+      request={fetchData}
+      title={'批量构建历史'}
+      columns={columns}
+    />
   );
 };
 

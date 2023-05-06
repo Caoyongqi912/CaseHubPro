@@ -14,18 +14,20 @@ Start the dev server,
 $ yarn start
 ```
 
-
 ## 演示图
 
 ### 登录页
 
-![img.png](dmeo/login.png))
+![img.png](dmeo/login.png)
 
 ### 接口页
 
 ![img.png](dmeo/img.png)
 
-
 ### 执行
 
 ![img.png](dmeo/runimg.png)
+
+### 报告
+
+![img.png](dmeo/img_2.png)
