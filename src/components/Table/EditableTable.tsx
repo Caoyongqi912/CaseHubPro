@@ -45,6 +45,7 @@ const EditableTable: FC<SelfProps> = ({
         actionRender: (row, config, defaultDoms) => {
           return [defaultDoms.delete];
         },
+
         onValuesChange: (record, recordList) => {
           if (extra) {
             extra(recordList);

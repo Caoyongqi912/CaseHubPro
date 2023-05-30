@@ -148,10 +148,26 @@ export default [
     path: '/CBS',
     // icon: "CloudTwoTone",
     routes: [
+      // {
+      //   path: '/CBS/perf/maintSetting',
+      //   name: '维护人业绩配置',
+      //   component: '@/pages/CBS/PerfMaintSetting',
+      // },
       {
-        path: '/CBS/perf/maintSetting',
-        name: '维护人业绩配置',
-        component: '@/pages/CBS/PerfMaintSetting',
+        path: '/CBS/structure',
+        name: 'CBS数据构造',
+        routes: [
+          {
+            path: '/CBS/structure/sign',
+            name: '草签合同',
+            component: '@/pages/CBS/Structure/Sign',
+          },
+          {
+            path: '/CBS/structure/approve',
+            name: '审批流',
+            component: '@/pages/CBS/Structure/Approve',
+          },
+        ],
       },
     ],
   },

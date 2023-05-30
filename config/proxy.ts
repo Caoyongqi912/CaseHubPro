@@ -24,6 +24,11 @@ const proxy: ITarget = {
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
+    '/cbs': {
+      target: 'http://127.0.0.1:8999',
+      changeOrigin: true,
+      pathRewrite: { '^/cbs': '' },
+    },
   },
   test: {
     '/api': {
