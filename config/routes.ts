@@ -163,6 +163,11 @@ export default [
             component: '@/pages/CBS/Structure/Sign',
           },
           {
+            path: '/CBS/structure/intention',
+            name: '杭州意向',
+            component: '@/pages/CBS/Structure/Intention',
+          },
+          {
             path: '/CBS/structure/approve',
             name: '审批流',
             component: '@/pages/CBS/Structure/Approve',

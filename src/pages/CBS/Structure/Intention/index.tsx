@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Drawer, Form, message } from 'antd';
 import {
-  ProForm,
-  ProFormText,
-  ProFormRadio,
-  ProTable,
   ProColumns,
-  EditableProTable,
+  ProForm,
+  ProFormRadio,
+  ProFormText,
 } from '@ant-design/pro-components';
-import { addSign } from '@/api/cbs';
-import { Drawer, Form, message, notification, Tooltip } from 'antd';
 import EditableTable from '@/components/Table/EditableTable';
+import { addIntention, addSign } from '@/api/cbs';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-twilight';
@@ -21,7 +19,7 @@ const Index = () => {
     {
       id: 1,
       target: '卖方',
-      name: '业绩自动化',
+      name: '杭州业绩自动化',
       ssn: '370801194003195002',
       phone: '17611395912',
     },
@@ -40,7 +38,6 @@ const Index = () => {
   const [log, setLogData] = useState<string[]>([]);
   const [drawer, setDrawer] = useState<boolean>(false);
   const [allLogs, setAllLogs] = useState<string[]>([]); // 新增一个状态变量 allLogs 来保存所有的日志内容
-
   useEffect(() => {
     setAllLogs((prevLogs) => [...prevLogs, ...log]); // 在变化时将 log 合并到 allLogs 中
   }, [log]);
@@ -97,7 +94,7 @@ const Index = () => {
       ...value,
     };
     console.log(body);
-    const { code, data, msg } = await addSign(body);
+    const { code, data, msg } = await addIntention(body);
     if (code === 0) {
       setDrawer(true);
       isStart(true);
@@ -126,6 +123,7 @@ const Index = () => {
           value={allLogs.join('')}
           height="500px"
           width="100%"
+          readOnly={true}
           editorProps={{ $blockScrolling: true }}
           setOptions={{
             showLineNumbers: true,
@@ -137,37 +135,12 @@ const Index = () => {
         <ProFormRadio.Group
           name="city"
           layout="horizontal"
-          initialValue={'beijing'}
+          initialValue={'hangzhou'}
           label="城市"
           options={[
             {
-              label: '北京',
-              value: 'beijing',
-            },
-            // {
-            //   label: "上海",
-            //   value: "shanghai"
-            // },
-            // {
-            //   label: "杭州",
-            //   value: "hangzhou"
-            // }
-          ]}
-        />
-
-        <ProFormRadio.Group
-          name="transfer"
-          layout="horizontal"
-          initialValue={'1'}
-          label="是否委托过户"
-          options={[
-            {
-              label: '委托',
-              value: '1',
-            },
-            {
-              label: '非委托',
-              value: '0',
+              label: '杭州',
+              value: 'hangzhou',
             },
           ]}
         />
@@ -175,17 +148,17 @@ const Index = () => {
           <ProFormText
             name="userID"
             label="用户ID"
-            initialValue={'629710'}
+            initialValue={'8355364'}
             required={true}
             rules={[{ required: true, message: '登陆人ID必填' }]}
           />
           <ProFormText
-            name="houseID"
+            name="houseId"
             label="房源ID"
             required={true}
             rules={[{ required: true, message: '房源ID必填' }]}
           />
-          <ProFormText name="money" label="全款成交价" initialValue={1000000} />
+          {/*<ProFormText name="money" label="全款成交价" initialValue={1000000} />*/}
         </ProForm.Group>
         <EditableTable
           columns={columns}

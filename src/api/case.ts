@@ -3,6 +3,8 @@ import { request } from '@@/plugin-request/request';
 
 const PageCaseURl: string = '/api/case/page';
 const CaseOPTURl: string = '/api/case/opt';
+const StartLogURl: string = '/api/case/log';
+const StopLogURl: string = '/api/case/stop/log';
 
 /**
  * case 分页
@@ -51,6 +53,20 @@ export async function delCase(
   return request<API.IResponse<any>>(CaseOPTURl, {
     method: 'DELETE',
     data: body,
+    ...(options || {}),
+  });
+}
+
+export async function startGetLog(options?: { [key: string]: any }) {
+  return request<API.IResponse<any>>(StartLogURl, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+export async function stopGetLog(options?: { [key: string]: any }) {
+  return request<API.IResponse<any>>(StartLogURl, {
+    method: 'POST',
     ...(options || {}),
   });
 }

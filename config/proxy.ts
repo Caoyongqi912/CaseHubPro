@@ -9,6 +9,7 @@
 
 interface IProxy {
   target: string;
+  ws?: boolean;
   changeOrigin: boolean;
   pathRewrite?: {};
 }
@@ -21,11 +22,12 @@ const proxy: ITarget = {
   dev: {
     '/api': {
       target: 'http://127.0.0.1:5000',
+      ws: true,
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
     '/cbs': {
-      target: 'http://127.0.0.1:8999',
+      target: 'http://127.0.0.1:8080',
       changeOrigin: true,
       pathRewrite: { '^/cbs': '' },
     },
