@@ -18,13 +18,18 @@ const Index = () => {
   useEffect(() => {
     if (roomID) {
       const socket = io('http://127.0.0.1:5000/', { query: { room: roomID } });
-      socket.on('connect', () => {
-        console.log('Connected to the server!');
+
+      socket.on('connect', function () {
+        console.log(`Connected to room ${roomID}`);
       });
 
-      socket.on('log', (data) => {
-        console.log(data);
-        setLogData([...log, data]);
+      socket.on('log', ({ code, msg }) => {
+        console.log(msg);
+        if (code === 1) {
+          setLogData([...log, msg]);
+        } else {
+          socket.disconnect();
+        }
       });
 
       return () => {
@@ -47,6 +52,7 @@ const Index = () => {
   };
   const handleStopTask = async () => {
     const response = await stopGetLog();
+    setAllLogs([]);
     console.log(response);
   };
   return (
