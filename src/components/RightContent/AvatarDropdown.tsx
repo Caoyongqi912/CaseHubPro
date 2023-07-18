@@ -88,9 +88,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         <Avatar
           size="small"
           className={styles.avatar}
-          src={
-            'http://localhost:5000/api/file/avatar?uid=' + currentUser.avatar
-          }
+          src={currentUser.avatar}
           alt="avatar"
         >
           {currentUser.username[0]}

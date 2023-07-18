@@ -9,6 +9,7 @@ interface SelfProps {
   editableKeys: any;
   setEditableRowKeys: any;
   extra?: any;
+  recordCreatorProps?: boolean;
 }
 
 const EditableTable: FC<SelfProps> = ({
@@ -19,6 +20,7 @@ const EditableTable: FC<SelfProps> = ({
   editableKeys,
   setEditableRowKeys,
   extra,
+  recordCreatorProps = true,
 }) => {
   useEffect(() => {
     if (dataSource) {
@@ -33,12 +35,16 @@ const EditableTable: FC<SelfProps> = ({
       rowKey="id"
       value={dataSource}
       onChange={setDataSource}
-      recordCreatorProps={{
-        newRecordType: 'dataSource',
-        record: () => ({
-          id: Date.now(),
-        }),
-      }}
+      recordCreatorProps={
+        recordCreatorProps === true
+          ? {
+              newRecordType: 'dataSource',
+              record: () => ({
+                id: Date.now(),
+              }),
+            }
+          : false
+      }
       editable={{
         type: 'multiple',
         editableKeys,

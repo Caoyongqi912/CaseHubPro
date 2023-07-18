@@ -3,9 +3,11 @@ import { request } from '@@/plugin-request/request';
 
 const SettingUrl = '/cbs/cbs/perfSetting/v3';
 const AddSign = '/cbs/cbs/sign';
-const AddIntention = '/cbs/cbs/hz/intention';
 const BuyApprove = '/cbs/cbs/perfBugApprove';
 const PerfApprove = '/cbs/cbs/perfApprove';
+const Collect = '/cbs/cbs/finance';
+const AddShowing = '/cbs/cbs/addShowing';
+const AddLease = '/cbs/cbs/addLease';
 
 interface IParams {
   city: string;
@@ -28,14 +30,6 @@ export async function addSign(value: any, options?: API.IObjGet) {
   });
 }
 
-export async function addIntention(value: any, options?: API.IObjGet) {
-  return request<API.IResponse<any>>(AddIntention, {
-    method: 'POST',
-    data: value,
-    ...(options || {}),
-  });
-}
-
 export async function buyApprove(value: any, options?: API.IObjGet) {
   return request<API.IResponse<any>>(BuyApprove, {
     method: 'POST',
@@ -46,6 +40,30 @@ export async function buyApprove(value: any, options?: API.IObjGet) {
 
 export async function perfApprove(value: any, options?: API.IObjGet) {
   return request<API.IResponse<any>>(PerfApprove, {
+    method: 'POST',
+    data: value,
+    ...(options || {}),
+  });
+}
+
+export async function collect(value: any, options?: API.IObjGet) {
+  return request<API.IResponse<any>>(Collect, {
+    method: 'POST',
+    data: value,
+    ...(options || {}),
+  });
+}
+
+export async function addShowing(value: any, options?: API.IObjGet) {
+  return request<API.IResponse<any>>(AddShowing, {
+    method: 'POST',
+    data: value,
+    ...(options || {}),
+  });
+}
+
+export async function addLease(value: any, options?: API.IObjGet) {
+  return request<API.IResponse<any>>(AddLease, {
     method: 'POST',
     data: value,
     ...(options || {}),

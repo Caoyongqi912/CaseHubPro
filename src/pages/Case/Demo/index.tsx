@@ -17,7 +17,7 @@ const Index = () => {
   }, [log]);
   useEffect(() => {
     if (roomID) {
-      const socket = io('http://127.0.0.1:5000/', { query: { room: roomID } });
+      const socket = io('http://10.1.1.90:5000/', { query: { room: roomID } });
 
       socket.on('connect', function () {
         console.log(`Connected to room ${roomID}`);
@@ -34,6 +34,7 @@ const Index = () => {
 
       return () => {
         socket.disconnect();
+        console.log('socket 断开');
       };
     }
   }, [roomID]);

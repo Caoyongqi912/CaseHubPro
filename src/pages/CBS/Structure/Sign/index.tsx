@@ -1,22 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ProForm,
   ProFormText,
   ProFormRadio,
-  ProTable,
   ProColumns,
-  EditableProTable,
+  ProCard,
+  ProFormSwitch,
 } from '@ant-design/pro-components';
 import { addSign } from '@/api/cbs';
-import { Drawer, Form, message, notification, Tooltip } from 'antd';
+import { Form, message } from 'antd';
 import EditableTable from '@/components/Table/EditableTable';
-import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-twilight';
-import io from 'socket.io-client';
+import DrawerAceEditor from '@/pages/CBS/component/DrawerAceEditor';
+import useSocket from '@/pages/CBS/component/useSocket';
+import Utils from '@/pages/CBS/component/utils';
 
 const Index = () => {
   const [form] = Form.useForm<any>();
+  const { setAllLogs, setLogData, setDrawer, drawer, setRoomID, allLogs } =
+    useSocket();
+  const [grid, setGrid] = useState(false);
+  const { CityUser, cityList } = Utils();
   const [userData, setUserData] = useState([
     {
       id: 1,
@@ -33,43 +38,10 @@ const Index = () => {
       phone: '15060062611',
     },
   ]);
+  const [city, setCity] = useState('beijing');
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     userData.map((item: any) => item.id),
   );
-  const [start, isStart] = useState(false);
-  const [log, setLogData] = useState<string[]>([]);
-  const [drawer, setDrawer] = useState<boolean>(false);
-  const [allLogs, setAllLogs] = useState<string[]>([]); // 新增一个状态变量 allLogs 来保存所有的日志内容
-
-  useEffect(() => {
-    setAllLogs((prevLogs) => [...prevLogs, ...log]); // 在变化时将 log 合并到 allLogs 中
-  }, [log]);
-  useEffect(() => {
-    if (start) {
-      const socket = io('http://127.0.0.1:8080');
-      socket.connect();
-      console.log('connect', socket.connect());
-      socket.on('connect', () => {
-        console.log('Connected to the server!');
-      });
-      socket.on('connect_error', (err) => {
-        console.log(`connect_error due to ${err.message}`);
-      });
-
-      socket.on('connect_timeout', (timeout) => {
-        console.log(`connect_timeout of ${timeout}ms exceeded`);
-      });
-
-      socket.on('log', (data) => {
-        console.log(data);
-        setLogData([...log, data]);
-      });
-
-      return () => {
-        socket.disconnect();
-      };
-    }
-  }, [start]);
   const columns: ProColumns[] = [
     {
       title: '买卖方',
@@ -100,101 +72,104 @@ const Index = () => {
     const { code, data, msg } = await addSign(body);
     if (code === 0) {
       setDrawer(true);
-      isStart(true);
+      setRoomID(data);
     } else {
       message.error(msg);
     }
   };
   return (
     <>
-      <Drawer
-        title={'构造日志'}
-        width={'70%'}
-        maskClosable={false}
+      <DrawerAceEditor
         visible={drawer}
         onClose={() => {
           setDrawer(false);
           setAllLogs([]);
+          setLogData([]);
+          setRoomID(null);
         }}
-        placement={'right'}
-      >
-        <AceEditor
-          mode="json"
-          theme="twilight"
-          // onChange={handleEditorChange}
-          name="my-editor"
-          value={allLogs.join('')}
-          height="500px"
-          width="100%"
-          editorProps={{ $blockScrolling: true }}
-          setOptions={{
-            showLineNumbers: true,
-            tabSize: 2,
-          }}
-        />
-      </Drawer>
-      <ProForm layout={'horizontal'} form={form} onFinish={onFinish}>
-        <ProFormRadio.Group
-          name="city"
-          layout="horizontal"
-          initialValue={'beijing'}
-          label="城市"
-          options={[
-            {
-              label: '北京',
-              value: 'beijing',
-            },
-            // {
-            //   label: "上海",
-            //   value: "shanghai"
-            // },
-            // {
-            //   label: "杭州",
-            //   value: "hangzhou"
-            // }
-          ]}
-        />
+        allLogs={allLogs.join('')}
+      />
+      <ProCard>
+        <ProForm layout={'horizontal'} form={form} onFinish={onFinish}>
+          <ProFormRadio.Group
+            name="city"
+            layout="horizontal"
+            initialValue={city}
+            label="城市"
+            options={cityList}
+            fieldProps={{
+              onChange: ({ target }) => {
+                console.log('==', target.value);
+                setCity(target.value);
+                form.setFieldValue('userID', CityUser[target.value]);
+              },
+            }}
+          />
+          <ProFormRadio.Group>
+            {city === 'beijing' || city === 'nanjing' || city === 'tianjin' ? (
+              <ProFormRadio.Group
+                name="transfer"
+                layout="horizontal"
+                initialValue={'1'}
+                label="是否委托过户"
+                options={[
+                  {
+                    label: '委托',
+                    value: '1',
+                  },
+                  {
+                    label: '非委托',
+                    value: '0',
+                  },
+                ]}
+              />
+            ) : null}
+            {city === 'beijing' ? (
+              <ProFormSwitch
+                fieldProps={{
+                  onChange: setGrid,
+                }}
+                initialValue={false}
+                label="华熙存量房"
+                name="hx"
+              />
+            ) : null}
+          </ProFormRadio.Group>
 
-        <ProFormRadio.Group
-          name="transfer"
-          layout="horizontal"
-          initialValue={'1'}
-          label="是否委托过户"
-          options={[
-            {
-              label: '委托',
-              value: '1',
-            },
-            {
-              label: '非委托',
-              value: '0',
-            },
-          ]}
-        />
-        <ProForm.Group>
-          <ProFormText
-            name="userID"
-            label="用户ID"
-            initialValue={'629710'}
-            required={true}
-            rules={[{ required: true, message: '登陆人ID必填' }]}
+          <ProForm.Group>
+            <ProFormText
+              name="userID"
+              label="用户ID"
+              initialValue={'625005'}
+              required={true}
+              rules={[{ required: true, message: '登陆人ID必填' }]}
+            />
+            <ProFormText
+              name="houseID"
+              label="房源ID"
+              required={true}
+              rules={[{ required: true, message: '房源ID必填' }]}
+            />
+            <ProFormText
+              name="amount"
+              label="全款成交价"
+              initialValue={1000000}
+              addonAfter={'元'}
+            />
+          </ProForm.Group>
+          <EditableTable
+            title={'双方信息'}
+            columns={columns}
+            dataSource={userData}
+            setDataSource={setUserData}
+            editableKeys={editableKeys}
+            setEditableRowKeys={setEditableRowKeys}
+            recordCreatorProps={false}
           />
-          <ProFormText
-            name="houseID"
-            label="房源ID"
-            required={true}
-            rules={[{ required: true, message: '房源ID必填' }]}
-          />
-          <ProFormText name="money" label="全款成交价" initialValue={1000000} />
-        </ProForm.Group>
-        <EditableTable
-          columns={columns}
-          dataSource={userData}
-          setDataSource={setUserData}
-          editableKeys={editableKeys}
-          setEditableRowKeys={setEditableRowKeys}
-        />
-      </ProForm>
+
+          <h1 style={{ color: 'red' }}>录入完成后注意佣金字段是否正确 !!!</h1>
+        </ProForm>
+      </ProCard>
     </>
   );
 };

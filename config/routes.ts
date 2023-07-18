@@ -146,7 +146,7 @@ export default [
   {
     name: 'CBS',
     path: '/CBS',
-    // icon: "CloudTwoTone",
+    // icon: "",
     routes: [
       // {
       //   path: '/CBS/perf/maintSetting',
@@ -157,15 +157,25 @@ export default [
         path: '/CBS/structure',
         name: 'CBS数据构造',
         routes: [
+          // {
+          //   path: "/CBS/structure/custom",
+          //   name: "添加带看",
+          //   component: "@/pages/CBS/Structure/Custom"
+          // },
           {
             path: '/CBS/structure/sign',
-            name: '草签合同',
+            name: '买卖草签合同',
             component: '@/pages/CBS/Structure/Sign',
           },
           {
-            path: '/CBS/structure/intention',
-            name: '杭州意向',
-            component: '@/pages/CBS/Structure/Intention',
+            path: '/CBS/structure/lease',
+            name: '租赁草签合同',
+            component: '@/pages/CBS/Structure/Lease',
+          },
+          {
+            path: '/CBS/structure/finance',
+            name: '正式合同收齐应收',
+            component: '@/pages/CBS/Structure/Finance',
           },
           {
             path: '/CBS/structure/approve',

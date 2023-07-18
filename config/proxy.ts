@@ -21,13 +21,13 @@ interface ITarget {
 const proxy: ITarget = {
   dev: {
     '/api': {
-      target: 'http://127.0.0.1:5000',
+      target: 'http://10.1.1.90:5000',
       ws: true,
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
     '/cbs': {
-      target: 'http://127.0.0.1:8080',
+      target: 'http://10.1.1.90:8080',
       changeOrigin: true,
       pathRewrite: { '^/cbs': '' },
     },
