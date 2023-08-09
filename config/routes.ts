@@ -97,27 +97,11 @@ export default [
         component: '@/pages/Case/CaseAPI/ApiDetail',
       },
       {
-        path: '/interface/scriptList',
-        name: '接口脚本',
-        component: '@/pages/Case/APIScript',
-      },
-      {
         path: '/interface/test',
-        name: '其他',
+        name: '调试页',
         component: '@/pages/Case/Demo',
       },
       { component: '@/pages/404' },
-    ],
-  },
-  {
-    path: '/bug',
-    name: 'Bugs',
-    icon: 'BugFilled',
-    routes: [
-      {
-        path: '/bug/table',
-        name: 'bugOpt',
-      },
     ],
   },
   {
@@ -138,15 +122,11 @@ export default [
       },
     ],
   },
-  {
-    name: 'Setting',
-    path: '/setting',
-    icon: 'SettingFilled',
-  },
+
   {
     name: 'CBS',
     path: '/CBS',
-    // icon: "",
+    icon: 'EditFilled',
     routes: [
       // {
       //   path: '/CBS/perf/maintSetting',
@@ -157,11 +137,33 @@ export default [
         path: '/CBS/structure',
         name: 'CBS数据构造',
         routes: [
-          // {
-          //   path: "/CBS/structure/custom",
-          //   name: "添加带看",
-          //   component: "@/pages/CBS/Structure/Custom"
-          // },
+          {
+            path: '/CBS/structure/house',
+            name: '房源动作',
+            routes: [
+              {
+                path: '/CBS/structure/house/newHouse',
+                name: '新增房源',
+                component: '@/pages/CBS/Structure/House',
+              },
+              {
+                path: '/CBS/structure/house/job',
+                name: '添加房源动作',
+                component: '@/pages/CBS/Structure/House/HouseJob',
+              },
+            ],
+          },
+          {
+            path: '/CBS/structure/custom',
+            name: '客源动作',
+            routes: [
+              {
+                path: '/CBS/structure/custom/addLook',
+                name: '添加带看',
+                component: '@/pages/CBS/Structure/Custom',
+              },
+            ],
+          },
           {
             path: '/CBS/structure/sign',
             name: '买卖草签合同',

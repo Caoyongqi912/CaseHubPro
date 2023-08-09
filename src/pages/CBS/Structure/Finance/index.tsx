@@ -84,7 +84,7 @@ const Index = () => {
             <ProFormText
               name="approve_by"
               label="财务审批人ID"
-              initialValue={'8189613'}
+              initialValue={'8128830'}
               required={true}
               rules={[{ required: true, message: '财务审批人ID' }]}
             />

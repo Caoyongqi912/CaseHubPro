@@ -139,7 +139,7 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
   }, [currentCasePartID, fetchCaseData]);
 
   return (
-    <ProCard bordered={false} hoverable>
+    <ProCard>
       <ShowCase
         caseInfo={caseInfo!}
         drawerVisibleProps={showCaseDrawerVisibleProps}
@@ -165,9 +165,9 @@ const CaseHubTable: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
           pageSize: 10,
         }}
         search={{
-          collapsed: true,
-          labelWidth: 'auto',
-          span: 6,
+          labelWidth: 80,
+          // span: 6,
+          showHiddenNum: true,
         }}
         toolBarRender={() => [
           <AddCase

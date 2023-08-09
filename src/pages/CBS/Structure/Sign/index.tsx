@@ -29,6 +29,15 @@ const Index = () => {
       name: '业绩自动化',
       ssn: '370801194003195002',
       phone: '17611395912',
+      // children:[
+      //   {
+      //     id: 1,
+      //     target: '卖方',
+      //     name: '业绩自动化',
+      //     ssn: '370801194003195002',
+      //     phone: '17611395912',
+      //   }
+      // ]
     },
     {
       id: 2,
@@ -141,6 +150,7 @@ const Index = () => {
               name="userID"
               label="用户ID"
               initialValue={'625005'}
+              tooltip={'即成交人'}
               required={true}
               rules={[{ required: true, message: '登陆人ID必填' }]}
             />
@@ -153,6 +163,7 @@ const Index = () => {
             <ProFormText
               name="amount"
               label="全款成交价"
+              tooltip={'不要传递带逗号分割的金额，要纯数字！'}
               initialValue={1000000}
               addonAfter={'元'}
             />
@@ -167,7 +178,7 @@ const Index = () => {
             recordCreatorProps={false}
           />
 
-          <h1 style={{ color: 'red' }}>录入完成后注意佣金字段是否正确 !!!</h1>
+          <h4 style={{ color: 'red' }}>录入完成后注意佣金字段是否正确 !!!</h4>
         </ProForm>
       </ProCard>
     </>

@@ -14,8 +14,9 @@ const useSocket = () => {
   }, [log]);
 
   useEffect(() => {
+    console.log('====', roomID);
     if (roomID) {
-      socketRef.current = io('http://10.1.1.90:8080/', {
+      socketRef.current = io('http://10.1.1.90:5050/', {
         query: { room: roomID },
       });
       const socket = socketRef.current;
@@ -39,8 +40,10 @@ const useSocket = () => {
           socket.disconnect();
         }
       };
+    } else {
     }
   }, [roomID]);
+
   return {
     setRoomID,
     setLogData,

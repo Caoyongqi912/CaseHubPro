@@ -27,6 +27,7 @@ import {
   putCasePart,
 } from '@/api/interface';
 import FormForModal from '@/components/InterfaceComponent/FormForModal';
+import { ProCard } from '@ant-design/pro-components';
 
 interface SelfProps {
   selectedProject: number | undefined;
@@ -208,11 +209,9 @@ const Index: FC<SelfProps> = (props) => {
             width={400}
             formName="root"
           />
-          <Card
+          <ProCard
             style={{
-              padding: 24,
-              overflowX: 'hidden',
-              overflow: 'auto',
+              padding: 2,
             }}
             bordered={false}
             hoverable={true}
@@ -294,7 +293,7 @@ const Index: FC<SelfProps> = (props) => {
                 />
               )}
             </Card>
-          </Card>
+          </ProCard>
         </>
       )}
     </>

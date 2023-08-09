@@ -116,6 +116,10 @@ const Index = () => {
                 label: '买卖',
                 value: '2',
               },
+              {
+                label: '意向',
+                value: '3',
+              },
             ]}
           />
           <ProForm.Group>

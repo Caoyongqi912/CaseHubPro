@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Card,
-  Col,
-  Descriptions,
-  Divider,
-  message,
-  Popconfirm,
-  Row,
-  Spin,
-  Tag,
-} from 'antd';
+import { Card, Col, Descriptions, message, Row, Spin, Tag } from 'antd';
 import {
   ProCard,
   ProColumns,
@@ -29,7 +19,6 @@ import { getInterfacesResultInfo } from '@/api/interface';
 import { useParams } from 'umi';
 import './Detail.less';
 import { CONFIG } from '@/utils/config';
-import { history } from '@@/core/history';
 import { ResponseAPI } from '@/api';
 import Result from '@/pages/Case/CaseAPI/component/Result/Result';
 

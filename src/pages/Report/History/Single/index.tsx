@@ -72,7 +72,6 @@ const Index = () => {
     {
       title: '执行时间',
       dataIndex: 'create_time',
-      valueType: 'dateTime',
       renderText: (text, record, index, action) => (
         <Tag color={'blue'}>{record.create_time}</Tag>
       ),

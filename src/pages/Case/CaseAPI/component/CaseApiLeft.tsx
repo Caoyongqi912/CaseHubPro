@@ -201,8 +201,9 @@ const CaseApiLeft: FC<SelfProps> = ({ projectID, currentCasePartID }) => {
         }}
         cardBordered
         search={{
-          labelWidth: 'auto',
-          span: 4,
+          labelWidth: 80,
+          // span: 6,
+          showHiddenNum: true,
         }}
         options={{
           setting: {

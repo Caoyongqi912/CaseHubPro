@@ -41,14 +41,6 @@ const Columns: ProColumns[] = [
     dataIndex: 'port',
     ellipsis: true,
     width: '10%',
-    formItemProps: {
-      rules: [
-        {
-          required: true,
-          message: '此项为必填项',
-        },
-      ],
-    },
   },
   {
     title: '创建人',
